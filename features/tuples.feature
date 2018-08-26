@@ -45,3 +45,23 @@ Feature: Is this a tuple?
     | 1.23456677777  | 1.23466677777  |
     | 1.23456677777  | 2.0  |
     | 1.23456677777  | 999.22337  |
+
+  Scenario: Adding two tuples
+    Given first ← tuple: 3, -2, 5, 1
+    And second ← tuple: -2, 3, 1, 0
+    Then first plus second should equal tuple: 1, 1, 6, 1
+  
+  Scenario: Subtracting two points
+    Given the first point(3, 2, 1)
+    And the second point(5, 6, 7)
+    Then firstPoint - secondPoint = vector(-2, -4, -6)
+
+  Scenario: Subtracting a vector from a point
+    Given a point(3, 2, 1)
+    And a vector(5, 6, 7)
+    Then the point minus the vector = point(-2, -4, -6)
+
+  Scenario: Subtracting two vectors
+    Given a firstVector(3, 2, 1)
+    And a secondVector(5, 6, 7)
+    Then the firstVector - secondVector = vector(-2, -4, -6)
