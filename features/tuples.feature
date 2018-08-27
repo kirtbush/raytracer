@@ -52,9 +52,9 @@ Feature: Is this a tuple?
     Then first plus second should equal tuple: 1, 1, 6, 1
   
   Scenario: Subtracting two points
-    Given the first point(3, 2, 1)
-    And the second point(5, 6, 7)
-    Then firstPoint - secondPoint = vector(-2, -4, -6)
+    Given p1 ← point(3, 2, 1)
+    And p2 ← point(5, 6, 7)
+    Then p1 - p2 = vector(-2, -4, -6)
 
   Scenario: Subtracting a vector from a point
     Given a point(3, 2, 1)

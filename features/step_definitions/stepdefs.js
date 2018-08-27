@@ -7,6 +7,7 @@ let tuple = require("./tuple");
 //let Vector = tuple.Vector;
 
 
+
 Given('a ← tuple: {float}, {float}, {float}, {float}', function (f1, f2, f3, f4) {
 	// Write code here that turns the phrase above into concrete actions
 	this.a = new tuple.tuple(f1, f2, f3, f4);
@@ -113,25 +114,18 @@ assert(inputTuple, sumTuple);
 //    ? Given p1 ← point(3, 2, 1)
 //        Undefined. Implement with the following snippet:
 
-Given(/(.+)? ← point\((.+), (.+), (.+)\)/, function (int, int2, int3, int4) {
+Given("p{int} ← {point}", function (int1, pt) {
 // Write code here that turns the phrase above into concrete actions
-return 'pending';
-});
-
-//    ? And p2 ← point(5, 6, 7)
-//        Undefined. Implement with the following snippet:
-
-Given('p{int} ← point\({int}, {int}, {int})', function (int, int2, int3, int4) {
-// Write code here that turns the phrase above into concrete actions
-return 'pending';
+	this.p = this.p || [];
+	this.p[int1] = pt;
 });
 
 //    ? Then p1 - p2 = vector(-2, -4, -6)
 //        Undefined. Implement with the following snippet:
 
-Then('p{int} - p{int} = vector\({int}, {int}, {int})', function (int, int2, int3, int4, int5) {
+Then('p{int} - p{int} = vector\({int}, {int}, {int})', function (int1, int2, int3, int4, int5) {
 // Write code here that turns the phrase above into concrete actions
-return 'pending';
+	tuple.isTupleEqual(tuple.sub(this.p[int1] - this.p[int2]), tuple.vector(int3, int4, int5));
 });
 
 
