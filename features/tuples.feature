@@ -57,11 +57,20 @@ Feature: Is this a tuple?
     Then p1 - p2 = vector(-2, -4, -6)
 
   Scenario: Subtracting a vector from a point
-    Given a point(3, 2, 1)
-    And a vector(5, 6, 7)
-    Then the point minus the vector = point(-2, -4, -6)
+    Given p ← point(3, 2, 1)
+    And v ← vector(5, 6, 7)
+    Then p - v = point(-2, -4, -6)
 
   Scenario: Subtracting two vectors
-    Given a firstVector(3, 2, 1)
-    And a secondVector(5, 6, 7)
-    Then the firstVector - secondVector = vector(-2, -4, -6)
+    Given v1 ← vector(3, 2, 1)
+    And v2 ← vector(5, 6, 7)
+    Then v1 - v2 = vector(-2, -4, -6)
+
+  Scenario: Subtracting a vector from the zero vector
+    Given zero ← vector(0, 0, 0)
+    And v ← vector(1, -2, 3)
+    Then zero - v = vector(-1, 2, -3)
+
+  Scenario: Negating a tuple
+    Given a ← tuple(1, -2, 3, -4)
+    Then -a = tuple(-1, 2, -3, 4)

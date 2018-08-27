@@ -82,100 +82,77 @@ Given('two values to compare {float}, {float}', function (float, float2) {
 });
 
 Then('first = second', function () {
-	// Write code here that turns the phrase above into concrete actions
 	assert(common.isEqualF(this.float, this.float2));
 });
 
 Then('first != second', function () {
-	// Write code here that turns the phrase above into concrete actions
 	assert(!common.isEqualF(this.float, this.float2));
 });
 
 Given(/first ← tuple: (.+), (.+), (.+), (.+)/, function (int1, int2, int3, int4) {
-// Write code here that turns the phrase above into concrete actions
-this.a1 = new tuple.tuple(int1, int2, int3, int4)
+	this.a1 = new tuple.tuple(int1, int2, int3, int4)
 });
 
 
 Given(/second ← tuple: (.+), (.+), (.+), (.+)/, function (int1, int2, int3, int4) {
-// Write code here that turns the phrase above into concrete actions
-this.a2 = new tuple.tuple(int1, int2, int3, int4);
+	this.a2 = new tuple.tuple(int1, int2, int3, int4);
 });
 
 
 Then(/first plus second should equal tuple: (.+), (.+), (.+), (.+)/, function (int, int2, int3, int4) {
-// Write code here that turns the phrase above into concrete actions
-let sumTuple = tuple.add(this.a1, this.a2);
-let inputTuple = new tuple.tuple(int, int2, int3, int4);
-assert(inputTuple, sumTuple);
+	let sumTuple = tuple.add(this.a1, this.a2);
+	let inputTuple = new tuple.tuple(int, int2, int3, int4);
+	assert(inputTuple, sumTuple);
 });
 
-// 1) Scenario: Subtracting two points # features\tuples.feature:54
-//    ? Given p1 ← point(3, 2, 1)
-//        Undefined. Implement with the following snippet:
-
 Given("p{int} ← {point}", function (int1, pt) {
-// Write code here that turns the phrase above into concrete actions
-	this.p = this.p || [];
+	this.p = this.p || [tuple.point(0,0,0)];
 	this.p[int1] = pt;
 });
 
-//    ? Then p1 - p2 = vector(-2, -4, -6)
-//        Undefined. Implement with the following snippet:
-
-Then('p{int} - p{int} = vector\({int}, {int}, {int})', function (int1, int2, int3, int4, int5) {
-// Write code here that turns the phrase above into concrete actions
-	tuple.isTupleEqual(tuple.sub(this.p[int1] - this.p[int2]), tuple.vector(int3, int4, int5));
+Then('p{int} - p{int} = {vector}', function (int1, int2, vector1) {
+	let newVect = tuple.sub(this.p[int1], this.p[int2]);
+	assert(tuple.isTupleEqual(newVect, vector1));
 });
 
-
-// 2) Scenario: Subtracting a vector from a point # features\tuples.feature:59
-//    ? Given p ← point(3, 2, 1)
-//        Undefined. Implement with the following snippet:
-
-Given('p ← point\({int}, {int}, {int})', function (int, int2, int3) {
-// Write code here that turns the phrase above into concrete actions
-return 'pending';
+Given('p ← {point}', function (point) {
+	this.p = point;
 });
 
-//    ? And v ← vector(5, 6, 7)
-//        Undefined. Implement with the following snippet:
-
-Given('v ← vector\({int}, {int}, {int})', function (int, int2, int3) {
-// Write code here that turns the phrase above into concrete actions
-return 'pending';
+Given('v ← {vector}', function (vector) {
+	this.v = vector;
 });
 
-//    ? Then p - v = point(-2, -4, -6)
-//        Undefined. Implement with the following snippet:
-
-Then('p - v = point\({int}, {int}, {int})', function (int, int2, int3) {
-// Write code here that turns the phrase above into concrete actions
-return 'pending';
+Then('p - v = {point}', function (point) {
+	let newPoint = tuple.sub(this.p, this.v);
+	assert(tuple.isTupleEqual(newPoint, point));
 });
 
-
-// 3) Scenario: Subtracting two vectors # features\tuples.feature:64
-//    ? Given v1 ← vector(3, 2, 1)
-//        Undefined. Implement with the following snippet:
-
-Given('v{int} ← vector\({int}, {int}, {int})', function (int, int2, int3, int4) {
-// Write code here that turns the phrase above into concrete actions
-return 'pending';
+Given('v{int} ← {vector}', function (int1, vector) {
+	this.v = this.v || [tuple.vector(0,0,0)];
+	this.v[int1] = vector;
 });
 
-//    ? And v2 ← vector(5, 6, 7)
-//        Undefined. Implement with the following snippet:
-
-Given('v{int} ← vector\({int}, {int}, {int})', function (int, int2, int3, int4) {
-// Write code here that turns the phrase above into concrete actions
-return 'pending';
+Then('v{int} - v{int} = {vector}', function (int1, int2, vector) {
+	let newVect = tuple.sub(this.v[int1], this.v[int2]);
+	assert(tuple.isTupleEqual(newVect, vector));
 });
 
-//    ? Then v1 - v2 = vector(-2, -4, -6)
-//        Undefined. Implement with the following snippet:
+Given('zero ← {vector}', function (vector) {
+	this.zero = vector;
+});
 
-Then('v{int} - v{int} = vector\({int}, {int}, {int})', function (int, int2, int3, int4, int5) {
-// Write code here that turns the phrase above into concrete actions
-return 'pending';
+Then('zero - v = {vector}', function (vector) {
+	let resultVector = tuple.sub(this.zero, this.v);
+	assert(tuple.isTupleEqual(resultVector, vector));
+});
+
+Given('a ← {tuple}', function (tuple1) {
+	this.a = tuple1;
+	//console.log(this.a);
+});
+
+Then('-a = {tuple}', function (tuple1) {
+	//console.log(tuple1);
+	assert(tuple.isTupleEqual(tuple.negate(this.a), tuple1));	
 });

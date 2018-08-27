@@ -3,6 +3,7 @@ var common = require("../common");
 
 const POINT_TYPE = 1.0;
 const VECTOR_TYPE = 0;
+const ZeroVector = new tuple(0,0,0,0);
 
 function tuple (xVal, yVal, zVal, wVal) {
 	this.x = xVal;
@@ -24,12 +25,23 @@ module.exports = {
 	point: point,
 	vector: vector,
 
-	add: function(obj1, obj2) {
-		return new tuple(obj1.x + obj2.x, obj1.y + obj2.y, obj1.z + obj2.z, obj1.w + obj2.w);
+	//This function exists solely because cucumber cannot find 
+	// the tuple constrctor found above...
+	createTuple: function(xVal, yVal, zVal, wVal) {
+		return new tuple(xVal, yVal, zVal, wVal);
 	},
 
-	sub: function(obj1, obj2) {
-		return new tuple(obj1.x - obj2.x, obj1.y - obj2.y, obj1.z - obj2.z, obj1.w - obj2.w);
+	add: function(tuple1, tuple2) {
+		return new tuple(tuple1.x + tuple2.x, tuple1.y + tuple2.y, tuple1.z + tuple2.z, tuple1.w + tuple2.w);
+	},
+
+	sub: function(tuple1, tuple2) {
+		let newTuple = new tuple(tuple1.x - tuple2.x, tuple1.y - tuple2.y, tuple1.z - tuple2.z, tuple1.w - tuple2.w);
+		return newTuple;
+	},
+
+	negate: function(tuple1) {
+		return this.sub(new vector(0,0,0), tuple1);
 	},
 
 	isVector: function (tpl) {
