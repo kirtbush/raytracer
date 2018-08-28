@@ -165,13 +165,11 @@ Then('a * {float} = {tuple}', function (float1, tuple1) {
 
 Then("a \/ {int} = {tuple}", function (int1, tuple1) {
 	let float1 = int1.toFixed(3);
-//	console.log("float1:"+float1);
-//	console.log("this.a.x:"+this.a.x);
 	let newTuple = tuple.divideScalar(this.a, float1);
 	assert(tuple.isTupleEqual(newTuple, tuple1));
 });
 
-//magnitude test
+//magnitude of vector
 Then("{magnitude} = {int}", function (mag, int1) {
 	assert(common.isEqualF(tuple.magnitude(this.v), int1));
 });
@@ -179,3 +177,49 @@ Then("{magnitude} = {int}", function (mag, int1) {
 Then('{magnitude} = {sqrt}', function (mag, sqrt) {
 	assert(common.isEqualF(tuple.magnitude(this.v), sqrt));
 });
+
+//normalize vector
+Then('{normalize} = {vector}', function (normalizer, vector1) {
+	// Write code here that turns the phrase above into concrete actions
+	assert(tuple.isTupleEqual(tuple.normalize(this.v), vector1));
+  });
+
+  Then('{normalize} = approximately {vector}', function (normalize, vector1) {
+	// Write code here that turns the phrase above into concrete actions
+	this.norm = tuple.normalize(vector1);
+	assert(tuple.isTupleEqual(tuple.normalize(this.v), vector1))
+  });
+
+   When(/norm ← normalize\(v\)/, function () {
+	// Write code here that turns the phrase above into concrete actions
+	this.norm = tuple.normalize(this.v);
+  });
+
+  Then('{magnitudenorm} = {int}', function (magnitudenorm, int1) {
+	// Write code here that turns the phrase above into concrete actions
+	let mag = tuple.magnitude(this.norm);
+	assert(mag == int1);
+  });
+
+  //dot product
+  Given('a ← {vector}', function (vector) {
+	// Write code here that turns the phrase above into concrete actions
+	this.a = vector;
+  });
+  Given('b ← {vector}', function (vector) {
+	// Write code here that turns the phrase above into concrete actions
+	this.b = vector;
+  });
+
+  Then('a dot b = {int}', function (int1) {
+	// Write code here that turns the phrase above into concrete actions
+	assert(common.isEqualF(tuple.dot(this.a, this.b), int1));
+  });
+
+  Then('a cross b = {vector}', function (vector) {
+	assert(tuple.isTupleEqual(tuple.cross(this.a, this.b), vector));
+  });
+
+  Then('b cross a = {vector}', function (vector) {
+	assert(tuple.isTupleEqual(tuple.cross(this.b, this.a), vector));
+  });

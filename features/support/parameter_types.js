@@ -34,11 +34,26 @@ defineParameterType( {
 defineParameterType( {
     name: 'sqrt',           // name
     regexp: /√(.+)/, // regexp
-    transformer: tuple.sqrtString  // transformer function
+    transformer: Math.sqrt  // transformer function
+} );
+
+//The below functions capture words with the functions magnitude and normalize
+// and do nothing with them... this is because cucumber feature syntax is silly
+// and cannot work with parenthesis (it tells them to make the text optional)
+defineParameterType( {
+    name: 'magnitudenorm',           // name
+    regexp: /magnitude\(norm\)/, // regexp
+    transformer: s => eval("this.norm")
 } );
 
 defineParameterType( {
     name: 'magnitude',           // name
-    regexp: /magnitude\((.+)\)/, // regexp
-    transformer: s => s  // transformer function
+    regexp: /magnitude\(v\)/, // regexp
+    transformer: s => eval("this.v")  // transformer function
+} );
+
+defineParameterType( {
+    name: 'normalize',           // name
+    regexp: /^(normalize\(v\))/, // regexp
+    transformer: s => eval("this.v")
 } );

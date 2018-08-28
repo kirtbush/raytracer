@@ -93,7 +93,6 @@ Feature: Is this a tuple?
     Then a / 2 = tuple(0.5, -1, 1.5, -2)
 
 #magnitude
-
   Scenario: Magnitude of vector(1, 0, 0)
     Given v ← vector(1, 0, 0)
     Then magnitude(v) = 1
@@ -109,3 +108,29 @@ Feature: Is this a tuple?
   Scenario: Magnitude of vector(-1, -2, -3)
     Given v ← vector(-1, -2, -3)
     Then magnitude(v) = √14
+
+#normalization
+  Scenario: Normalizing vector(4, 0, 0) gives (1, 0, 0)
+    Given v ← vector(4, 0, 0)
+    Then normalize(v) = vector(1, 0, 0)
+  Scenario: Normalizing vector(1, 2, 3)
+    Given v ← vector(1, 2, 3)
+    # vector(1/√14, 2/√14, 3/√14)
+    Then normalize(v) = approximately vector(0.26726, 0.53452, 0.80178)
+  Scenario: The magnitude of a normalized vector
+    Given v ← vector(1, 2, 3)
+    When norm ← normalize(v)
+    Then magnitude(norm) = 1
+
+#dot
+  Scenario: The dot product of two tuples
+    Given a ← vector(1, 2, 3)
+    And b ← vector(2, 3, 4)
+    Then a dot b = 20
+
+#cross
+  Scenario: Cross product of two vectors
+    Given a ← vector(1, 2, 3)
+    And b ← vector(2, 3, 4)
+    Then a cross b = vector(-1, 2, -1)
+    And b cross a = vector(1, -2, 1)

@@ -61,6 +61,28 @@ module.exports = {
 			+ Math.pow(vector1.w, 2));	
 	},
 
+	normalize: function (v) {
+		let mag = this.magnitude(v);
+		// console.log("mag:"+mag);
+		// console.log("v.x:"+v.x);
+		// console.log("v.y:"+v.y);
+		// console.log("v.z:"+v.z);
+		// console.log("v.w:"+v.w);
+		return new tuple(v.x / mag, v.y / mag, v.z / mag, v.w / mag);
+	},
+
+	dot: function (a, b) {
+		return  (a.x * b.x) +
+			(a.y * b.y) +
+			(a.z * b.z) +
+			(a.w * b.w);
+	},
+	cross: function (a, b) {
+		return vector(a.y * b.z - a.z * b.y,
+					a.z * b.x - a.x * b.z,
+					a.x * b.y - a.y * b.x)
+	},
+	
 	sqrtString: function (strVal) {
 		return Math.sqrt(parseFloat(strVal));
 	},
