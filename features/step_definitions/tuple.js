@@ -44,6 +44,27 @@ module.exports = {
 		return this.sub(new vector(0,0,0), tuple1);
 	},
 
+	multiplyScalar: function(tuple1, float1) {
+		let newTuple = new tuple(tuple1.x * float1, tuple1.y * float1, tuple1.z * float1, tuple1.w * float1);
+		return newTuple;
+	},
+
+	divideScalar: function(tuple1, float1) {
+		let newTuple = new tuple(tuple1.x / float1, tuple1.y / float1, tuple1.z / float1, tuple1.w / float1);
+		return newTuple;
+	},
+
+	magnitude: function (vector1) {
+		return Math.sqrt(Math.pow(vector1.x, 2) 
+		   	+ Math.pow(vector1.y, 2) 
+			+ Math.pow(vector1.z, 2)
+			+ Math.pow(vector1.w, 2));	
+	},
+
+	sqrtString: function (strVal) {
+		return Math.sqrt(parseFloat(strVal));
+	},
+
 	isVector: function (tpl) {
 		if (tpl.w === VECTOR_TYPE)
 			return true;

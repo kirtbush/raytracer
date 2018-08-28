@@ -28,6 +28,7 @@ Feature: Is this a tuple?
     Given v ← vector: 4,-4,3
     Then v = tuple: 4, -4, 3, 0
   
+#floating value comparison tests
   Scenario Outline: two floating values should be equal
     Given two values to compare <first>, <second>
     Then first = second
@@ -46,6 +47,7 @@ Feature: Is this a tuple?
     | 1.23456677777  | 2.0  |
     | 1.23456677777  | 999.22337  |
 
+#addition and subtraction
   Scenario: Adding two tuples
     Given first ← tuple: 3, -2, 5, 1
     And second ← tuple: -2, 3, 1, 0
@@ -66,6 +68,7 @@ Feature: Is this a tuple?
     And v2 ← vector(5, 6, 7)
     Then v1 - v2 = vector(-2, -4, -6)
 
+#subtraction from zero
   Scenario: Subtracting a vector from the zero vector
     Given zero ← vector(0, 0, 0)
     And v ← vector(1, -2, 3)
@@ -74,3 +77,35 @@ Feature: Is this a tuple?
   Scenario: Negating a tuple
     Given a ← tuple(1, -2, 3, -4)
     Then -a = tuple(-1, 2, -3, 4)
+
+#multiplcation and division of vectors (for scaling)
+#e.g. what lies 3.5 times farther in that direction
+  Scenario: Multiplying a tuple by a scalar
+    Given a ← tuple(1, -2, 3, -4)
+    Then a * 3.5 = tuple(3.5, -7, 10.5, -14)
+
+  Scenario: Multiplying a tuple by a fraction
+    Given a ← tuple(1, -2, 3, -4)
+    Then a * 0.5 = tuple(0.5, -1, 1.5, -2)
+    
+  Scenario: Dividing a tuple by a scalar
+    Given a ← tuple(1, -2, 3, -4)
+    Then a / 2 = tuple(0.5, -1, 1.5, -2)
+
+#magnitude
+
+  Scenario: Magnitude of vector(1, 0, 0)
+    Given v ← vector(1, 0, 0)
+    Then magnitude(v) = 1
+  Scenario: Magnitude of vector(0, 1, 0)
+    Given v ← vector(0, 1, 0)
+    Then magnitude(v) = 1
+  Scenario: Magnitude of vector(0, 0, 1)
+    Given v ← vector(0, 0, 1)
+    Then magnitude(v) = 1
+  Scenario: Magnitude of vector(1, 2, 3)
+    Given v ← vector(1, 2, 3)
+    Then magnitude(v) = √14
+  Scenario: Magnitude of vector(-1, -2, -3)
+    Given v ← vector(-1, -2, -3)
+    Then magnitude(v) = √14

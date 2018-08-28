@@ -156,3 +156,26 @@ Then('-a = {tuple}', function (tuple1) {
 	//console.log(tuple1);
 	assert(tuple.isTupleEqual(tuple.negate(this.a), tuple1));	
 });
+
+//multiplication and division of scalars
+Then('a * {float} = {tuple}', function (float1, tuple1) {
+// Write code here that turns the phrase above into concrete actions
+	assert(tuple.isTupleEqual(tuple.multiplyScalar(this.a, float1), tuple1));
+});
+
+Then("a \/ {int} = {tuple}", function (int1, tuple1) {
+	let float1 = int1.toFixed(3);
+//	console.log("float1:"+float1);
+//	console.log("this.a.x:"+this.a.x);
+	let newTuple = tuple.divideScalar(this.a, float1);
+	assert(tuple.isTupleEqual(newTuple, tuple1));
+});
+
+//magnitude test
+Then("{magnitude} = {int}", function (mag, int1) {
+	assert(common.isEqualF(tuple.magnitude(this.v), int1));
+});
+
+Then('{magnitude} = {sqrt}', function (mag, sqrt) {
+	assert(common.isEqualF(tuple.magnitude(this.v), sqrt));
+});

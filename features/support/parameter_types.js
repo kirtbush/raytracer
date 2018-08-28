@@ -31,9 +31,14 @@ defineParameterType( {
     transformer: tuple.createTuple  // transformer function
 } );
 
-// defineParameterType( {
-//     name: 'pointname',           // name
-//     regexp: /p(.+)?/, // regexp
-//     type: string,             // type
-//     transformer: s => s  // transformer function
-// } );
+defineParameterType( {
+    name: 'sqrt',           // name
+    regexp: /√(.+)/, // regexp
+    transformer: tuple.sqrtString  // transformer function
+} );
+
+defineParameterType( {
+    name: 'magnitude',           // name
+    regexp: /magnitude\((.+)\)/, // regexp
+    transformer: s => s  // transformer function
+} );
