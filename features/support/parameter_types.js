@@ -1,15 +1,8 @@
 
 const { defineParameterType } = require('cucumber')
 let tuple = require("../step_definitions/tuple");
+let canvas = require("../step_definitions/canvas");
 
-/*
-defineParameterType(new ParameterType<>(
-    'color',           // name
-    /red|blue|yellow/, // regexp
-    Color,             // type
-    s => new Color(s)  // transformer function
-))
-*/
 defineParameterType( {
     name: 'point',           // name
     regexp: /point\((.+),(.+),(.+)\)/, // regexp
@@ -29,6 +22,13 @@ defineParameterType( {
     regexp: /tuple\((.+),(.+),(.+),(.+)\)/, // regexp
     type: tuple.tuple,             // type
     transformer: tuple.createTuple  // transformer function
+} );
+
+defineParameterType( {
+    name: 'Color',           // name
+    regexp: /color\((.+),(.+),(.+)\)/, // regexp
+    type: tuple.Color,             // type
+    transformer: tuple.createColor  // transformer function
 } );
 
 defineParameterType( {
@@ -56,4 +56,12 @@ defineParameterType( {
     name: 'normalize',           // name
     regexp: /^(normalize\(v\))/, // regexp
     transformer: s => eval("this.v")
+} );
+
+//canvas
+defineParameterType( {
+    name: 'Canvas',           // name
+    regexp: /canvas\((.+),(.+)\)/, // regexp
+    type: canvas.Canvas,             // type
+    transformer: canvas.createCanvas  // transformer function
 } );

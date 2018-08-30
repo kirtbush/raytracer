@@ -1,9 +1,10 @@
 
 var common = require("../common");
 
+const VERSION = 1.0;
 const POINT_TYPE = 1.0;
 const VECTOR_TYPE = 0;
-const ZeroVector = new tuple(0,0,0,0);
+const ZeroVector = new vector(0,0,0);
 
 function tuple (xVal, yVal, zVal, wVal) {
 	this.x = xVal;
@@ -20,15 +21,57 @@ function vector(xVal, yVal, zVal) {
 	return new tuple(xVal, yVal, zVal, VECTOR_TYPE);
 }
 
+class Canvas {
+	constructor(w,h) {
+		this.width = w;
+		this.height = h;
+	}
+}
+
+class Color {
+	constructor(r,g,b) {
+		this.x = r;
+		this.y = g;
+		this.z = b;
+		this.w = 0;
+		//console.log("color constructed with r:"+r+" g:"+g);
+	}
+	get red() {
+		//console.log("red getter:"+this.x);
+		return this.x;	
+	}
+	set red(value) {
+		this.x = value;
+	}
+	get green() {
+		return this.y;		
+	}
+	set green(value) {
+		this.y = value;
+	}
+	get blue() {
+		return this.z;		
+	}
+	set blue(value) {
+		this.z = value;
+	}
+}
+
 module.exports = {
 	tuple: tuple,
 	point: point,
 	vector: vector,
+	Color: Color,
+	Canvas: Canvas,	
 
 	//This function exists solely because cucumber cannot find 
-	// the tuple constrctor found above...
+	// the tuple constructor found above...
 	createTuple: function(xVal, yVal, zVal, wVal) {
 		return new tuple(xVal, yVal, zVal, wVal);
+	},
+
+	createColor: function(rVal, gVal, bVal) {
+		return new Color(parseFloat(rVal), parseFloat(gVal), parseFloat(bVal));
 	},
 
 	add: function(tuple1, tuple2) {
@@ -41,7 +84,7 @@ module.exports = {
 	},
 
 	negate: function(tuple1) {
-		return this.sub(new vector(0,0,0), tuple1);
+		return this.sub(ZeroVector, tuple1);
 	},
 
 	multiplyScalar: function(tuple1, float1) {
@@ -63,11 +106,6 @@ module.exports = {
 
 	normalize: function (v) {
 		let mag = this.magnitude(v);
-		// console.log("mag:"+mag);
-		// console.log("v.x:"+v.x);
-		// console.log("v.y:"+v.y);
-		// console.log("v.z:"+v.z);
-		// console.log("v.w:"+v.w);
 		return new tuple(v.x / mag, v.y / mag, v.z / mag, v.w / mag);
 	},
 
@@ -83,6 +121,14 @@ module.exports = {
 					a.x * b.y - a.y * b.x)
 	},
 	
+	//color blending by multiplying
+	hadamard_product: function(c1, c2) {
+		r = c1.red * c2.red;
+		g = c1.green * c2.green;
+		b = c1.blue * c2.blue;
+		return new Color(r,g,b);
+	},
+
 	sqrtString: function (strVal) {
 		return Math.sqrt(parseFloat(strVal));
 	},

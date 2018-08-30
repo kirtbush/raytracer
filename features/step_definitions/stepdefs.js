@@ -2,6 +2,7 @@ const assert = require('assert');
 const { Given, When, Then } = require('cucumber');
 let common = require("../common");
 let tuple = require("./tuple");
+let canvas = require("./canvas");
 //let Tuple = tuple.Tuple;
 //let Point = tuple.Point;
 //let Vector = tuple.Vector;
@@ -106,7 +107,7 @@ Then(/first plus second should equal tuple: (.+), (.+), (.+), (.+)/, function (i
 });
 
 Given("p{int} ← {point}", function (int1, pt) {
-	this.p = this.p || [tuple.point(0,0,0)];
+	this.p = this.p || [tuple.point(0, 0, 0)];
 	this.p[int1] = pt;
 });
 
@@ -129,7 +130,7 @@ Then('p - v = {point}', function (point) {
 });
 
 Given('v{int} ← {vector}', function (int1, vector) {
-	this.v = this.v || [tuple.vector(0,0,0)];
+	this.v = this.v || [tuple.vector(0, 0, 0)];
 	this.v[int1] = vector;
 });
 
@@ -154,12 +155,12 @@ Given('a ← {tuple}', function (tuple1) {
 
 Then('-a = {tuple}', function (tuple1) {
 	//console.log(tuple1);
-	assert(tuple.isTupleEqual(tuple.negate(this.a), tuple1));	
+	assert(tuple.isTupleEqual(tuple.negate(this.a), tuple1));
 });
 
 //multiplication and division of scalars
 Then('a * {float} = {tuple}', function (float1, tuple1) {
-// Write code here that turns the phrase above into concrete actions
+	// Write code here that turns the phrase above into concrete actions
 	assert(tuple.isTupleEqual(tuple.multiplyScalar(this.a, float1), tuple1));
 });
 
@@ -182,44 +183,123 @@ Then('{magnitude} = {sqrt}', function (mag, sqrt) {
 Then('{normalize} = {vector}', function (normalizer, vector1) {
 	// Write code here that turns the phrase above into concrete actions
 	assert(tuple.isTupleEqual(tuple.normalize(this.v), vector1));
-  });
+});
 
-  Then('{normalize} = approximately {vector}', function (normalize, vector1) {
+Then('{normalize} = approximately {vector}', function (normalize, vector1) {
 	// Write code here that turns the phrase above into concrete actions
 	this.norm = tuple.normalize(vector1);
 	assert(tuple.isTupleEqual(tuple.normalize(this.v), vector1))
-  });
+});
 
-   When(/norm ← normalize\(v\)/, function () {
+When(/norm ← normalize\(v\)/, function () {
 	// Write code here that turns the phrase above into concrete actions
 	this.norm = tuple.normalize(this.v);
-  });
+});
 
-  Then('{magnitudenorm} = {int}', function (magnitudenorm, int1) {
+Then('{magnitudenorm} = {int}', function (magnitudenorm, int1) {
 	// Write code here that turns the phrase above into concrete actions
 	let mag = tuple.magnitude(this.norm);
 	assert(mag == int1);
-  });
+});
 
-  //dot product
-  Given('a ← {vector}', function (vector) {
+//dot product
+Given('a ← {vector}', function (vector) {
 	// Write code here that turns the phrase above into concrete actions
 	this.a = vector;
-  });
-  Given('b ← {vector}', function (vector) {
+});
+Given('b ← {vector}', function (vector) {
 	// Write code here that turns the phrase above into concrete actions
 	this.b = vector;
-  });
+});
 
-  Then('a dot b = {int}', function (int1) {
+Then('a dot b = {int}', function (int1) {
 	// Write code here that turns the phrase above into concrete actions
 	assert(common.isEqualF(tuple.dot(this.a, this.b), int1));
-  });
+});
 
-  Then('a cross b = {vector}', function (vector) {
+Then('a cross b = {vector}', function (vector) {
 	assert(tuple.isTupleEqual(tuple.cross(this.a, this.b), vector));
-  });
+});
 
-  Then('b cross a = {vector}', function (vector) {
+Then('b cross a = {vector}', function (vector) {
 	assert(tuple.isTupleEqual(tuple.cross(this.b, this.a), vector));
-  });
+});
+
+Given('c ← {Color}', function (color) {
+	this.c = color;
+});
+
+Then('c.red = {float}', function (float) {
+	assert(common.isEqualF(this.c.red, float));
+});
+
+Then('c.green = {float}', function (float) {
+	assert(common.isEqualF(this.c.green, float));
+});
+
+Then('c.blue = {float}', function (float) {
+	assert(common.isEqualF(this.c.blue, float));
+});
+
+Given('c{int} ← {Color}', function (int, Color) {
+	this.c = this.c || [];
+	this.c[int] = Color;
+});
+
+Then('c{int} + c{int} = {Color}', function (int, int2, Color) {
+	// Write code here that turns the phrase above into concrete actions
+	let newColor = tuple.add(this.c[int], this.c[int2]);
+	assert(tuple.isTupleEqual(newColor, Color));
+});
+
+Then('c{int} - c{int} = {Color}', function (int, int2, Color) {
+	let newColor = tuple.sub(this.c[int], this.c[int2]);
+	assert(tuple.isTupleEqual(newColor, Color));
+});
+
+Then('c * {int} = {Color}', function (int, Color) {
+	let newColor = tuple.multiplyScalar(this.c, int);
+	assert(tuple.isTupleEqual(newColor, Color));
+});
+
+Then('c{int} * c{int} = {Color}', function (int, int2, Color) {
+	let newColor = tuple.hadamard_product(this.c[int], this.c[int2]);
+	assert(tuple.isTupleEqual(newColor, Color));
+});
+
+//CANVAS
+Given('c ← {Canvas}', function (Canvas) {
+	this.c = Canvas;
+});
+
+Then('c.width = {int}', function (int) {
+	assert(this.c.width, int);
+});
+
+Then('c.height = {int}', function (int) {
+	assert(this.c.height, int);
+});
+
+Then('every pixel of c is {Color}', function (Color) {
+	let x = 0;
+	let y = 0;
+	while(x < this.c.width) {
+		while(y < this.c.height) {
+			assert(tuple.isTupleEqual(this.c.pixels[x][y],Color));
+			y++;
+		}
+		x++;
+	}
+});
+
+Given('red ← {Color}', function (Color) {
+	this.red = Color;
+});
+
+When(/write_pixel\(c, (.+), (.+), red\)/, function (int, int2) {
+	canvas.write_pixel(this.c, int, int2, this.red);
+});
+
+Then(/pixel_at\(c, (.+), (.+)\) = red/, function (int, int2) {
+	assert(tuple.isTupleEqual(this.c.pixels[int][int2], this.red));
+});
