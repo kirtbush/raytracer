@@ -40,17 +40,32 @@ function create_ppm_header(width, height, max_color) {
     return retStr;
 }
 
-function add_color_to_str(dataLines, nextLine, c) {
-    c = scale(c, DEFAULT_COLOR_SCALE);
-    nextLine += c;
-    if(nextLine.length + 1 > 70)
+function add_color_to_str(nextLine, dataLines, c) {
+    
+    if(nextLine.length + 1 > 69)
     {
-        nextLine += "\n";
+        //nextLine += "\n";
         dataLines += nextLine;
         nextLine = "";
     }
-    else
+    else if (nextLine.length != 0)
         nextLine += " ";
+
+    
+    c = scale(c, DEFAULT_COLOR_SCALE);
+
+    if(nextLine.length + String(c).length > 69)
+    {
+        //nextLine += "\n";
+        dataLines += nextLine;
+        nextLine = "";
+    }
+
+    nextLine += c;
+
+
+
+    return {dl: dataLines, nl: nextLine};
 }
 
 function scale(value, scale) {
@@ -85,13 +100,16 @@ module.exports = {
         
         let dataLines = "";
         let nextLine = "\n";
+        let s = {dl: dataLines, nl: nextLine};
         for(idy=0; idy < canvas1.height; idy++) {
             for(idx=0; idx < canvas1.width; idx++) {
                 let r = canvas1.pixels[idx][idy].red;
-                add_color_to_str(dataLines, nextLine, r);
-                // r = canvas1.scale(r, DEFAULT_COLOR_SCALE);
+                s = add_color_to_str(nextLine, dataLines, r);
+                nextLine = s.nl;
+                dataLines = s.dl;
+                // r = scale(r, DEFAULT_COLOR_SCALE);
                 // nextLine += r;
-                // if(nextLine.length + 1 > 70)
+                // if(nextLine.length + 1 > 69)
                 // {
                 //     nextLine += "\n";
                 //     dataLines += nextLine;
@@ -101,32 +119,40 @@ module.exports = {
                 //     nextLine += " ";
 
                 let g = canvas1.pixels[idx][idy].green;
-                g = canvas1.scale(g, DEFAULT_COLOR_SCALE);
+                s = add_color_to_str(nextLine, dataLines, g);
+                nextLine = s.nl;
+                dataLines = s.dl;
+                // g = scale(g, DEFAULT_COLOR_SCALE);
 
-                nextLine += g;
-                if(nextLine.length + 1 > 70)
-                {
-                    nextLine += "\n";
-                    dataLines += nextLine;
-                    nextLine = "";
-                }
-                else
-                    nextLine += " ";
+                // nextLine += g;
+                // if(nextLine.length + 1 > 69)
+                // {
+                //     nextLine += "\n";
+                //     dataLines += nextLine;
+                //     nextLine = "";
+                // }
+                // else
+                //     nextLine += " ";
                 let b = canvas1.pixels[idx][idy].blue;
-                b = canvas1.scale(b, DEFAULT_COLOR_SCALE);
-                nextLine += b;
-                if(nextLine.length + 1 > 70)
-                {
-                    nextLine += "\n";
-                    dataLines += nextLine;
-                    nextLine = "";
-                }
-                else if(idx + 1 < canvas1.width)
-                    nextLine += " ";
+                s = add_color_to_str(nextLine, dataLines, b);
+                nextLine = s.nl;
+                dataLines = s.dl;
+                // b = scale(b, DEFAULT_COLOR_SCALE);
+                // nextLine += b;
+                // if(nextLine.length + 1 > 69)
+                // {
+                //     nextLine += "\n";
+                //     dataLines += nextLine;
+                //     nextLine = "";
+                // }
+                // else if(idx + 1 < canvas1.width)
+                //     nextLine += " ";
 
                 //need to add a new line for row major
                 //if(dataLines.charAt(dataLines.length-1)!="\n") dataLines += "\n"; 
             }
+
+            //nextLine = nextLine.trim(); 
             nextLine += "\n";
             dataLines += nextLine;
             nextLine = "";

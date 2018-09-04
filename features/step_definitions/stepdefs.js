@@ -360,3 +360,8 @@ When('ppm ← {canvas_to_ppm}', function (canvas1) {
 		}
 	}
   });
+
+  Then('the last character of ppm is a newline', function () {
+	// Write code here that turns the phrase above into concrete actions
+	this.ppm[this.ppm.length-1] == "\n";
+  });
