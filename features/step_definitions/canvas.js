@@ -42,28 +42,25 @@ function create_ppm_header(width, height, max_color) {
 
 function add_color_to_str(nextLine, dataLines, c) {
     
-    if(nextLine.length + 1 > 69)
+    if(nextLine.length + String(c).length + 1 > 69)
     {
         //nextLine += "\n";
-        dataLines += nextLine;
+        dataLines.push(nextLine);
         nextLine = "";
     }
-    else if (nextLine.length != 0)
+    else if (nextLine.length > 0 && nextLine != "\n")
         nextLine += " ";
-
     
     c = scale(c, DEFAULT_COLOR_SCALE);
 
     if(nextLine.length + String(c).length > 69)
     {
         //nextLine += "\n";
-        dataLines += nextLine;
+        dataLines.push(nextLine);
         nextLine = "";
     }
 
     nextLine += c;
-
-
 
     return {dl: dataLines, nl: nextLine};
 }
@@ -98,7 +95,7 @@ module.exports = {
         let ppmStr = create_ppm_header(canvas1.width, canvas1.height, DEFAULT_COLOR_SCALE);
         let idx = 0, idy = 0;
         
-        let dataLines = "";
+        let dataLines = [];
         let nextLine = "\n";
         let s = {dl: dataLines, nl: nextLine};
         for(idy=0; idy < canvas1.height; idy++) {
@@ -153,12 +150,12 @@ module.exports = {
             }
 
             //nextLine = nextLine.trim(); 
-            nextLine += "\n";
-            dataLines += nextLine;
+            //nextLine += "\n";
+            dataLines.push(nextLine);
             nextLine = "";
         }
 
-        ppmStr += dataLines;
+        ppmStr += dataLines.join("\n");
 
         return ppmStr;
     }
