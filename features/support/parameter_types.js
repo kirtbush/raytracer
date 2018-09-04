@@ -58,6 +58,8 @@ defineParameterType( {
     transformer: s => eval("this.v")
 } );
 
+
+
 //canvas
 defineParameterType( {
     name: 'Canvas',           // name
@@ -65,3 +67,22 @@ defineParameterType( {
     type: canvas.Canvas,             // type
     transformer: canvas.createCanvas  // transformer function
 } );
+
+defineParameterType( {
+    name: 'canvas_to_ppm',           // name
+    regexp: /canvas_to_ppm\([\w.+]\)/, // regexp
+    type: canvas.Canvas
+    //transformer: s => eval
+} );
+
+// defineParameterType( {
+//     name: 'canvas_to_ppm',           // name
+//     regexp: /canvas_to_ppm\([\w.+]\)/, // regexp
+//     transformer: s => canvas.canvas_to_ppm(s)
+// } );
+
+// defineParameterType( {
+//     name: 'write_pixel',           // name
+//     regexp: /write_pixel\((.+), (.+), (.+), (.+)\)/, // regexp
+//     transformer: s => {}
+// } );

@@ -241,19 +241,26 @@ Then('c.blue = {float}', function (float) {
 	assert(common.isEqualF(this.c.blue, float));
 });
 
-Given('c{int} ← {Color}', function (int, Color) {
-	this.c = this.c || [];
-	this.c[int] = Color;
+Given('c1 ← {Color}', function ( Color) {
+	this.c1 = Color;
 });
 
-Then('c{int} + c{int} = {Color}', function (int, int2, Color) {
+Given('c2 ← {Color}', function ( Color) {
+	this.c2 = Color;
+});
+
+Given('c3 ← {Color}', function ( Color) {
+	this.c3 = Color;
+});
+
+Then('c1 + c2 = {Color}', function (Color) {
 	// Write code here that turns the phrase above into concrete actions
-	let newColor = tuple.add(this.c[int], this.c[int2]);
+	let newColor = tuple.add(this.c1, this.c2);
 	assert(tuple.isTupleEqual(newColor, Color));
 });
 
-Then('c{int} - c{int} = {Color}', function (int, int2, Color) {
-	let newColor = tuple.sub(this.c[int], this.c[int2]);
+Then('c1 - c2 = {Color}', function (Color) {
+	let newColor = tuple.sub(this.c1, this.c2);
 	assert(tuple.isTupleEqual(newColor, Color));
 });
 
@@ -262,8 +269,8 @@ Then('c * {int} = {Color}', function (int, Color) {
 	assert(tuple.isTupleEqual(newColor, Color));
 });
 
-Then('c{int} * c{int} = {Color}', function (int, int2, Color) {
-	let newColor = tuple.hadamard_product(this.c[int], this.c[int2]);
+Then('c1 * c2 = {Color}', function (Color) {
+	let newColor = tuple.hadamard_product(this.c1, this.c2);
 	assert(tuple.isTupleEqual(newColor, Color));
 });
 
@@ -303,3 +310,53 @@ When(/write_pixel\(c, (.+), (.+), red\)/, function (int, int2) {
 Then(/pixel_at\(c, (.+), (.+)\) = red/, function (int, int2) {
 	assert(tuple.isTupleEqual(this.c.pixels[int][int2], this.red));
 });
+
+//ppm file creation
+When('ppm ← {canvas_to_ppm}', function (canvas1) {
+	this.ppm = canvas.canvas_to_ppm(this.c);
+  });
+
+  Then('lines {int}-{int} of ppm are', function (int, int2, docString) {
+	var docStringSplit = docString.split("\n");
+	var ppmSplit = this.ppm.split("\n");
+	let lineCount = int2 - int + 1;
+
+	let ppmArray = ppmSplit.slice(int-1, int2);
+
+	assert(docStringSplit.length >= lineCount);
+	assert(ppmSplit.length >= lineCount);
+	let idx = 0;
+	for(idx = 0;idx < docStringSplit.length; idx++)
+	{
+		console.log("D"+(idx)+":"+docStringSplit[idx]);
+		console.log("P"+(idx)+":"+ppmArray[idx]);
+		assert(docStringSplit[idx]==ppmArray[idx]);
+	}
+  });
+
+  When('write_pixel: c, {int}, {int}, c1', function (int, int2) {
+	// Write code here that turns the phrase above into concrete actions
+	canvas.write_pixel(this.c, int, int2, this.c1);
+	//return 'pending';
+  });
+
+  When('write_pixel: c, {int}, {int}, c2', function (int, int2) {
+	// Write code here that turns the phrase above into concrete actions
+	canvas.write_pixel(this.c, int, int2, this.c2);
+	//return 'pending';
+  });
+
+  When('write_pixel: c, {int}, {int}, c3', function (int, int2) {
+	// Write code here that turns the phrase above into concrete actions
+	canvas.write_pixel(this.c, int, int2, this.c3);
+	//return 'pending';
+  });
+
+  When('every pixel of c is set to {Color}', function (clr) {
+	let x=0, y=0;
+	for(y=0;y<this.c.height;y++){
+		for(x=0;x<this.c.width;x++){
+			canvas.write_pixel(this.c, x, y, clr);
+		}
+	}
+  });
