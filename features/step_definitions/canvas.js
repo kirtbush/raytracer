@@ -25,6 +25,16 @@ class Canvas {
         // }
     }
 
+    write_pixel(x, y, c) {
+        if( x > this.width - 1 || x < 0)
+            return;
+
+        if( y > this.height - 1 || y < 0)
+            return;
+
+        this.pixels[Math.round(x)][Math.round(y)] = c;
+    }
+
 }
 
 //writes the line
@@ -81,15 +91,19 @@ module.exports = {
         return new Canvas(w,h);
     },
 
-    write_pixel: function(canvas, x, y, color) {
-        canvas.pixels[x][y] = color;
+    write_pixel: function(canvas1, x, y, color) {
+        if( x > canvas1.width - 1 || x < 0)
+            return;
+
+        if( y > canvas1.height - 1 || y < 0)
+            return;
+
+        canvas1.pixels[Math.round(x)][Math.round(y)] = color;
     },
 
     pixel_at: function(canvas, x,y) {
         return canvas.pixels[x][y];
     },
-
-
 
     canvas_to_ppm: function(canvas1) {
         let ppmStr = create_ppm_header(canvas1.width, canvas1.height, DEFAULT_COLOR_SCALE);
@@ -104,53 +118,18 @@ module.exports = {
                 s = add_color_to_str(nextLine, dataLines, r);
                 nextLine = s.nl;
                 dataLines = s.dl;
-                // r = scale(r, DEFAULT_COLOR_SCALE);
-                // nextLine += r;
-                // if(nextLine.length + 1 > 69)
-                // {
-                //     nextLine += "\n";
-                //     dataLines += nextLine;
-                //     nextLine = "";
-                // }
-                // else
-                //     nextLine += " ";
 
                 let g = canvas1.pixels[idx][idy].green;
                 s = add_color_to_str(nextLine, dataLines, g);
                 nextLine = s.nl;
                 dataLines = s.dl;
-                // g = scale(g, DEFAULT_COLOR_SCALE);
 
-                // nextLine += g;
-                // if(nextLine.length + 1 > 69)
-                // {
-                //     nextLine += "\n";
-                //     dataLines += nextLine;
-                //     nextLine = "";
-                // }
-                // else
-                //     nextLine += " ";
                 let b = canvas1.pixels[idx][idy].blue;
                 s = add_color_to_str(nextLine, dataLines, b);
                 nextLine = s.nl;
                 dataLines = s.dl;
-                // b = scale(b, DEFAULT_COLOR_SCALE);
-                // nextLine += b;
-                // if(nextLine.length + 1 > 69)
-                // {
-                //     nextLine += "\n";
-                //     dataLines += nextLine;
-                //     nextLine = "";
-                // }
-                // else if(idx + 1 < canvas1.width)
-                //     nextLine += " ";
-
-                //need to add a new line for row major
-                //if(dataLines.charAt(dataLines.length-1)!="\n") dataLines += "\n"; 
             }
 
-            //nextLine = nextLine.trim(); 
-            //nextLine += "\n";
             dataLines.push(nextLine);
             nextLine = "";
         }

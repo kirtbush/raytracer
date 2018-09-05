@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "cucumber-js",
-    "build": "babel babel-src -d features/step_definitions"
+    "build": "babel ./ -d ./lib",
+    "flow": "flow"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +14,8 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "cucumber": "^4.2.1"
+    "babel-preset-flow": "^6.23.0",
+    "cucumber": "^4.2.1",
+    "flow-bin": "^0.80.0"
   }
 }

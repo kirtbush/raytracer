@@ -4,16 +4,16 @@ var common = require("../common");
 const VERSION = 1.0;
 const POINT_TYPE = 1.0;
 const VECTOR_TYPE = 0;
-const ZeroVector = new vector(0,0,0);
+const ZeroVector = new vector(0, 0, 0);
 
-function tuple (xVal, yVal, zVal, wVal) {
+function tuple(xVal, yVal, zVal, wVal) {
 	this.x = xVal;
 	this.y = yVal;
 	this.z = zVal;
 	this.w = wVal;
 }
 
-function point (xVal, yVal, zVal) {
+function point(xVal, yVal, zVal) {
 	return new tuple(xVal, yVal, zVal, POINT_TYPE);
 }
 
@@ -22,14 +22,14 @@ function vector(xVal, yVal, zVal) {
 }
 
 class Canvas {
-	constructor(w,h) {
+	constructor(w, h) {
 		this.width = w;
 		this.height = h;
 	}
 }
 
 class Color {
-	constructor(r,g,b) {
+	constructor(r, g, b) {
 		this.x = r;
 		this.y = g;
 		this.z = b;
@@ -38,19 +38,19 @@ class Color {
 	}
 	get red() {
 		//console.log("red getter:"+this.x);
-		return this.x;	
+		return this.x;
 	}
 	set red(value) {
 		this.x = value;
 	}
 	get green() {
-		return this.y;		
+		return this.y;
 	}
 	set green(value) {
 		this.y = value;
 	}
 	get blue() {
-		return this.z;		
+		return this.z;
 	}
 	set blue(value) {
 		this.z = value;
@@ -62,46 +62,46 @@ module.exports = {
 	point: point,
 	vector: vector,
 	Color: Color,
-	Canvas: Canvas,	
+	Canvas: Canvas,
 
 	//This function exists solely because cucumber cannot find 
 	// the tuple constructor found above...
-	createTuple: function(xVal, yVal, zVal, wVal) {
+	createTuple: function (xVal, yVal, zVal, wVal) {
 		return new tuple(xVal, yVal, zVal, wVal);
 	},
 
-	createColor: function(rVal, gVal, bVal) {
+	createColor: function (rVal, gVal, bVal) {
 		return new Color(parseFloat(rVal), parseFloat(gVal), parseFloat(bVal));
 	},
 
-	add: function(tuple1, tuple2) {
+	add: function (tuple1, tuple2) {
 		return new tuple(tuple1.x + tuple2.x, tuple1.y + tuple2.y, tuple1.z + tuple2.z, tuple1.w + tuple2.w);
 	},
 
-	sub: function(tuple1, tuple2) {
+	sub: function (tuple1, tuple2) {
 		let newTuple = new tuple(tuple1.x - tuple2.x, tuple1.y - tuple2.y, tuple1.z - tuple2.z, tuple1.w - tuple2.w);
 		return newTuple;
 	},
 
-	negate: function(tuple1) {
+	negate: function (tuple1) {
 		return this.sub(ZeroVector, tuple1);
 	},
 
-	multiplyScalar: function(tuple1, float1) {
+	multiplyScalar: function (tuple1, float1) {
 		let newTuple = new tuple(tuple1.x * float1, tuple1.y * float1, tuple1.z * float1, tuple1.w * float1);
 		return newTuple;
 	},
 
-	divideScalar: function(tuple1, float1) {
+	divideScalar: function (tuple1, float1) {
 		let newTuple = new tuple(tuple1.x / float1, tuple1.y / float1, tuple1.z / float1, tuple1.w / float1);
 		return newTuple;
 	},
 
 	magnitude: function (vector1) {
-		return Math.sqrt(Math.pow(vector1.x, 2) 
-		   	+ Math.pow(vector1.y, 2) 
+		return Math.sqrt(Math.pow(vector1.x, 2)
+			+ Math.pow(vector1.y, 2)
 			+ Math.pow(vector1.z, 2)
-			+ Math.pow(vector1.w, 2));	
+			+ Math.pow(vector1.w, 2));
 	},
 
 	normalize: function (v) {
@@ -110,23 +110,23 @@ module.exports = {
 	},
 
 	dot: function (a, b) {
-		return  (a.x * b.x) +
+		return (a.x * b.x) +
 			(a.y * b.y) +
 			(a.z * b.z) +
 			(a.w * b.w);
 	},
 	cross: function (a, b) {
 		return vector(a.y * b.z - a.z * b.y,
-					a.z * b.x - a.x * b.z,
-					a.x * b.y - a.y * b.x)
+			a.z * b.x - a.x * b.z,
+			a.x * b.y - a.y * b.x)
 	},
-	
+
 	//color blending by multiplying
-	hadamard_product: function(c1, c2) {
+	hadamard_product: function (c1, c2) {
 		r = c1.red * c2.red;
 		g = c1.green * c2.green;
 		b = c1.blue * c2.blue;
-		return new Color(r,g,b);
+		return new Color(r, g, b);
 	},
 
 	sqrtString: function (strVal) {
