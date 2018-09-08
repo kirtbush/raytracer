@@ -30,9 +30,9 @@ class Canvas {
 
 class Color {
 	constructor(r, g, b) {
-		this.x = r;
-		this.y = g;
-		this.z = b;
+		this.x = parseFloat(r);
+		this.y = parseFloat(g);
+		this.z = parseFloat(b);
 		this.w = 0;
 		//console.log("color constructed with r:"+r+" g:"+g);
 	}
@@ -66,13 +66,13 @@ module.exports = {
 
 	//This function exists solely because cucumber cannot find 
 	// the tuple constructor found above...
-	createTuple: function (xVal, yVal, zVal, wVal) {
-		return new tuple(xVal, yVal, zVal, wVal);
-	},
+	// createTuple: function (xVal, yVal, zVal, wVal) {
+	// 	return new tuple(xVal, yVal, zVal, wVal);
+	// },
 
-	createColor: function (rVal, gVal, bVal) {
-		return new Color(parseFloat(rVal), parseFloat(gVal), parseFloat(bVal));
-	},
+	// createColor: function (rVal, gVal, bVal) {
+	// 	return new Color(parseFloat(rVal), parseFloat(gVal), parseFloat(bVal));
+	// },
 
 	add: function (tuple1, tuple2) {
 		return new tuple(tuple1.x + tuple2.x, tuple1.y + tuple2.y, tuple1.z + tuple2.z, tuple1.w + tuple2.w);

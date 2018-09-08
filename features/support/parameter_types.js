@@ -21,20 +21,20 @@ defineParameterType({
     name: 'tuple',           // name
     regexp: /tuple\((.+),(.+),(.+),(.+)\)/, // regexp
     type: tuple.tuple,             // type
-    transformer: tuple.createTuple  // transformer function
+    transformer: (x,y,z,w) => new tuple.tuple(x,y,z,w)  // transformer function
 });
 
 defineParameterType({
     name: 'Color',           // name
     regexp: /color\((.+),(.+),(.+)\)/, // regexp
     type: tuple.Color,             // type
-    transformer: tuple.createColor  // transformer function
+    transformer: (r,g,b) => new tuple.Color(r,g,b)  // transformer function
 });
 
 defineParameterType({
     name: 'sqrt',           // name
     regexp: /√(.+)/, // regexp
-    transformer: Math.sqrt  // transformer function
+    transformer: s => Math.sqrt(s)  // transformer function
 });
 
 //The below functions capture words with the functions magnitude and normalize
@@ -65,7 +65,7 @@ defineParameterType({
     name: 'Canvas',           // name
     regexp: /canvas\((.+),(.+)\)/, // regexp
     type: canvas.Canvas,             // type
-    transformer: canvas.createCanvas  // transformer function
+    transformer: (w, h) => new canvas.Canvas(w,h)  // transformer function
 });
 
 defineParameterType({

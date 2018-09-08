@@ -3,6 +3,7 @@ const { Given, When, Then } = require('cucumber');
 let common = require("../common");
 let tuple = require("./tuple");
 let canvas = require("./canvas");
+let matrices = require("./matrices");
 //let Tuple = tuple.Tuple;
 //let Point = tuple.Point;
 //let Vector = tuple.Vector;
@@ -357,3 +358,28 @@ When('every pixel of c is set to {Color}', function (clr) {
 Then('the last character of ppm is a newline', function () {
 	this.ppm[this.ppm.length - 1] == "\n";
 });
+
+// Matrices
+Given('the following {int}x{int} matrix M:', function (int, int2, dataTable) {
+    // Write code here that turns the phrase above into concrete actions
+	this.M = new matrices.Matrix(int, int2);
+	this.M.copyFromRawTable(dataTable);
+  });
+
+
+Then('M[{int},{int}] = {int}', function (int, int2, int3) {
+	// Write code here that turns the phrase above into concrete actions
+	let first = this.M.arr[int][int2];
+	let second = int3;
+    assert(first==second);
+});
+
+Then('M[{int},{int}] = {float}', function (int, int2, float) {
+    // Write code here that turns the phrase above into concrete actions
+    assert(common.isEqualF(this.M.arr[int][int2],float));
+});
+
+Then('the size of M is {int}', function (int) {
+	// Write code here that turns the phrase above into concrete actions
+	assert(this.M.arr.length==int);
+  });
