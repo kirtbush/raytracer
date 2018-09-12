@@ -1,11 +1,11 @@
 "use strict";
-exports.__esModule = true;
-var assert = require("../../node_modules/assert-plus");
-var cucumber_1 = require("cucumber");
-var common = require("../common");
-var tuple = require("./tuple");
-var canvas = require("./canvas");
-var matrices = require("./matrices");
+Object.defineProperty(exports, "__esModule", { value: true });
+const assert = require("../../node_modules/assert-plus");
+const cucumber_1 = require("cucumber");
+const common = require("../common");
+const tuple = require("./tuple");
+const canvas = require("./canvas");
+const matrices = require("./matrices");
 //let Tuple = tuple.Tuple;
 //let Point = tuple.Point;
 //let Vector = tuple.Vector;
@@ -80,16 +80,16 @@ cucumber_1.Given(/second ← tuple: (.+), (.+), (.+), (.+)/, function (int1, int
     this.a2 = new tuple.tuple(int1, int2, int3, int4);
 });
 cucumber_1.Then(/first plus second should equal tuple: (.+), (.+), (.+), (.+)/, function (int, int2, int3, int4) {
-    var sumTuple = tuple.add(this.a1, this.a2);
-    var inputTuple = new tuple.tuple(int, int2, int3, int4);
+    let sumTuple = tuple.add(this.a1, this.a2);
+    let inputTuple = new tuple.tuple(int, int2, int3, int4);
     assert(inputTuple, sumTuple);
 });
 cucumber_1.Given("p{int} ← {point}", function (int1, pt) {
-    this.p = this.p || [tuple.point(0, 0, 0)];
+    this.p = this.p || [new tuple.point(0, 0, 0)];
     this.p[int1] = pt;
 });
 cucumber_1.Then('p{int} - p{int} = {vector}', function (int1, int2, vector1) {
-    var newVect = tuple.sub(this.p[int1], this.p[int2]);
+    let newVect = tuple.sub(this.p[int1], this.p[int2]);
     assert(tuple.isTupleEqual(newVect, vector1));
 });
 cucumber_1.Given('p ← {point}', function (point) {
@@ -99,22 +99,22 @@ cucumber_1.Given('v ← {vector}', function (vector) {
     this.v = vector;
 });
 cucumber_1.Then('p - v = {point}', function (point) {
-    var newPoint = tuple.sub(this.p, this.v);
+    let newPoint = tuple.sub(this.p, this.v);
     assert(tuple.isTupleEqual(newPoint, point));
 });
 cucumber_1.Given('v{int} ← {vector}', function (int1, vector) {
-    this.v = this.v || [tuple.vector(0, 0, 0)];
+    this.v = this.v || [new tuple.vector(0, 0, 0)];
     this.v[int1] = vector;
 });
 cucumber_1.Then('v{int} - v{int} = {vector}', function (int1, int2, vector) {
-    var newVect = tuple.sub(this.v[int1], this.v[int2]);
+    let newVect = tuple.sub(this.v[int1], this.v[int2]);
     assert(tuple.isTupleEqual(newVect, vector));
 });
 cucumber_1.Given('zero ← {vector}', function (vector) {
     this.zero = vector;
 });
 cucumber_1.Then('zero - v = {vector}', function (vector) {
-    var resultVector = tuple.sub(this.zero, this.v);
+    let resultVector = tuple.sub(this.zero, this.v);
     assert(tuple.isTupleEqual(resultVector, vector));
 });
 cucumber_1.Given('a ← {tuple}', function (tuple1) {
@@ -131,8 +131,8 @@ cucumber_1.Then('a * {float} = {tuple}', function (float1, tuple1) {
     assert(tuple.isTupleEqual(tuple.multiplyScalar(this.a, float1), tuple1));
 });
 cucumber_1.Then("a \/ {int} = {tuple}", function (int1, tuple1) {
-    var float1 = int1.toFixed(3);
-    var newTuple = tuple.divideScalar(this.a, float1);
+    let float1 = int1.toFixed(3);
+    let newTuple = tuple.divideScalar(this.a, float1);
     assert(tuple.isTupleEqual(newTuple, tuple1));
 });
 //magnitude of vector
@@ -158,7 +158,7 @@ cucumber_1.When(/norm ← normalize\(v\)/, function () {
 });
 cucumber_1.Then('{magnitudenorm} = {int}', function (magnitudenorm, int1) {
     // Write code here that turns the phrase above into concrete actions
-    var mag = tuple.magnitude(this.norm);
+    let mag = tuple.magnitude(this.norm);
     assert(mag == int1);
 });
 //dot product
@@ -203,19 +203,19 @@ cucumber_1.Given('c3 ← {Color}', function (Color) {
 });
 cucumber_1.Then('c1 + c2 = {Color}', function (Color) {
     // Write code here that turns the phrase above into concrete actions
-    var newColor = tuple.add(this.c1, this.c2);
+    let newColor = tuple.add(this.c1, this.c2);
     assert(tuple.isTupleEqual(newColor, Color));
 });
 cucumber_1.Then('c1 - c2 = {Color}', function (Color) {
-    var newColor = tuple.sub(this.c1, this.c2);
+    let newColor = tuple.sub(this.c1, this.c2);
     assert(tuple.isTupleEqual(newColor, Color));
 });
 cucumber_1.Then('c * {int} = {Color}', function (int, Color) {
-    var newColor = tuple.multiplyScalar(this.c, int);
+    let newColor = tuple.multiplyScalar(this.c, int);
     assert(tuple.isTupleEqual(newColor, Color));
 });
 cucumber_1.Then('c1 * c2 = {Color}', function (Color) {
-    var newColor = tuple.hadamard_product(this.c1, this.c2);
+    let newColor = tuple.hadamard_product(this.c1, this.c2);
     assert(tuple.isTupleEqual(newColor, Color));
 });
 //CANVAS
@@ -229,8 +229,8 @@ cucumber_1.Then('c.height = {int}', function (int) {
     assert(this.c.height, int);
 });
 cucumber_1.Then('every pixel of c is {Color}', function (Color) {
-    var x = 0;
-    var y = 0;
+    let x = 0;
+    let y = 0;
     while (x < this.c.width) {
         while (y < this.c.height) {
             assert(tuple.isTupleEqual(this.c.pixels[x][y], Color));
@@ -255,11 +255,11 @@ cucumber_1.When('ppm ← {canvas_to_ppm}', function (canvas1) {
 cucumber_1.Then('lines {int}-{int} of ppm are', function (int, int2, docString) {
     var docStringSplit = docString.split("\n");
     var ppmSplit = this.ppm.split("\n");
-    var lineCount = int2 - int + 1;
-    var ppmArray = ppmSplit.slice(int - 1, int2);
+    let lineCount = int2 - int + 1;
+    let ppmArray = ppmSplit.slice(int - 1, int2);
     assert(docStringSplit.length >= lineCount);
     assert(ppmSplit.length >= lineCount);
-    var idx = 0;
+    let idx = 0;
     for (idx = 0; idx < docStringSplit.length; idx++) {
         // console.log("D"+(idx)+":"+docStringSplit[idx]);
         // console.log("P"+(idx)+":"+ppmArray[idx]);
@@ -276,7 +276,7 @@ cucumber_1.When('write_pixel: c, {int}, {int}, c3', function (int, int2) {
     canvas.write_pixel(this.c, int, int2, this.c3);
 });
 cucumber_1.When('every pixel of c is set to {Color}', function (clr) {
-    var x = 0, y = 0;
+    let x = 0, y = 0;
     for (y = 0; y < this.c.height; y++) {
         for (x = 0; x < this.c.width; x++) {
             canvas.write_pixel(this.c, x, y, clr);
@@ -291,8 +291,8 @@ cucumber_1.Given('the following {int}x{int} matrix M:', function (int, int2, dat
     this.M = matrices.copyFromRawTable(dataTable);
 });
 cucumber_1.Then('M[{int},{int}] = {int}', function (int, int2, int3) {
-    var first = this.M[int][int2];
-    var second = int3;
+    let first = this.M[int][int2];
+    let second = int3;
     assert(first == second);
 });
 cucumber_1.Then('M[{int},{int}] = {float}', function (int, int2, float) {
@@ -308,9 +308,9 @@ cucumber_1.Given('the following matrix B:', function (dataTable) {
     this.B = matrices.copyFromRawTable(dataTable);
 });
 cucumber_1.Then('A * B is the following {int}x{int} matrix:', function (int, int2, dataTable) {
-    var testMatrix = matrices.copyFromRawTable(dataTable);
-    var resultMatrix = this.A.multiply(this.B);
-    var success = testMatrix.equals(resultMatrix);
+    let testMatrix = matrices.copyFromRawTable(dataTable);
+    let resultMatrix = this.A.multiply(this.B);
+    let success = testMatrix.equals(resultMatrix);
     assert(success);
 });
 cucumber_1.Given('b ← {tuple}', function (tuple1) {
@@ -319,18 +319,19 @@ cucumber_1.Given('b ← {tuple}', function (tuple1) {
 });
 cucumber_1.Then('A * b = {tuple}', function (tuple1) {
     // Write code here that turns the phrase above into concrete actions
-    var resultTuple = this.A.multiplyByTuple(this.b);
+    let resultTuple = this.A.multiplyByTuple(this.b);
     assert(tuple.isTupleEqual(resultTuple, tuple1));
 });
 cucumber_1.Then('A * identity_matrix = A', function () {
     assert(this.A.equals(this.A.multiply(matrices.identity(this.A.length))));
 });
 cucumber_1.Then('identity_matrix * a = a', function () {
-    var resultTuple = matrices.identity(4).multiplyByTuple(this.a);
+    let resultTuple = matrices.identity(4).multiplyByTuple(this.a);
     assert(tuple.isTupleEqual(this.a, resultTuple));
 });
 cucumber_1.Then('{transposedM} is the following matrix:', function (transposedM, dataTable) {
-    eval("this." + transposedM) = matrices.copyFromRawTable(dataTable);
+    let something = eval("this." + transposedM);
+    something = matrices.copyFromRawTable(dataTable);
     //this.transposedM.copyFromRawTable(dataTable); 
 });
 cucumber_1.Given('A ← {transposedI}', function (transposedI) {

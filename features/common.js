@@ -1,6 +1,6 @@
 "use strict";
 //export module common {
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.EPSILON = 0.00001;
 function isEqualF(first, second) {
     if (Math.abs(first - second) < exports.EPSILON) {

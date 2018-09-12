@@ -8,11 +8,12 @@
         "removeComments": false,
         "noImplicitAny": false,
         "skipLibCheck": true,
-        "outDir": "typeScript",
+        //"outDir": "typeScript",
         "typeRoots": [ "./node_modules/@types" ],
     },
     "include": [
-        "./features/step_definitions/stepdefs.ts"
+        "./features/step_definitions/stepdefs.ts",
+        "./features/support/parameter_types.ts"
     ],
     "exclude": [
         "node_modules",

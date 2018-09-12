@@ -1,4 +1,3 @@
-import * as common from "../common";
 import * as tuple from"./tuple";
 
 // export module canvas {

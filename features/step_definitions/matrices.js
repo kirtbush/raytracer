@@ -1,59 +1,44 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    }
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-var tuple = require("./tuple");
-var Matrix = /** @class */ (function (_super) {
-    __extends(Matrix, _super);
-    function Matrix(f1, f2) {
-        var _this = _super.call(this) || this;
-        _this.length = f1;
-        for (var row = 0; row < f1; row++) {
-            _this[row] = [];
-            for (var col = 0; col < f2; col++) {
-                _this[row].push([]);
+Object.defineProperty(exports, "__esModule", { value: true });
+const tuple = require("./tuple");
+class Matrix extends Array {
+    constructor(f1, f2) {
+        super();
+        this.length = f1;
+        for (let row = 0; row < f1; row++) {
+            this[row] = [];
+            for (let col = 0; col < f2; col++) {
+                this[row].push([]);
             }
         }
-        return _this;
     }
-    Matrix.prototype.equals = function (other) {
-        for (var row = 0; row < other.length; row++) {
-            for (var col = 0; col < other[row].length; col++) {
+    equals(other) {
+        for (let row = 0; row < other.length; row++) {
+            for (let col = 0; col < other[row].length; col++) {
                 if (other[row][col] != this[row][col])
                     return false;
             }
         }
         return true;
-    };
-    Matrix.prototype.multiply = function (other) {
-        var M = new Matrix(this.length, this.length);
-        for (var row = 0; row < this.length; row++) {
-            for (var col = 0; col < this.length; col++) {
+    }
+    multiply(other) {
+        let M = new Matrix(this.length, this.length);
+        for (let row = 0; row < this.length; row++) {
+            for (let col = 0; col < this.length; col++) {
                 M[row][col] = 0;
-                for (var idz = 0; idz < this.length; idz++) {
+                for (let idz = 0; idz < this.length; idz++) {
                     M[row][col] += (this[row][idz] * other[idz][col]);
                 }
             }
         }
         return M;
-    };
-    Matrix.prototype.multiplyByTuple = function (tupleIn) {
-        var inputArray = [tupleIn.x, tupleIn.y, tupleIn.z, tupleIn.w];
-        var outputArray = [0, 0, 0, 0];
-        var T = new tuple.tuple(0, 0, 0, 0);
-        for (var row = 0; row < this.length; row++) {
-            for (var col = 0; col < this.length; col++) {
+    }
+    multiplyByTuple(tupleIn) {
+        let inputArray = [tupleIn.x, tupleIn.y, tupleIn.z, tupleIn.w];
+        let outputArray = [0, 0, 0, 0];
+        let T = new tuple.tuple(0, 0, 0, 0);
+        for (let row = 0; row < this.length; row++) {
+            for (let col = 0; col < this.length; col++) {
                 outputArray[row] += (this[row][col] * inputArray[col]);
             }
         }
@@ -62,35 +47,35 @@ var Matrix = /** @class */ (function (_super) {
         T.z = outputArray[2];
         T.w = outputArray[3];
         return T;
-    };
-    return Matrix;
-}(Array));
-module.exports = {
-    Matrix: Matrix,
-    identity: function (size) {
-        var M = new Matrix(size, size);
-        for (var x = 0; x < size; x++) {
-            for (var y = 0; y < size; y++) {
-                if (x == y)
-                    M[x][y] = 1;
-                else
-                    M[x][y] = 0;
-            }
-        }
-        return M;
-    },
-    transpose: function (m1) {
-    },
-    copyFromRawTable: function (rt) {
-        var len = rt.rawTable.length;
-        var M = new Matrix(rt.rawTable.length, rt.rawTable.length);
-        for (var row = 0; row < len; row++) {
-            M[row] = [];
-            for (var col = 0; col < rt.rawTable[row].length; col++) {
-                M[row][col] = parseFloat(rt.rawTable[row][col]);
-            }
-        }
-        return M;
     }
-};
+}
+exports.Matrix = Matrix;
+function identity(size) {
+    let M = new Matrix(size, size);
+    for (let x = 0; x < size; x++) {
+        for (let y = 0; y < size; y++) {
+            if (x == y)
+                M[x][y] = 1;
+            else
+                M[x][y] = 0;
+        }
+    }
+    return M;
+}
+exports.identity = identity;
+function transpose(m1) {
+}
+exports.transpose = transpose;
+function copyFromRawTable(rt) {
+    let len = rt.rawTable.length;
+    let M = new Matrix(rt.rawTable.length, rt.rawTable.length);
+    for (let row = 0; row < len; row++) {
+        M[row] = [];
+        for (let col = 0; col < rt.rawTable[row].length; col++) {
+            M[row][col] = parseFloat(rt.rawTable[row][col]);
+        }
+    }
+    return M;
+}
+exports.copyFromRawTable = copyFromRawTable;
 module.id = "matrices";
