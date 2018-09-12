@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es6",
+        "moduleResolution": "node",
+        "sourceMap": false,
+        "declaration": false,
+        "removeComments": false,
+        "noImplicitAny": false,
+        "skipLibCheck": true,
+        "outDir": "typeScript",
+        "typeRoots": [ "./node_modules/@types" ],
+    },
+    "include": [
+        "./features/step_definitions/stepdefs.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "typescript"
+    ]
+}
