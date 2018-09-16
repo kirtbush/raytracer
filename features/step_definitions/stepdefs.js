@@ -6,61 +6,48 @@ const common = require("../common");
 const tuple = require("./tuple");
 const canvas = require("./canvas");
 const matrices = require("./matrices");
+const transforms = require("./transforms");
 cucumber_1.Given('a ← tuple: {float}, {float}, {float}, {float}', function (f1, f2, f3, f4) {
-    // Write code here that turns the phrase above into concrete actions
     this.a = new tuple.tuple(f1, f2, f3, f4);
 });
 cucumber_1.Then('a.x = {float}', function (x) {
-    // Write code here that turns the phrase above into concrete actions
     assert(common.isEqualF(this.a.x, x));
 });
 cucumber_1.Then('a.y = {float}', function (y) {
-    // Write code here that turns the phrase above into concrete actions
     assert(common.isEqualF(this.a.y, y));
 });
 cucumber_1.Then('a.z = {float}', function (z) {
-    // Write code here that turns the phrase above into concrete actions
     assert(common.isEqualF(this.a.z, z));
 });
 cucumber_1.Then('a.w = {float}', function (w) {
-    // Write code here that turns the phrase above into concrete actions
     assert(common.isEqualF(this.a.w, w));
 });
 cucumber_1.Then('a is a point', function () {
-    // Write code here that turns the phrase above into concrete actions
     assert(tuple.isPoint(this.a));
 });
 cucumber_1.Then('a is not a vector', function () {
-    // Write code here that turns the phrase above into concrete actions
     assert(!tuple.isVector(this.a));
 });
 cucumber_1.Then('a is not a point', function () {
-    // Write code here that turns the phrase above into concrete actions
     assert(!tuple.isPoint(this.a));
 });
 cucumber_1.Then('a is a vector', function () {
-    // Write code here that turns the phrase above into concrete actions
     assert(tuple.isVector(this.a));
 });
 cucumber_1.Given(/p ← point: (.+),(.+),(.+)/, function (int1, int2, int3) {
-    // Write code here that turns the phrase above into concrete actions
     this.p = new tuple.point(int1, int2, int3);
 });
 cucumber_1.Then(/p = tuple: (.+), (.+), (.+), (.+)/, function (int1, int2, int3, int4) {
-    // Write code here that turns the phrase above into concrete actions
     assert(tuple.isTupleEqual(this.p, new tuple.tuple(int1, int2, int3, int4)));
 });
 cucumber_1.Given(/v ← vector: (.+),(.+),(.+)/, function (int1, int2, int3) {
-    // Write code here that turns the phrase above into concrete actions
     this.v = new tuple.vector(int1, int2, int3);
 });
 cucumber_1.Then(/v = tuple: (.+), (.+), (.+), (.+)/, function (int1, int2, int3, int4) {
-    // Write code here that turns the phrase above into concrete actions
     assert(tuple.isTupleEqual(this.v, new tuple.tuple(int1, int2, int3, int4)));
 });
 //Floating point testing
 cucumber_1.Given('two values to compare {float}, {float}', function (float, float2) {
-    // Write code here that turns the phrase above into concrete actions
     this.float = float;
     this.float2 = float2;
 });
@@ -124,7 +111,6 @@ cucumber_1.Then('-a = {tuple}', function (tuple1) {
 });
 //multiplication and division of scalars
 cucumber_1.Then('a * {float} = {tuple}', function (float1, tuple1) {
-    // Write code here that turns the phrase above into concrete actions
     assert(tuple.isTupleEqual(tuple.multiplyScalar(this.a, float1), tuple1));
 });
 cucumber_1.Then("a \/ {int} = {tuple}", function (int1, tuple1) {
@@ -141,34 +127,27 @@ cucumber_1.Then('{magnitude} = {sqrt}', function (mag, sqrt) {
 });
 //normalize vector
 cucumber_1.Then('{normalize} = {vector}', function (normalizer, vector1) {
-    // Write code here that turns the phrase above into concrete actions
     assert(tuple.isTupleEqual(tuple.normalize(this.v), vector1));
 });
 cucumber_1.Then('{normalize} = approximately {vector}', function (normalize, vector1) {
-    // Write code here that turns the phrase above into concrete actions
     this.norm = tuple.normalize(vector1);
     assert(tuple.isTupleEqual(tuple.normalize(this.v), vector1));
 });
 cucumber_1.When(/norm ← normalize\(v\)/, function () {
-    // Write code here that turns the phrase above into concrete actions
     this.norm = tuple.normalize(this.v);
 });
 cucumber_1.Then('{magnitudenorm} = {int}', function (magnitudenorm, int1) {
-    // Write code here that turns the phrase above into concrete actions
     let mag = tuple.magnitude(this.norm);
     assert(mag == int1);
 });
 //dot product
 cucumber_1.Given('a ← {vector}', function (vector1) {
-    // Write code here that turns the phrase above into concrete actions
     this.a = vector1;
 });
 cucumber_1.Given('b ← {vector}', function (vector1) {
-    // Write code here that turns the phrase above into concrete actions
     this.b = vector1;
 });
 cucumber_1.Then('a dot b = {int}', function (int1) {
-    // Write code here that turns the phrase above into concrete actions
     assert(common.isEqualF(tuple.dot(this.a, this.b), int1));
 });
 cucumber_1.Then('a cross b = {vector}', function (vector1) {
@@ -199,7 +178,6 @@ cucumber_1.Given('c3 ← {Color}', function (Color1) {
     this.c3 = Color1;
 });
 cucumber_1.Then('c1 + c2 = {Color}', function (Color1) {
-    // Write code here that turns the phrase above into concrete actions
     let newColor = tuple.add(this.c1, this.c2);
     assert(tuple.isTupleEqual(newColor, Color1));
 });
@@ -311,11 +289,9 @@ cucumber_1.Then('A * B is the following {int}x{int} matrix:', function (int, int
     assert(success);
 });
 cucumber_1.Given('b ← {tuple}', function (tuple1) {
-    // Write code here that turns the phrase above into concrete actions
     this.b = tuple1;
 });
 cucumber_1.Then('A * b = {tuple}', function (tuple1) {
-    // Write code here that turns the phrase above into concrete actions
     let resultTuple = this.A.multiplyByTuple(this.b);
     assert(tuple.isTupleEqual(resultTuple, tuple1));
 });
@@ -334,36 +310,29 @@ cucumber_1.Then('{transposedM} is the following matrix:', function (transposedM,
     //this.transposedM.copyFromRawTable(dataTable); 
 });
 cucumber_1.Given('A ← {transposedI}', function (transposedI) {
-    // Write code here that turns the phrase above into concrete actions
     this.A = matrices.transpose(matrices.identity(4));
 });
 cucumber_1.Then('A = identity_matrix', function () {
-    // Write code here that turns the phrase above into concrete actions
     this.A.equals(matrices.identity(4));
 });
 cucumber_1.Given('the following {int}x{int} matrix A:', function (int, int2, dataTable) {
     this.A = matrices.copyFromRawTable(dataTable);
 });
 cucumber_1.Then(/determinant\(A\) = (.+)/, function (int) {
-    // Write code here that turns the phrase above into concrete actions
     let determinant = this.A.determinant();
     assert(common.isEqualF(determinant, int));
 });
 cucumber_1.Then(/submatrix\(A, (.+), (.+)\) is the following (.+)x(.+) matrix:/, function (int, int2, int3, int4, dataTable) {
-    // Write code here that turns the phrase above into concrete actions
     let subm = matrices.submatrix(this.A, int, int2);
     assert(subm.equals(matrices.copyFromRawTable(dataTable)));
 });
 cucumber_1.Given(/B ← submatrix\(A, (.+), (.+)\)/, function (int, int2) {
-    // Write code here that turns the phrase above into concrete actions
     this.B = matrices.submatrix(this.A, int, int2);
 });
 cucumber_1.Then(/determinant\(B\) = (.+)/, function (int) {
-    // Write code here that turns the phrase above into concrete actions
     assert(common.isEqualF(this.B.determinant(), int));
 });
 cucumber_1.Then(/minor\(A, (.+), (.+)\) = (.+)/, function (int, int2, int3) {
-    // Write code here that turns the phrase above into concrete actions
     let minorVal = matrices.minor(this.A, int, int2);
     assert(common.isEqualF(minorVal, int3));
 });
@@ -375,7 +344,6 @@ cucumber_1.Then('A is invertible', function () {
     assert(this.A.isInvertible());
 });
 cucumber_1.Given(/B ← inverse\(A\)/, function () {
-    // Write code here that turns the phrase above into concrete actions
     this.B = matrices.invert(this.A);
 });
 cucumber_1.Then(/B\[(.+),(.+)\] = (.+)\/(.+)/, function (int, int2, int3, int4) {
@@ -405,5 +373,24 @@ cucumber_1.Then(/C \* inverse\(B\) = A/, function () {
     let bInverted = matrices.invert(this.B);
     let resultMatrix = this.C.multiply(bInverted);
     assert(resultMatrix.equals(this.A));
+});
+// Chapter 4 transformation and translation
+cucumber_1.Given(/transform ← translation\((.+), (.+), (.+)\)/, function (int, int2, int3) {
+    this.transform = transforms.translation(int, int2, int3);
+});
+cucumber_1.Then('transform * p = {point}', function (point) {
+    let resultP = this.transform.multiplyByTuple(this.p);
+    assert(tuple.isTupleEqual(resultP, point));
+});
+cucumber_1.Given(/inv ← inverse\(transform\)/, function () {
+    this.inv = matrices.invert(this.transform);
+});
+cucumber_1.Then('inv * p = {point}', function (point) {
+    let invTrans = matrices.invert(this.transform);
+    assert(this.inv.equals(invTrans));
+});
+cucumber_1.Then('transform * v = v', function () {
+    let resultV = this.transform.multiplyByTuple(this.v);
+    assert(tuple.isTupleEqual(resultV, this.v));
 });
 //# sourceMappingURL=stepdefs.js.map

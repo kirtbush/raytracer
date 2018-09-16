@@ -10,6 +10,7 @@ class Matrix extends Array {
             this[row] = [];
             for (let col = 0; col < f2; col++) {
                 this[row].push([]);
+                this[row][col] = 0;
             }
         }
     }

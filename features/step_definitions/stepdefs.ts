@@ -4,76 +4,77 @@ import * as common from "../common";
 import * as tuple from "./tuple";
 import * as canvas from "./canvas";
 import * as matrices from "./matrices";
+import * as transforms from "./transforms";
 
 Given('a ← tuple: {float}, {float}, {float}, {float}', function (f1, f2, f3, f4) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	this.a = new tuple.tuple(f1, f2, f3, f4);
 });
 
 Then('a.x = {float}', function (x) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(common.isEqualF(this.a.x, x));
 });
 
 Then('a.y = {float}', function (y) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(common.isEqualF(this.a.y, y));
 });
 
 
 Then('a.z = {float}', function (z) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(common.isEqualF(this.a.z, z));
 });
 
 Then('a.w = {float}', function (w) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(common.isEqualF(this.a.w, w));
 });
 
 Then('a is a point', function () {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(tuple.isPoint(this.a));
 });
 
 Then('a is not a vector', function () {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(!tuple.isVector(this.a));
 });
 
 Then('a is not a point', function () {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(!tuple.isPoint(this.a));
 });
 
 Then('a is a vector', function () {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(tuple.isVector(this.a));
 });
 
 Given(/p ← point: (.+),(.+),(.+)/, function (int1, int2, int3) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	this.p = new tuple.point(int1, int2, int3);
 });
 
 Then(/p = tuple: (.+), (.+), (.+), (.+)/, function (int1, int2, int3, int4) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(tuple.isTupleEqual(this.p, new tuple.tuple(int1, int2, int3, int4)));
 });
 
 Given(/v ← vector: (.+),(.+),(.+)/, function (int1, int2, int3) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	this.v = new tuple.vector(int1, int2, int3);
 });
 
 Then(/v = tuple: (.+), (.+), (.+), (.+)/, function (int1, int2, int3, int4) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(tuple.isTupleEqual(this.v, new tuple.tuple(int1, int2, int3, int4)));
 });
 
 //Floating point testing
 Given('two values to compare {float}, {float}', function (float, float2) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	this.float = float;
 	this.float2 = float2;
 });
@@ -156,7 +157,7 @@ Then('-a = {tuple}', function (tuple1) {
 
 //multiplication and division of scalars
 Then('a * {float} = {tuple}', function (float1, tuple1) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(tuple.isTupleEqual(tuple.multiplyScalar(this.a, float1), tuple1));
 });
 
@@ -177,39 +178,39 @@ Then('{magnitude} = {sqrt}', function (mag, sqrt) {
 
 //normalize vector
 Then('{normalize} = {vector}', function (normalizer, vector1) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(tuple.isTupleEqual(tuple.normalize(this.v), vector1));
 });
 
 Then('{normalize} = approximately {vector}', function (normalize, vector1) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	this.norm = tuple.normalize(vector1);
 	assert(tuple.isTupleEqual(tuple.normalize(this.v), vector1))
 });
 
 When(/norm ← normalize\(v\)/, function () {
-	// Write code here that turns the phrase above into concrete actions
+	
 	this.norm = tuple.normalize(this.v);
 });
 
 Then('{magnitudenorm} = {int}', function (magnitudenorm, int1) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	let mag = tuple.magnitude(this.norm);
 	assert(mag == int1);
 });
 
 //dot product
 Given('a ← {vector}', function (vector1) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	this.a = vector1;
 });
 Given('b ← {vector}', function (vector1) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	this.b = vector1;
 });
 
 Then('a dot b = {int}', function (int1) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(common.isEqualF(tuple.dot(this.a, this.b), int1));
 });
 
@@ -250,7 +251,7 @@ Given('c3 ← {Color}', function (Color1) {
 });
 
 Then('c1 + c2 = {Color}', function (Color1) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	let newColor = tuple.add(this.c1, this.c2);
 	assert(tuple.isTupleEqual(newColor, Color1));
 });
@@ -390,12 +391,12 @@ Then('A * B is the following {int}x{int} matrix:', function (int, int2, dataTabl
 });
 
 Given('b ← {tuple}', function (tuple1) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	this.b = tuple1;
 });
 
 Then('A * b = {tuple}', function (tuple1) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	let resultTuple = this.A.multiplyByTuple(this.b);
 	assert(tuple.isTupleEqual(resultTuple, tuple1));
 });
@@ -418,12 +419,12 @@ Then('{transposedM} is the following matrix:', function (transposedM, dataTable)
 });
 
 Given('A ← {transposedI}', function (transposedI) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	this.A = matrices.transpose(matrices.identity(4));
 });
 
 Then('A = identity_matrix', function () {
-	// Write code here that turns the phrase above into concrete actions
+	
 	this.A.equals(matrices.identity(4));
 });
 
@@ -432,29 +433,29 @@ Given('the following {int}x{int} matrix A:', function (int, int2, dataTable) {
 });
 
 Then(/determinant\(A\) = (.+)/, function (int) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	let determinant = this.A.determinant();
 	assert(common.isEqualF(determinant, int));
 });
 
 Then(/submatrix\(A, (.+), (.+)\) is the following (.+)x(.+) matrix:/, function (int, int2, int3, int4, dataTable) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	let subm = matrices.submatrix(this.A, int, int2);
 	assert(subm.equals(matrices.copyFromRawTable(dataTable)));
 });
 
 Given(/B ← submatrix\(A, (.+), (.+)\)/, function (int, int2) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	this.B = matrices.submatrix(this.A, int, int2);
 });
 
 Then(/determinant\(B\) = (.+)/, function (int) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	assert(common.isEqualF(this.B.determinant(), int));
 });
 
 Then(/minor\(A, (.+), (.+)\) = (.+)/, function (int, int2, int3) {
-	// Write code here that turns the phrase above into concrete actions
+	
 	let minorVal = matrices.minor(this.A, int, int2)
 	assert(common.isEqualF(minorVal, int3));
 });
@@ -469,7 +470,7 @@ Then('A is invertible', function () {
 });
 
 Given(/B ← inverse\(A\)/, function () {
-	// Write code here that turns the phrase above into concrete actions
+	
 	this.B = matrices.invert(this.A);
 });
 
@@ -510,3 +511,25 @@ Then(/C \* inverse\(B\) = A/, function () {
 	let resultMatrix = this.C.multiply(bInverted);
 	assert(resultMatrix.equals(this.A));
 });
+
+// Chapter 4 transformation and translation
+Given(/transform ← translation\((.+), (.+), (.+)\)/, function (int, int2,int3) {
+	this.transform = transforms.translation(int, int2, int3);
+});
+Then('transform * p = {point}', function (point) {
+	let resultP = this.transform.multiplyByTuple(this.p);
+	assert(tuple.isTupleEqual(resultP, point));
+});
+
+Given(/inv ← inverse\(transform\)/, function () {
+	this.inv = matrices.invert(this.transform);
+});
+Then('inv * p = {point}', function (point) {
+	let invTrans = matrices.invert(this.transform);
+	assert(this.inv.equals(invTrans));	
+});
+
+Then('transform * v = v', function () {
+	let resultV = this.transform.multiplyByTuple(this.v);
+	assert(tuple.isTupleEqual(resultV, this.v));
+  });
