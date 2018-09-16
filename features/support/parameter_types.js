@@ -76,3 +76,4 @@ defineParameterType({
     type: matrices.Matrix,
     transformer: s => matrices.identity(4)
 });
+//# sourceMappingURL=parameter_types.js.map

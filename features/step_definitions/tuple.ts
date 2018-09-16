@@ -13,6 +13,9 @@ export class tuple {
 		this.z = zVal;
 		this.w = wVal;
 	}
+	print() {
+		console.log(" "+this.x+"\n",this.y+"\n",this.z+"\n",this.w+"\n");
+	}
 }
 
 

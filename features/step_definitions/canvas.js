@@ -117,3 +117,4 @@ function canvas_to_ppm(canvas1) {
 }
 exports.canvas_to_ppm = canvas_to_ppm;
 //}
+//# sourceMappingURL=canvas.js.map

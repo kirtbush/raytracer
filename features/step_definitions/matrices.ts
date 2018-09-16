@@ -158,6 +158,20 @@ export function transpose(m1: Matrix) {
     return M;
 }
 
+export function copyFromArrays(rt: Array<Array<number>>) {
+    let len = rt.length;
+    let M = new Matrix(rt.length, rt.length);
+
+    for (let row = 0; row < len; row++) {
+        M[row] = [];
+        for (let col = 0; col < rt.length; col++) {
+            M[row][col] = rt[row][col];
+        }
+    }
+
+    return M;
+}
+
 export function copyFromRawTable(rt) {
     let len = rt.rawTable.length;
     let M = new Matrix(rt.rawTable.length, rt.rawTable.length);

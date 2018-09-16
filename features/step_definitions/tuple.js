@@ -9,6 +9,9 @@ class tuple {
         this.z = zVal;
         this.w = wVal;
     }
+    print() {
+        console.log(" " + this.x + "\n", this.y + "\n", this.z + "\n", this.w + "\n");
+    }
 }
 exports.tuple = tuple;
 class point {
@@ -142,3 +145,4 @@ function isPoint(tpl) {
 exports.isPoint = isPoint;
 //}
 module.id = "tuple";
+//# sourceMappingURL=tuple.js.map

@@ -1,7 +1,14 @@
-let common = require("./features/common")
-let tuple = require("./features/step_definitions/tuple")
-let canvas = require("./features/step_definitions/canvas")
-let fs = require("fs");
+import * as common from "./features/common";
+import * as tuple from "./features/step_definitions/tuple";
+import * as canvas from "./features/step_definitions/canvas";
+import * as matrices from "./features/step_definitions/matrices";
+import * as fs from "fs";
+
+
+//let common = require("./features/common")
+//let tuple = require("./features/step_definitions/tuple")
+
+//let fs = require("fs");
 //cannon projectile test
 console.log("apptest start");
 
@@ -15,8 +22,8 @@ function position(pt, vel) {
     return { position: pt, velocity: vel };
 }
 
-let prj1 = position(tuple.point(0, 3, 0), tuple.multiplyScalar(tuple.normalize(tuple.vector(1, 1.8, 0)), 11.25));
-let wrld = world(tuple.vector(0.1, -0.2, 0), tuple.vector(-0.01, 0, 0));
+let prj1 = position(new tuple.point(0, 3, 0), tuple.multiplyScalar(tuple.normalize(new tuple.vector(1, 1.8, 0)), 11.25));
+let wrld = world(new tuple.vector(0.1, -0.2, 0), new tuple.vector(-0.01, 0, 0));
 let cvs = new canvas.Canvas(900, 550);
 let bgColor = new tuple.Color(0, 0, 0);
 let projectileColor = new tuple.Color(255, 69, 0);
@@ -48,4 +55,54 @@ stream.once('open', function (fd) {
     stream.end();
 });
 
-console.log("Finished");
+//Chapter 3 matrix tests
+
+function MatrixTests(){
+    console.log("Matrix Tests:");
+    let ident4 = matrices.identity(4);
+    ident4.print();
+    let ident4Inv = matrices.invert(ident4);
+    console.log("identity matrix inverted:");
+    ident4Inv.print();
+    
+    let testArray =
+        [[9, 3, 0, 9],
+        [-5, -2, -6, -3],
+        [-4, 9, 6, 4],
+        [-7, 6, 6, 2]];
+    
+    console.log("testM1:");
+    let testM1 = matrices.copyFromArrays(testArray);
+    testM1.print();
+    let testM1Inv = matrices.invert(testM1);
+    testM1Inv.print();
+    let testM1multi = testM1.multiply(testM1Inv);
+    testM1multi.print();
+    
+    if(testM1multi.equals(matrices.identity(4)))
+        console.log("Identity Found!");
+    
+    let invOfTrans = matrices.invert(matrices.transpose(testM1));
+    let transOfinv = matrices.transpose(matrices.invert(testM1));
+    
+    console.log("invOfTrans:\n");
+    invOfTrans.print();
+    
+    console.log("transOfinv:\n");
+    transOfinv.print();
+    
+    if(invOfTrans.equals(transOfinv))
+        console.log("trans<->inv test is true!");
+    
+    let testTuple = new tuple.tuple(1,2,3,4);
+    let testIdent = matrices.identity(4);
+    testIdent[2][2] = 7;
+
+    let newtuple = testIdent.multiplyByTuple(testTuple);
+    console.log("newIdent:");
+    newtuple.print();
+}
+
+MatrixTests();
+
+console.log("\nAppTest Finished");

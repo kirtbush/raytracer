@@ -136,6 +136,18 @@ function transpose(m1) {
     return M;
 }
 exports.transpose = transpose;
+function copyFromArrays(rt) {
+    let len = rt.length;
+    let M = new Matrix(rt.length, rt.length);
+    for (let row = 0; row < len; row++) {
+        M[row] = [];
+        for (let col = 0; col < rt.length; col++) {
+            M[row][col] = rt[row][col];
+        }
+    }
+    return M;
+}
+exports.copyFromArrays = copyFromArrays;
 function copyFromRawTable(rt) {
     let len = rt.rawTable.length;
     let M = new Matrix(rt.rawTable.length, rt.rawTable.length);
@@ -173,3 +185,4 @@ function invert(matrix) {
 }
 exports.invert = invert;
 module.id = "matrices";
+//# sourceMappingURL=matrices.js.map

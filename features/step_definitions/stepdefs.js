@@ -406,3 +406,4 @@ cucumber_1.Then(/C \* inverse\(B\) = A/, function () {
     let resultMatrix = this.C.multiply(bInverted);
     assert(resultMatrix.equals(this.A));
 });
+//# sourceMappingURL=stepdefs.js.map
