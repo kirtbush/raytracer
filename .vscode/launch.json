@@ -14,10 +14,27 @@
             "name": "e2e",
             "type": "node",
             "request": "launch",
+            "protocol": "inspector",
             "program": "${workspaceRoot}/node_modules/cucumber/bin/cucumber-js",
             "outFiles": [
                 "${workspaceRoot}/features/*.feature"
-            ]
-        }
+            ],
+            // "runtimeArgs": [
+            //     "-r",
+            //     "ts-node/register"
+            // ]
+            //"runtimeArgs": ["-r", "ts-node/register", "-r", "source-map-support/register"],
+            //"internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch current file w/ ts-node",
+            "protocol": "inspector",
+            "args": ["${relativeFile}"],
+            "cwd": "${workspaceRoot}",
+            "runtimeArgs": ["-r", "ts-node/register"],
+            "internalConsoleOptions": "openOnSessionStart"
+          }
     ]
 }

@@ -8,13 +8,13 @@ defineParameterType({
     name: 'point',
     regexp: /point\((.+),(.+),(.+)\)/,
     type: tuple.point,
-    transformer: tuple.point // transformer function
+    transformer: (x, y, z) => new tuple.point(x, y, z) // transformer function
 });
 defineParameterType({
     name: 'vector',
     regexp: /vector\((.+),(.+),(.+)\)/,
     type: tuple.vector,
-    transformer: tuple.vector // transformer function
+    transformer: (x, y, z) => new tuple.vector(x, y, z) // transformer function
 });
 defineParameterType({
     name: 'tuple',

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const common = require("../common");
 const tuple = require("./tuple");
 class Matrix extends Array {
     constructor(f1, f2) {
@@ -15,7 +16,7 @@ class Matrix extends Array {
     equals(other) {
         for (let row = 0; row < other.length; row++) {
             for (let col = 0; col < other[row].length; col++) {
-                if (other[row][col] != this[row][col])
+                if (!common.isEqualF(other[row][col], this[row][col]))
                     return false;
             }
         }
@@ -48,8 +49,70 @@ class Matrix extends Array {
         T.w = outputArray[3];
         return T;
     }
+    determinant() {
+        let det = 0;
+        if (this.length > 2) {
+            for (let y = 0; y < this.length; y++) {
+                let currentDet = (cofactor(this, 0, y) * this[0][y]);
+                det += currentDet;
+            }
+        }
+        else {
+            det = (this[0][0] * this[1][1]) - (this[0][1] * this[1][0]);
+        }
+        return det;
+        //return (this[0][0] * this[1][1]) - (this[0][1] * this[1][0]);
+    }
+    isInvertible() {
+        return !common.isEqualF(this.determinant(), 0);
+    }
+    print() {
+        process.stdout.write("\n");
+        for (let row = 0; row < this.length; row++) {
+            for (let col = 0; col < this.length; col++) {
+                process.stdout.write("| " + this[row][col] + " ");
+            }
+            process.stdout.write("|\n");
+        }
+    }
 }
 exports.Matrix = Matrix;
+function minor(matrix, row, col) {
+    return submatrix(matrix, row, col).determinant();
+}
+exports.minor = minor;
+function isEven(n) {
+    return (n % 2) == 0;
+}
+function cofactor(matrix, row, col) {
+    let mnr = minor(matrix, row, col);
+    let sum = row + col;
+    let n = new Number(row + col);
+    return isEven(sum) ? mnr : -mnr;
+}
+exports.cofactor = cofactor;
+function submatrix(matrix, row, col) {
+    //let splicedMatrix = matrix.splice(row, 1);
+    let size = matrix.length;
+    let M = new Matrix(size - 1, size - 1);
+    let actualX = 0;
+    let actualY = 0;
+    for (let x = 0; x < size; x++) {
+        if (x == row) {
+            continue;
+        }
+        for (let y = 0, actualY = 0; y < size; y++) {
+            if (y == col) {
+                continue;
+            }
+            M[actualX][actualY] = matrix[x][y];
+            actualY++;
+        }
+        actualX++;
+    }
+    return M;
+}
+exports.submatrix = submatrix;
 function identity(size) {
     let M = new Matrix(size, size);
     for (let x = 0; x < size; x++) {
@@ -64,6 +127,13 @@ function identity(size) {
 }
 exports.identity = identity;
 function transpose(m1) {
+    let M = new Matrix(m1.length, m1.length);
+    for (let x = 0; x < m1.length; x++) {
+        for (let y = 0; y < m1.length; y++) {
+            M[x][y] = m1[y][x];
+        }
+    }
+    return M;
 }
 exports.transpose = transpose;
 function copyFromRawTable(rt) {
@@ -78,4 +148,28 @@ function copyFromRawTable(rt) {
     return M;
 }
 exports.copyFromRawTable = copyFromRawTable;
+function invert(matrix) {
+    if (!matrix.isInvertible) {
+        throw "invert: Matrix is not invertible! :O";
+    }
+    let len = matrix.length;
+    let cofactorMatrix = new Matrix(len, len);
+    let det = matrix.determinant();
+    //create matrix of cofactors of original matrix
+    for (let row = 0; row < len; row++) {
+        for (let col = 0; col < len; col++) {
+            cofactorMatrix[row][col] = cofactor(matrix, row, col);
+        }
+    }
+    // transpose cofactor matrix
+    let inverted = transpose(cofactorMatrix);
+    //divide each of the resulting elements by the original matrix's determinant
+    for (let row = 0; row < len; row++) {
+        for (let col = 0; col < len; col++) {
+            inverted[row][col] = inverted[row][col] / det;
+        }
+    }
+    return inverted;
+}
+exports.invert = invert;
 module.id = "matrices";

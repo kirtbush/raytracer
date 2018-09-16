@@ -12,6 +12,7 @@
         "typeRoots": [ "./node_modules/@types" ],
     },
     "include": [
+        "./apptest.ts",
         "./features/step_definitions/stepdefs.ts",
         "./features/support/parameter_types.ts"
     ],

@@ -11,5 +11,10 @@ function isEqualF(first, second) {
     }
 }
 exports.isEqualF = isEqualF;
+function modulo(n, m) {
+    var remain = n % m;
+    return Math.floor(remain >= 0 ? remain : remain + m);
+}
+exports.modulo = modulo;
 //}
 //module.id="common";
