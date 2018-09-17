@@ -354,8 +354,6 @@ cucumber_1.Then('A is not invertible', function () {
 });
 cucumber_1.Then('B is the following {int}x{int} matrix:', function (int, int2, dataTable) {
     let dt = matrices.copyFromRawTable(dataTable);
-    dt.print();
-    this.B.print();
     assert(this.B.equals(dt));
 });
 cucumber_1.Then(/inverse\(A\) is the following (.+)x(.+) matrix:/, function (int, int2, dataTable) {
@@ -392,5 +390,86 @@ cucumber_1.Then('inv * p = {point}', function (point) {
 cucumber_1.Then('transform * v = v', function () {
     let resultV = this.transform.multiplyByTuple(this.v);
     assert(tuple.isTupleEqual(resultV, this.v));
+});
+cucumber_1.Given(/transform ← scaling\((.+), (.+), (.+)\)/, function (int, int2, int3) {
+    this.transform = transforms.scaling(int, int2, int3);
+});
+cucumber_1.Then('transform * v = {vector}', function (vector) {
+    let resultTuple = this.transform.multiplyByTuple(this.v);
+    assert(tuple.isTupleEqual(resultTuple, vector));
+});
+cucumber_1.Then('inv * v = {vector}', function (vector) {
+    let resultTuple = this.inv.multiplyByTuple(this.v);
+    assert(tuple.isTupleEqual(resultTuple, vector));
+});
+cucumber_1.Given(/half_quarter ← rotation_x\(π \/ (.+)\)/, function (int) {
+    this.half_quarter = transforms.rotation_x(Math.PI / int);
+});
+cucumber_1.Given(/full_quarter ← rotation_x\(π \/ (.+)\)/, function (int) {
+    this.full_quarter = transforms.rotation_x(Math.PI / int);
+});
+// ? Then half_quarter * p = point(0, √2/2, √2/2)
+// Undefined. Implement with the following snippet:
+cucumber_1.Then(/half_quarter \* p = point\(0, √2\/2, √2\/2\)/, function () {
+    let pt = new tuple.point(0, Math.sqrt(2) / 2, Math.sqrt(2) / 2);
+    let resultP = this.half_quarter.multiplyByTuple(this.p);
+    assert(tuple.isTupleEqual(resultP, pt));
+});
+cucumber_1.Then(/half_quarter \* p = point\(√2\/2, 0, √2\/2\)/, function () {
+    let pt = new tuple.point(Math.sqrt(2) / 2, 0, Math.sqrt(2) / 2);
+    let resultP = this.half_quarter.multiplyByTuple(this.p);
+    assert(tuple.isTupleEqual(resultP, pt));
+});
+// ? And full_quarter * p = point(0, 0, 1)
+// Undefined. Implement with the following snippet:
+cucumber_1.Then('full_quarter * p = {point}', function (point) {
+    let resultP = this.full_quarter.multiplyByTuple(this.p);
+    assert(tuple.isTupleEqual(resultP, point));
+});
+cucumber_1.Given('v ← {point}', function (point) {
+    this.v = point;
+});
+// - And half_quarter ← rotation_x(π / 4) # features/step_definitions/stepdefs.js:405
+// ? And inv ← inverse(half_quarter)
+// Undefined. Implement with the following snippet:
+cucumber_1.Given(/inv ← inverse\(half_quarter\)/, function () {
+    // Write code here that turns the phrase above into concrete actions
+    this.inv = matrices.invert(this.half_quarter);
+});
+// ? Then inv * v = point(0, √2/2, -√2/2)
+// Undefined. Implement with the following snippet:
+cucumber_1.Then('inv * v = {point}', function (point) {
+    let resultV = this.inv.multiplyByTuple(this.v);
+    assert(tuple.isTupleEqual(point, resultV));
+});
+cucumber_1.Given(/half_quarter ← rotation_y\(π \/ (.+)\)/, function (int) {
+    this.half_quarter = transforms.rotation_y(Math.PI / int);
+});
+// ? And full_quarter ← rotation_y(π / 2)
+// Undefined. Implement with the following snippet:
+cucumber_1.Given(/full_quarter ← rotation_y\(π \/ (.+)\)/, function (int) {
+    this.full_quarter = transforms.rotation_y(Math.PI / int);
+});
+// ? And half_quarter ← rotation_z(π / 4)
+// Undefined. Implement with the following snippet:
+cucumber_1.Given(/half_quarter ← rotation_z\(π \/ (.+)\)/, function (int) {
+    this.half_quarter = transforms.rotation_z(Math.PI / int);
+});
+// ? And full_quarter ← rotation_z(π / 2)
+// Undefined. Implement with the following snippet:
+cucumber_1.Given(/full_quarter ← rotation_z\(π \/ (.+)\)/, function (int) {
+    this.full_quarter = transforms.rotation_z(Math.PI / int);
+});
+// ? Then half_quarter * p = point(-√2/2, √2/2, 0)
+// Undefined. Implement with the following snippet:
+cucumber_1.Then(/half_quarter \* p = point\(-√2\/2, √2\/2, 0\)/, function () {
+    let pt = new tuple.point(-Math.sqrt(2) / 2, Math.sqrt(2) / 2, 0);
+    let resultP = this.half_quarter.multiplyByTuple(this.p);
+    assert(tuple.isTupleEqual(resultP, pt));
+});
+// ? Given transform ← shearing(1, 0, 0, 0, 0, 0)
+// Undefined. Implement with the following snippet:
+cucumber_1.Given(/transform ← shearing\((.+), (.+), (.+), (.+), (.+), (.+)\)/, function (int, int2, int3, int4, int5, int6) {
+    this.transform = transforms.shearing(int, int2, int3, int4, int5, int6);
 });
 //# sourceMappingURL=stepdefs.js.map

@@ -7,74 +7,74 @@ import * as matrices from "./matrices";
 import * as transforms from "./transforms";
 
 Given('a ← tuple: {float}, {float}, {float}, {float}', function (f1, f2, f3, f4) {
-	
+
 	this.a = new tuple.tuple(f1, f2, f3, f4);
 });
 
 Then('a.x = {float}', function (x) {
-	
+
 	assert(common.isEqualF(this.a.x, x));
 });
 
 Then('a.y = {float}', function (y) {
-	
+
 	assert(common.isEqualF(this.a.y, y));
 });
 
 
 Then('a.z = {float}', function (z) {
-	
+
 	assert(common.isEqualF(this.a.z, z));
 });
 
 Then('a.w = {float}', function (w) {
-	
+
 	assert(common.isEqualF(this.a.w, w));
 });
 
 Then('a is a point', function () {
-	
+
 	assert(tuple.isPoint(this.a));
 });
 
 Then('a is not a vector', function () {
-	
+
 	assert(!tuple.isVector(this.a));
 });
 
 Then('a is not a point', function () {
-	
+
 	assert(!tuple.isPoint(this.a));
 });
 
 Then('a is a vector', function () {
-	
+
 	assert(tuple.isVector(this.a));
 });
 
 Given(/p ← point: (.+),(.+),(.+)/, function (int1, int2, int3) {
-	
+
 	this.p = new tuple.point(int1, int2, int3);
 });
 
 Then(/p = tuple: (.+), (.+), (.+), (.+)/, function (int1, int2, int3, int4) {
-	
+
 	assert(tuple.isTupleEqual(this.p, new tuple.tuple(int1, int2, int3, int4)));
 });
 
 Given(/v ← vector: (.+),(.+),(.+)/, function (int1, int2, int3) {
-	
+
 	this.v = new tuple.vector(int1, int2, int3);
 });
 
 Then(/v = tuple: (.+), (.+), (.+), (.+)/, function (int1, int2, int3, int4) {
-	
+
 	assert(tuple.isTupleEqual(this.v, new tuple.tuple(int1, int2, int3, int4)));
 });
 
 //Floating point testing
 Given('two values to compare {float}, {float}', function (float, float2) {
-	
+
 	this.float = float;
 	this.float2 = float2;
 });
@@ -157,7 +157,7 @@ Then('-a = {tuple}', function (tuple1) {
 
 //multiplication and division of scalars
 Then('a * {float} = {tuple}', function (float1, tuple1) {
-	
+
 	assert(tuple.isTupleEqual(tuple.multiplyScalar(this.a, float1), tuple1));
 });
 
@@ -178,39 +178,39 @@ Then('{magnitude} = {sqrt}', function (mag, sqrt) {
 
 //normalize vector
 Then('{normalize} = {vector}', function (normalizer, vector1) {
-	
+
 	assert(tuple.isTupleEqual(tuple.normalize(this.v), vector1));
 });
 
 Then('{normalize} = approximately {vector}', function (normalize, vector1) {
-	
+
 	this.norm = tuple.normalize(vector1);
 	assert(tuple.isTupleEqual(tuple.normalize(this.v), vector1))
 });
 
 When(/norm ← normalize\(v\)/, function () {
-	
+
 	this.norm = tuple.normalize(this.v);
 });
 
 Then('{magnitudenorm} = {int}', function (magnitudenorm, int1) {
-	
+
 	let mag = tuple.magnitude(this.norm);
 	assert(mag == int1);
 });
 
 //dot product
 Given('a ← {vector}', function (vector1) {
-	
+
 	this.a = vector1;
 });
 Given('b ← {vector}', function (vector1) {
-	
+
 	this.b = vector1;
 });
 
 Then('a dot b = {int}', function (int1) {
-	
+
 	assert(common.isEqualF(tuple.dot(this.a, this.b), int1));
 });
 
@@ -251,7 +251,7 @@ Given('c3 ← {Color}', function (Color1) {
 });
 
 Then('c1 + c2 = {Color}', function (Color1) {
-	
+
 	let newColor = tuple.add(this.c1, this.c2);
 	assert(tuple.isTupleEqual(newColor, Color1));
 });
@@ -391,12 +391,12 @@ Then('A * B is the following {int}x{int} matrix:', function (int, int2, dataTabl
 });
 
 Given('b ← {tuple}', function (tuple1) {
-	
+
 	this.b = tuple1;
 });
 
 Then('A * b = {tuple}', function (tuple1) {
-	
+
 	let resultTuple = this.A.multiplyByTuple(this.b);
 	assert(tuple.isTupleEqual(resultTuple, tuple1));
 });
@@ -419,12 +419,12 @@ Then('{transposedM} is the following matrix:', function (transposedM, dataTable)
 });
 
 Given('A ← {transposedI}', function (transposedI) {
-	
+
 	this.A = matrices.transpose(matrices.identity(4));
 });
 
 Then('A = identity_matrix', function () {
-	
+
 	this.A.equals(matrices.identity(4));
 });
 
@@ -433,29 +433,29 @@ Given('the following {int}x{int} matrix A:', function (int, int2, dataTable) {
 });
 
 Then(/determinant\(A\) = (.+)/, function (int) {
-	
+
 	let determinant = this.A.determinant();
 	assert(common.isEqualF(determinant, int));
 });
 
 Then(/submatrix\(A, (.+), (.+)\) is the following (.+)x(.+) matrix:/, function (int, int2, int3, int4, dataTable) {
-	
+
 	let subm = matrices.submatrix(this.A, int, int2);
 	assert(subm.equals(matrices.copyFromRawTable(dataTable)));
 });
 
 Given(/B ← submatrix\(A, (.+), (.+)\)/, function (int, int2) {
-	
+
 	this.B = matrices.submatrix(this.A, int, int2);
 });
 
 Then(/determinant\(B\) = (.+)/, function (int) {
-	
+
 	assert(common.isEqualF(this.B.determinant(), int));
 });
 
 Then(/minor\(A, (.+), (.+)\) = (.+)/, function (int, int2, int3) {
-	
+
 	let minorVal = matrices.minor(this.A, int, int2)
 	assert(common.isEqualF(minorVal, int3));
 });
@@ -470,7 +470,7 @@ Then('A is invertible', function () {
 });
 
 Given(/B ← inverse\(A\)/, function () {
-	
+
 	this.B = matrices.invert(this.A);
 });
 
@@ -484,9 +484,6 @@ Then('A is not invertible', function () {
 
 Then('B is the following {int}x{int} matrix:', function (int, int2, dataTable) {
 	let dt = matrices.copyFromRawTable(dataTable);
-
-	dt.print();
-	this.B.print();
 
 	assert(this.B.equals(dt));
 });
@@ -513,7 +510,7 @@ Then(/C \* inverse\(B\) = A/, function () {
 });
 
 // Chapter 4 transformation and translation
-Given(/transform ← translation\((.+), (.+), (.+)\)/, function (int, int2,int3) {
+Given(/transform ← translation\((.+), (.+), (.+)\)/, function (int, int2, int3) {
 	this.transform = transforms.translation(int, int2, int3);
 });
 Then('transform * p = {point}', function (point) {
@@ -526,10 +523,118 @@ Given(/inv ← inverse\(transform\)/, function () {
 });
 Then('inv * p = {point}', function (point) {
 	let invTrans = matrices.invert(this.transform);
-	assert(this.inv.equals(invTrans));	
+	assert(this.inv.equals(invTrans));
 });
 
 Then('transform * v = v', function () {
 	let resultV = this.transform.multiplyByTuple(this.v);
 	assert(tuple.isTupleEqual(resultV, this.v));
+});
+
+Given(/transform ← scaling\((.+), (.+), (.+)\)/, function (int, int2, int3) {
+	this.transform = transforms.scaling(int, int2, int3);
+});
+
+Then('transform * v = {vector}', function (vector) {
+	let resultTuple = this.transform.multiplyByTuple(this.v);
+	assert(tuple.isTupleEqual(resultTuple, vector));
+});
+
+Then('inv * v = {vector}', function (vector) {
+	let resultTuple = this.inv.multiplyByTuple(this.v);
+	assert(tuple.isTupleEqual(resultTuple, vector));
+});
+
+Given(/half_quarter ← rotation_x\(π \/ (.+)\)/, function (int) {
+	this.half_quarter = transforms.rotation_x(Math.PI / int);
+});
+
+Given(/full_quarter ← rotation_x\(π \/ (.+)\)/, function (int) {
+	this.full_quarter = transforms.rotation_x(Math.PI / int);
+});
+
+// ? Then half_quarter * p = point(0, √2/2, √2/2)
+// Undefined. Implement with the following snippet:
+
+Then(/half_quarter \* p = point\(0, √2\/2, √2\/2\)/, function () {
+	let pt = new tuple.point(0, Math.sqrt(2) / 2, Math.sqrt(2) / 2);
+	let resultP = this.half_quarter.multiplyByTuple(this.p);
+	assert(tuple.isTupleEqual(resultP, pt));
+});
+
+Then(/half_quarter \* p = point\(√2\/2, 0, √2\/2\)/, function () {
+	let pt = new tuple.point(Math.sqrt(2) / 2, 0, Math.sqrt(2) / 2);
+	let resultP = this.half_quarter.multiplyByTuple(this.p);
+	assert(tuple.isTupleEqual(resultP, pt));
+});
+
+// ? And full_quarter * p = point(0, 0, 1)
+// Undefined. Implement with the following snippet:
+
+Then('full_quarter * p = {point}', function (point) {
+	let resultP = this.full_quarter.multiplyByTuple(this.p);
+	assert(tuple.isTupleEqual(resultP, point));
+});
+
+Given('v ← {point}', function (point) {
+	this.v = point;
+});
+
+// - And half_quarter ← rotation_x(π / 4) # features/step_definitions/stepdefs.js:405
+// ? And inv ← inverse(half_quarter)
+// Undefined. Implement with the following snippet:
+
+Given(/inv ← inverse\(half_quarter\)/, function () {
+	// Write code here that turns the phrase above into concrete actions
+	this.inv = matrices.invert(this.half_quarter);
+});
+
+// ? Then inv * v = point(0, √2/2, -√2/2)
+// Undefined. Implement with the following snippet:
+
+Then('inv * v = {point}', function (point) {
+	let resultV = this.inv.multiplyByTuple(this.v);
+	assert(tuple.isTupleEqual(point, resultV));
+});
+
+
+Given(/half_quarter ← rotation_y\(π \/ (.+)\)/, function (int) {
+	this.half_quarter = transforms.rotation_y(Math.PI / int);
+});
+
+// ? And full_quarter ← rotation_y(π / 2)
+// Undefined. Implement with the following snippet:
+
+Given(/full_quarter ← rotation_y\(π \/ (.+)\)/, function (int) {
+	this.full_quarter = transforms.rotation_y(Math.PI / int);
+});
+
+// ? And half_quarter ← rotation_z(π / 4)
+// Undefined. Implement with the following snippet:
+
+  Given(/half_quarter ← rotation_z\(π \/ (.+)\)/, function (int) {
+	this.half_quarter = transforms.rotation_z(Math.PI / int);
+  });
+
+// ? And full_quarter ← rotation_z(π / 2)
+// Undefined. Implement with the following snippet:
+
+  Given(/full_quarter ← rotation_z\(π \/ (.+)\)/, function (int) {
+	this.full_quarter = transforms.rotation_z(Math.PI / int);
+  });
+
+// ? Then half_quarter * p = point(-√2/2, √2/2, 0)
+// Undefined. Implement with the following snippet:
+
+Then(/half_quarter \* p = point\(-√2\/2, √2\/2, 0\)/, function () {
+	let pt = new tuple.point(-Math.sqrt(2) / 2, Math.sqrt(2) / 2, 0);
+	let resultP = this.half_quarter.multiplyByTuple(this.p);
+	assert(tuple.isTupleEqual(resultP, pt));
+});
+
+// ? Given transform ← shearing(1, 0, 0, 0, 0, 0)
+// Undefined. Implement with the following snippet:
+
+  Given(/transform ← shearing\((.+), (.+), (.+), (.+), (.+), (.+)\)/, function (int, int2, int3, int4, int5, int6) {
+	this.transform = transforms.shearing(int, int2, int3, int4, int5, int6);
   });
