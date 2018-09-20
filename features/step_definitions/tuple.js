@@ -14,14 +14,16 @@ class tuple {
     }
 }
 exports.tuple = tuple;
-class point {
+class point extends tuple {
     constructor(xVal, yVal, zVal) {
+        super(xVal, yVal, zVal, POINT_TYPE);
         return new tuple(xVal, yVal, zVal, POINT_TYPE);
     }
 }
 exports.point = point;
-class vector {
+class vector extends tuple {
     constructor(xVal, yVal, zVal) {
+        super(xVal, yVal, zVal, VECTOR_TYPE);
         return new tuple(xVal, yVal, zVal, VECTOR_TYPE);
     }
 }

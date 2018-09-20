@@ -3,6 +3,7 @@ import * as tuple from "./features/step_definitions/tuple";
 import * as canvas from "./features/step_definitions/canvas";
 import * as matrices from "./features/step_definitions/matrices";
 import * as fs from "fs";
+import * as transforms from "./features/step_definitions/transforms";
 
 //cannon projectile test
 console.log("apptest start");
@@ -26,11 +27,11 @@ function tick(w, p) {
 
 const cvs = new canvas.Canvas(900, 550);
 const projectileColor = new tuple.Color(255, 69, 0);
+const bgColor = new tuple.Color(0, 0, 0);
 
 function CanvasTest() {
     let prj1 = position(new tuple.point(0, 3, 0), tuple.multiplyScalar(tuple.normalize(new tuple.vector(1, 1.8, 0)), 11.25));
     let wrld = world(new tuple.vector(0.1, -0.2, 0), new tuple.vector(-0.01, 0, 0));
-    let bgColor = new tuple.Color(0, 0, 0);
 
     let idx = 0, idy = 0;
     for (idx = 0; idx < cvs.width; idx++) {
@@ -99,7 +100,47 @@ function MatrixTests() {
     newtuple.print();
 }
 
+function ClockTransformTest(){
+    let cvs = new canvas.Canvas(400,400);
+    let origin = new tuple.point(200, 200, 0);
+    let rot = Math.PI / 6;
+    let trans = transforms.translation(1, 0, 0);
+    let scale = transforms.scaling(0.6, 0, 0);
+
+    //write the background
+    for (let idx = 0; idx < cvs.width; idx++) {
+        for (let idy = 0; idy < cvs.height; idy++) {
+            cvs.write_pixel(idx, idy, bgColor);
+        }
+    }
+
+    // create the first point
+    // translate it one unit +y axis
+    
+    let firstPtPos = trans.multiplyByTuple(origin);
+    
+    // scale it along the y axis
+    firstPtPos = scale.multiplyByTuple(firstPtPos);
+    
+    for(let n = 0; n < 12; n++) {
+        let newPos = tuple.add(transforms.rotation_z(rot*n).multiplyByTuple(firstPtPos), origin);
+
+        //write it
+        cvs.write_pixel(newPos.x, newPos.y, projectileColor);
+        console.log("newPos.x:"+newPos.x+" newPos.y:"+newPos.y);
+    }
+
+    let ppmString = canvas.canvas_to_ppm(cvs);
+    var stream = fs.createWriteStream("clock.ppm");
+    stream.once('open', function (fd) {
+        stream.write(ppmString);
+        stream.end();
+    });
+}
+
 CanvasTest();
 MatrixTests();
+ClockTransformTest();
+
 
 console.log("\nAppTest Finished");
