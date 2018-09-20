@@ -81,16 +81,16 @@ export class Color {
 		return newTuple;
 	}
 
-	export function negate(tuple1) {
+	export function negate(tuple1: tuple) {
 		return this.sub(ZeroVector, tuple1);
 	}
 
-	export function multiplyScalar(tuple1, float1) {
+	export function multiplyScalar(tuple1: tuple, float1: number) {
 		let newTuple = new tuple(tuple1.x * float1, tuple1.y * float1, tuple1.z * float1, tuple1.w * float1);
 		return newTuple;
 	}
 
-	export function divideScalar(tuple1, float1) {
+	export function divideScalar(tuple1: tuple, float1: number) {
 		let newTuple = new tuple(tuple1.x / float1, tuple1.y / float1, tuple1.z / float1, tuple1.w / float1);
 		return newTuple;
 	}

@@ -5,6 +5,8 @@ import * as tuple from "./tuple";
 import * as canvas from "./canvas";
 import * as matrices from "./matrices";
 import * as transforms from "./transforms";
+import { Ray } from "./rays";
+import { Sphere } from "./spheres";
 
 Given('a ← tuple: {float}, {float}, {float}, {float}', function (f1, f2, f3, f4) {
 
@@ -592,9 +594,10 @@ Given(/inv ← inverse\(half_quarter\)/, function () {
 // ? Then inv * v = point(0, √2/2, -√2/2)
 // Undefined. Implement with the following snippet:
 
-Then('inv * v = {point}', function (point) {
+Then(/inv \* v = point\((.+), (.+), (.+)\)/, function (int, int2, int3) {
+	let pt = new tuple.point(0, Math.sqrt(2) / 2, -Math.sqrt(2) / 2);
 	let resultV = this.inv.multiplyByTuple(this.v);
-	assert(tuple.isTupleEqual(point, resultV));
+	assert(tuple.isTupleEqual(pt, resultV));
 });
 
 
@@ -612,16 +615,16 @@ Given(/full_quarter ← rotation_y\(π \/ (.+)\)/, function (int) {
 // ? And half_quarter ← rotation_z(π / 4)
 // Undefined. Implement with the following snippet:
 
-  Given(/half_quarter ← rotation_z\(π \/ (.+)\)/, function (int) {
+Given(/half_quarter ← rotation_z\(π \/ (.+)\)/, function (int) {
 	this.half_quarter = transforms.rotation_z(Math.PI / int);
-  });
+});
 
 // ? And full_quarter ← rotation_z(π / 2)
 // Undefined. Implement with the following snippet:
 
-  Given(/full_quarter ← rotation_z\(π \/ (.+)\)/, function (int) {
+Given(/full_quarter ← rotation_z\(π \/ (.+)\)/, function (int) {
 	this.full_quarter = transforms.rotation_z(Math.PI / int);
-  });
+});
 
 // ? Then half_quarter * p = point(-√2/2, √2/2, 0)
 // Undefined. Implement with the following snippet:
@@ -635,6 +638,96 @@ Then(/half_quarter \* p = point\(-√2\/2, √2\/2, 0\)/, function () {
 // ? Given transform ← shearing(1, 0, 0, 0, 0, 0)
 // Undefined. Implement with the following snippet:
 
-  Given(/transform ← shearing\((.+), (.+), (.+), (.+), (.+), (.+)\)/, function (int, int2, int3, int4, int5, int6) {
+Given(/transform ← shearing\((.+), (.+), (.+), (.+), (.+), (.+)\)/, function (int, int2, int3, int4, int5, int6) {
 	this.transform = transforms.shearing(int, int2, int3, int4, int5, int6);
+});
+
+//Chapter 5 rays and spheres
+//   ? Given origin ← point(1, 2, 3)
+//   Undefined. Implement with the following snippet:
+
+Given('origin ← {point}', function (point) {
+	this.origin = point;
+});
+
+// ? And direction ← vector(4, 5, 6)
+//   Undefined. Implement with the following snippet:
+
+Given('direction ← {vector}', function (vector) {
+	this.direction = vector;
+});
+
+// ? When r ← ray(origin, direction)
+//   Undefined. Implement with the following snippet:
+
+When(/r ← ray\(origin, direction\)/, function () {
+	this.r = new Ray(this.origin, this.direction);
+});
+
+// ? Then r.origin = origin
+//   Undefined. Implement with the following snippet:
+
+Then('r.origin = origin', function () {
+	assert(tuple.isTupleEqual(this.r.origin, this.origin))
+});
+
+// ? And r.direction = direction
+//   Undefined. Implement with the following snippet:
+
+Then('r.direction = direction', function () {
+	assert(tuple.isTupleEqual(this.r.direction, this.direction))
+});
+
+// ? Given r ← ray(point(2, 3, 4), vector(1, 0, 0))
+// Undefined. Implement with the following snippet:
+
+Given('r ← {ray}', function (ray) {
+	this.r = ray;
+});
+
+// ? Then position(r, 0) = point(2, 3, 4)
+// Undefined. Implement with the following snippet:
+
+Then('{position} = {point}', function (pos, point) {
+	let newPos = this.r.position(pos);
+	assert(newPos, point);
+});
+
+//Spheres
+Given(/s ← sphere\(\)/, function () {
+	// Write code here that turns the phrase above into concrete actions
+	this.s = new Sphere(new tuple.point(0,0,0), 0);
+});
+
+// ? When xs ← intersect(s, r)
+// Undefined. Implement with the following snippet:
+
+  When('xs ← intersect\(s, r\)', function () {
+	// Write code here that turns the phrase above into concrete actions
+	this.xs = this.xs || [];
+	this.xs = Sphere.intersects(this.s, this.r);
+  });
+
+// ? Then xs.count = 2
+// Undefined. Implement with the following snippet:
+
+  Then('xs.count = {int}', function (int) {
+	// Write code here that turns the phrase above into concrete actions
+	return 'pending';
+  });
+
+// ? And xs[0] = 4
+// Undefined. Implement with the following snippet:
+
+  Then('xs[{int}] = {int}', function (int, int2) {
+	// Write code here that turns the phrase above into concrete actions
+	return 'pending';
+  });
+
+// ? And xs[1] = 6
+// Undefined. Implement with the following snippet:
+
+  Then('xs[{int}] = {int}', function (int, int2) {
+	// Write code here that turns the phrase above into concrete actions
+	return 'pending';
   });

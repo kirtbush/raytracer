@@ -4,11 +4,25 @@ const { defineParameterType } = require('cucumber');
 const tuple = require("../step_definitions/tuple");
 const canvas = require("../step_definitions/canvas");
 const matrices = require("../step_definitions/matrices");
+const rays_1 = require("../step_definitions/rays");
 defineParameterType({
     name: 'point',
-    regexp: /point\((.+),(.+),(.+)\)/,
+    regexp: /point\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/,
     type: tuple.point,
     transformer: (x, y, z) => new tuple.point(x, y, z) // transformer function
+});
+//look at this bullsh!t
+defineParameterType({
+    name: 'ray',
+    regexp: /ray\(point\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\), vector\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/,
+    type: rays_1.Ray,
+    transformer: (pt1, pt2, pt3, vct1, vct2, vct3) => rays_1.createRay(new tuple.point(pt1, pt2, pt3), new tuple.vector(vct1, vct2, vct3)) // transformer function
+});
+defineParameterType({
+    name: 'position',
+    regexp: /position\(r, ([-]?\d+\.?\d*)\)/,
+    //type: number,             // type
+    transformer: (num) => (num) // transformer function
 });
 defineParameterType({
     name: 'vector',
@@ -30,7 +44,7 @@ defineParameterType({
 });
 defineParameterType({
     name: 'sqrt',
-    regexp: /√(.+)/,
+    regexp: /√([-]?\d+\.?\d*)/,
     transformer: s => Math.sqrt(s) // transformer function
 });
 //The below functions capture words with the functions magnitude and normalize

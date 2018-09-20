@@ -3,13 +3,30 @@ const { defineParameterType } = require('cucumber')
 import * as tuple from "../step_definitions/tuple";
 import * as canvas from "../step_definitions/canvas";
 import * as matrices from "../step_definitions/matrices";
+import {Ray, createRay} from "../step_definitions/rays";
 
 defineParameterType({
     name: 'point',           // name
-    regexp: /point\((.+),(.+),(.+)\)/, // regexp
+    regexp: /point\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/, // regexp
     type: tuple.point,             // type
     transformer: (x,y,z) => new tuple.point(x, y, z)  // transformer function
 });
+
+//look at this bullsh!t
+defineParameterType({
+    name: 'ray',           // name
+    regexp: /ray\(point\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\), vector\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, // regexp
+    type: Ray,             // type
+    transformer: (pt1,pt2,pt3,vct1, vct2, vct3) => createRay(new tuple.point(pt1,pt2,pt3), new tuple.vector(vct1, vct2, vct3))  // transformer function
+});
+
+defineParameterType({
+    name: 'position',           // name
+    regexp: /position\(r, ([-]?\d+\.?\d*)\)/, // regexp
+    //type: number,             // type
+    transformer: (num) => (num)  // transformer function
+});
+
 
 defineParameterType({
     name: 'vector',           // name
@@ -34,7 +51,7 @@ defineParameterType({
 
 defineParameterType({
     name: 'sqrt',           // name
-    regexp: /√(.+)/, // regexp
+    regexp: /√([-]?\d+\.?\d*)/, // regexp
     transformer: s => Math.sqrt(s)  // transformer function
 });
 

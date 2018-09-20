@@ -7,6 +7,8 @@ const tuple = require("./tuple");
 const canvas = require("./canvas");
 const matrices = require("./matrices");
 const transforms = require("./transforms");
+const rays_1 = require("./rays");
+const spheres_1 = require("./spheres");
 cucumber_1.Given('a ← tuple: {float}, {float}, {float}, {float}', function (f1, f2, f3, f4) {
     this.a = new tuple.tuple(f1, f2, f3, f4);
 });
@@ -438,9 +440,10 @@ cucumber_1.Given(/inv ← inverse\(half_quarter\)/, function () {
 });
 // ? Then inv * v = point(0, √2/2, -√2/2)
 // Undefined. Implement with the following snippet:
-cucumber_1.Then('inv * v = {point}', function (point) {
+cucumber_1.Then(/inv \* v = point\((.+), (.+), (.+)\)/, function (int, int2, int3) {
+    let pt = new tuple.point(0, Math.sqrt(2) / 2, -Math.sqrt(2) / 2);
     let resultV = this.inv.multiplyByTuple(this.v);
-    assert(tuple.isTupleEqual(point, resultV));
+    assert(tuple.isTupleEqual(pt, resultV));
 });
 cucumber_1.Given(/half_quarter ← rotation_y\(π \/ (.+)\)/, function (int) {
     this.half_quarter = transforms.rotation_y(Math.PI / int);
@@ -471,5 +474,72 @@ cucumber_1.Then(/half_quarter \* p = point\(-√2\/2, √2\/2, 0\)/, function ()
 // Undefined. Implement with the following snippet:
 cucumber_1.Given(/transform ← shearing\((.+), (.+), (.+), (.+), (.+), (.+)\)/, function (int, int2, int3, int4, int5, int6) {
     this.transform = transforms.shearing(int, int2, int3, int4, int5, int6);
+});
+//Chapter 5 rays and spheres
+//   ? Given origin ← point(1, 2, 3)
+//   Undefined. Implement with the following snippet:
+cucumber_1.Given('origin ← {point}', function (point) {
+    this.origin = point;
+});
+// ? And direction ← vector(4, 5, 6)
+//   Undefined. Implement with the following snippet:
+cucumber_1.Given('direction ← {vector}', function (vector) {
+    this.direction = vector;
+});
+// ? When r ← ray(origin, direction)
+//   Undefined. Implement with the following snippet:
+cucumber_1.When(/r ← ray\(origin, direction\)/, function () {
+    this.r = new rays_1.Ray(this.origin, this.direction);
+});
+// ? Then r.origin = origin
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('r.origin = origin', function () {
+    assert(tuple.isTupleEqual(this.r.origin, this.origin));
+});
+// ? And r.direction = direction
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('r.direction = direction', function () {
+    assert(tuple.isTupleEqual(this.r.direction, this.direction));
+});
+// ? Given r ← ray(point(2, 3, 4), vector(1, 0, 0))
+// Undefined. Implement with the following snippet:
+cucumber_1.Given('r ← {ray}', function (ray) {
+    this.r = ray;
+});
+// ? Then position(r, 0) = point(2, 3, 4)
+// Undefined. Implement with the following snippet:
+cucumber_1.Then('{position} = {point}', function (pos, point) {
+    let newPos = this.r.position(pos);
+    assert(newPos, point);
+});
+//Spheres
+cucumber_1.Given(/s ← sphere\(\)/, function () {
+    // Write code here that turns the phrase above into concrete actions
+    this.s = new spheres_1.Sphere(new tuple.point(0, 0, 0), 0);
+});
+// ? When xs ← intersect(s, r)
+// Undefined. Implement with the following snippet:
+cucumber_1.When('xs ← intersect\(s, r\)', function () {
+    // Write code here that turns the phrase above into concrete actions
+    this.xs = this.xs || [];
+    this.xs = spheres_1.Sphere.intersects(this.s, this.r);
+});
+// ? Then xs.count = 2
+// Undefined. Implement with the following snippet:
+cucumber_1.Then('xs.count = {int}', function (int) {
+    // Write code here that turns the phrase above into concrete actions
+    return 'pending';
+});
+// ? And xs[0] = 4
+// Undefined. Implement with the following snippet:
+cucumber_1.Then('xs[{int}] = {int}', function (int, int2) {
+    // Write code here that turns the phrase above into concrete actions
+    return 'pending';
+});
+// ? And xs[1] = 6
+// Undefined. Implement with the following snippet:
+cucumber_1.Then('xs[{int}] = {int}', function (int, int2) {
+    // Write code here that turns the phrase above into concrete actions
+    return 'pending';
 });
 //# sourceMappingURL=stepdefs.js.map
