@@ -2,27 +2,28 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require("../../node_modules/assert-plus");
 const cucumber_1 = require("cucumber");
-const common = require("../common");
+const common_1 = require("../common");
 const tuple = require("./tuple");
 const canvas = require("./canvas");
 const matrices = require("./matrices");
 const transforms = require("./transforms");
 const rays_1 = require("./rays");
 const spheres_1 = require("./spheres");
+const intersections_1 = require("./intersections");
 cucumber_1.Given('a ← tuple: {float}, {float}, {float}, {float}', function (f1, f2, f3, f4) {
     this.a = new tuple.tuple(f1, f2, f3, f4);
 });
 cucumber_1.Then('a.x = {float}', function (x) {
-    assert(common.isEqualF(this.a.x, x));
+    assert(common_1.isEqualF(this.a.x, x));
 });
 cucumber_1.Then('a.y = {float}', function (y) {
-    assert(common.isEqualF(this.a.y, y));
+    assert(common_1.isEqualF(this.a.y, y));
 });
 cucumber_1.Then('a.z = {float}', function (z) {
-    assert(common.isEqualF(this.a.z, z));
+    assert(common_1.isEqualF(this.a.z, z));
 });
 cucumber_1.Then('a.w = {float}', function (w) {
-    assert(common.isEqualF(this.a.w, w));
+    assert(common_1.isEqualF(this.a.w, w));
 });
 cucumber_1.Then('a is a point', function () {
     assert(tuple.isPoint(this.a));
@@ -54,10 +55,10 @@ cucumber_1.Given('two values to compare {float}, {float}', function (float, floa
     this.float2 = float2;
 });
 cucumber_1.Then('first = second', function () {
-    assert(common.isEqualF(this.float, this.float2));
+    assert(common_1.isEqualF(this.float, this.float2));
 });
 cucumber_1.Then('first != second', function () {
-    assert(!common.isEqualF(this.float, this.float2));
+    assert(!common_1.isEqualF(this.float, this.float2));
 });
 cucumber_1.Given(/first ← tuple: (.+), (.+), (.+), (.+)/, function (int1, int2, int3, int4) {
     this.a1 = new tuple.tuple(int1, int2, int3, int4);
@@ -122,10 +123,10 @@ cucumber_1.Then("a \/ {int} = {tuple}", function (int1, tuple1) {
 });
 //magnitude of vector
 cucumber_1.Then("{magnitude} = {int}", function (mag, int1) {
-    assert(common.isEqualF(tuple.magnitude(this.v), int1));
+    assert(common_1.isEqualF(tuple.magnitude(this.v), int1));
 });
 cucumber_1.Then('{magnitude} = {sqrt}', function (mag, sqrt) {
-    assert(common.isEqualF(tuple.magnitude(this.v), sqrt));
+    assert(common_1.isEqualF(tuple.magnitude(this.v), sqrt));
 });
 //normalize vector
 cucumber_1.Then('{normalize} = {vector}', function (normalizer, vector1) {
@@ -150,7 +151,7 @@ cucumber_1.Given('b ← {vector}', function (vector1) {
     this.b = vector1;
 });
 cucumber_1.Then('a dot b = {int}', function (int1) {
-    assert(common.isEqualF(tuple.dot(this.a, this.b), int1));
+    assert(common_1.isEqualF(tuple.dot(this.a, this.b), int1));
 });
 cucumber_1.Then('a cross b = {vector}', function (vector1) {
     assert(tuple.isTupleEqual(tuple.cross(this.a, this.b), vector1));
@@ -162,13 +163,13 @@ cucumber_1.Given('c ← {Color}', function (color1) {
     this.c = color1;
 });
 cucumber_1.Then('c.red = {float}', function (float) {
-    assert(common.isEqualF(this.c.red, float));
+    assert(common_1.isEqualF(this.c.red, float));
 });
 cucumber_1.Then('c.green = {float}', function (float) {
-    assert(common.isEqualF(this.c.green, float));
+    assert(common_1.isEqualF(this.c.green, float));
 });
 cucumber_1.Then('c.blue = {float}', function (float) {
-    assert(common.isEqualF(this.c.blue, float));
+    assert(common_1.isEqualF(this.c.blue, float));
 });
 cucumber_1.Given('c1 ← {Color}', function (Color1) {
     this.c1 = Color1;
@@ -273,7 +274,7 @@ cucumber_1.Then('M[{int},{int}] = {int}', function (int, int2, int3) {
     assert(first == second);
 });
 cucumber_1.Then('M[{int},{int}] = {float}', function (int, int2, float) {
-    assert(common.isEqualF(this.M[int][int2], float));
+    assert(common_1.isEqualF(this.M[int][int2], float));
 });
 cucumber_1.Then('the size of M is {int}', function (int) {
     assert(this.M.length == int);
@@ -322,7 +323,7 @@ cucumber_1.Given('the following {int}x{int} matrix A:', function (int, int2, dat
 });
 cucumber_1.Then(/determinant\(A\) = (.+)/, function (int) {
     let determinant = this.A.determinant();
-    assert(common.isEqualF(determinant, int));
+    assert(common_1.isEqualF(determinant, int));
 });
 cucumber_1.Then(/submatrix\(A, (.+), (.+)\) is the following (.+)x(.+) matrix:/, function (int, int2, int3, int4, dataTable) {
     let subm = matrices.submatrix(this.A, int, int2);
@@ -332,15 +333,15 @@ cucumber_1.Given(/B ← submatrix\(A, (.+), (.+)\)/, function (int, int2) {
     this.B = matrices.submatrix(this.A, int, int2);
 });
 cucumber_1.Then(/determinant\(B\) = (.+)/, function (int) {
-    assert(common.isEqualF(this.B.determinant(), int));
+    assert(common_1.isEqualF(this.B.determinant(), int));
 });
 cucumber_1.Then(/minor\(A, (.+), (.+)\) = (.+)/, function (int, int2, int3) {
     let minorVal = matrices.minor(this.A, int, int2);
-    assert(common.isEqualF(minorVal, int3));
+    assert(common_1.isEqualF(minorVal, int3));
 });
 cucumber_1.Then(/cofactor\(A, (.+), (.+)\) = (.+)/, function (int, int2, int3) {
     let cofo = matrices.cofactor(this.A, parseInt(int), parseInt(int2));
-    assert(common.isEqualF(cofo, int3));
+    assert(common_1.isEqualF(cofo, int3));
 });
 cucumber_1.Then('A is invertible', function () {
     assert(this.A.isInvertible());
@@ -349,7 +350,7 @@ cucumber_1.Given(/B ← inverse\(A\)/, function () {
     this.B = matrices.invert(this.A);
 });
 cucumber_1.Then(/B\[(.+),(.+)\] = (.+)\/(.+)/, function (int, int2, int3, int4) {
-    assert(common.isEqualF(this.B[int][int2], int3 / int4));
+    assert(common_1.isEqualF(this.B[int][int2], int3 / int4));
 });
 cucumber_1.Then('A is not invertible', function () {
     assert(!this.A.isInvertible());
@@ -519,27 +520,49 @@ cucumber_1.Given(/s ← sphere\(\)/, function () {
 });
 // ? When xs ← intersect(s, r)
 // Undefined. Implement with the following snippet:
-cucumber_1.When('xs ← intersect\(s, r\)', function () {
+cucumber_1.When(/xs ← intersect\(s, r\)/, function () {
     // Write code here that turns the phrase above into concrete actions
-    this.xs = this.xs || [];
-    this.xs = spheres_1.Sphere.intersects(this.s, this.r);
+    this.xs = [];
+    this.xs = this.s.intersects(this.r);
 });
 // ? Then xs.count = 2
 // Undefined. Implement with the following snippet:
 cucumber_1.Then('xs.count = {int}', function (int) {
-    // Write code here that turns the phrase above into concrete actions
-    return 'pending';
+    assert(common_1.isEqualF(this.xs.length, int));
 });
 // ? And xs[0] = 4
 // Undefined. Implement with the following snippet:
 cucumber_1.Then('xs[{int}] = {int}', function (int, int2) {
-    // Write code here that turns the phrase above into concrete actions
-    return 'pending';
+    assert(common_1.isEqualF(this.xs[int], int2));
 });
-// ? And xs[1] = 6
-// Undefined. Implement with the following snippet:
-cucumber_1.Then('xs[{int}] = {int}', function (int, int2) {
-    // Write code here that turns the phrase above into concrete actions
-    return 'pending';
+//intersections
+cucumber_1.When(/i ← intersection\(([-]?\d+\.?\d*), s\)/, function (float) {
+    this.i = new intersections_1.Intersection(float, this.s);
+});
+//   ? Then i.t = 3.5
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('i.t = {float}', function (float) {
+    assert(common_1.isEqualF(this.i.t, float));
+});
+// ? And i.object = s
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('i.object = s', function () {
+    assert(this.i.object === this.s);
+});
+// ?And i1 ← intersection(1, s)
+// Undefined.Implement with the following snippet:
+cucumber_1.Given(/i([-]?\d+\.?\d*) ← intersection\(([-]?\d+\.?\d*), s\)/, function (int, int2) {
+    this.i[int] = new intersections_1.Intersection(int2, this.s);
+});
+// ?When xs ← intersections(i1, i2)
+// Undefined.Implement with the following snippet:
+cucumber_1.When(/xs ← intersections\(i([-]?\d+\.?\d*), i([-]?\d+\.?\d*)\)/, function (int, int2) {
+    this.xs = new intersections_1.IntersectionArray([this.i[int], this.i[int2]]);
+});
+// - Then xs.count = 2 # features\step_definitions\stepdefs.js: 530
+//     ? And xs[0].t = 1
+// Undefined.Implement with the following snippet:
+cucumber_1.Then('xs[{int}].t = {int}', function (int, int2) {
+    assert(common_1.isEqualF(this.xs[int].t, int2));
 });
 //# sourceMappingURL=stepdefs.js.map
