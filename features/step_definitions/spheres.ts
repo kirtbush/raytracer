@@ -3,6 +3,7 @@ import * as tuple from "./tuple";
 import * as matrices from "./matrices";
 import * as transforms from "./transforms";
 import { Ray } from "./rays";
+import {Intersection, IntersectionArray} from "./intersections";
 
 export class Sphere {
     origin: tuple.point;
@@ -13,7 +14,7 @@ export class Sphere {
         this.radius = radius;
     }
 
-    intersects(ray: Ray) {
+    intersects(ray: Ray) : IntersectionArray {
 
         let sphere_to_ray = tuple.sub(ray.origin, new tuple.point(0, 0, 0));
         let a = tuple.dot(ray.direction, ray.direction);
@@ -22,15 +23,19 @@ export class Sphere {
         let discriminant = (b * b) - (4 * a * c);
 
         if (discriminant < 0) {
-            return [];
+            return new IntersectionArray([]);
         }
 
         let t1 = (-b - Math.sqrt(discriminant)) / (2 * a);
         let t2 = (-b + Math.sqrt(discriminant)) / (2 * a);
         if (t1 > t2)
-            return [t2, t1];
+            return new IntersectionArray([new Intersection(t2, this), new Intersection(t1, this)]);
 
-        return [t1, t2];
+            return new IntersectionArray([new Intersection(t1, this), new Intersection(t2, this)]);
+    }
+
+    equals(other:Sphere) {
+        return common.isEqualF(this.radius, other.radius) && tuple.isTupleEqual(this.origin, other.origin);
     }
 }
 

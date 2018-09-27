@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const common = require("../common");
 const tuple = require("./tuple");
+const intersections_1 = require("./intersections");
 class Sphere {
     constructor(orig, radius) {
         this.origin = orig;
@@ -13,13 +15,16 @@ class Sphere {
         let c = tuple.dot(sphere_to_ray, sphere_to_ray) - 1;
         let discriminant = (b * b) - (4 * a * c);
         if (discriminant < 0) {
-            return [];
+            return new intersections_1.IntersectionArray([]);
         }
         let t1 = (-b - Math.sqrt(discriminant)) / (2 * a);
         let t2 = (-b + Math.sqrt(discriminant)) / (2 * a);
         if (t1 > t2)
-            return [t2, t1];
-        return [t1, t2];
+            return new intersections_1.IntersectionArray([new intersections_1.Intersection(t2, this), new intersections_1.Intersection(t1, this)]);
+        return new intersections_1.IntersectionArray([new intersections_1.Intersection(t1, this), new intersections_1.Intersection(t2, this)]);
+    }
+    equals(other) {
+        return common.isEqualF(this.radius, other.radius) && tuple.isTupleEqual(this.origin, other.origin);
     }
 }
 exports.Sphere = Sphere;

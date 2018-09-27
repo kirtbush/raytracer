@@ -7,7 +7,7 @@ import * as matrices from "./matrices";
 import * as transforms from "./transforms";
 import { Ray } from "./rays";
 import { Sphere } from "./spheres";
-import { Intersection, IntersectionArray } from "./intersections";
+import { hit, Intersection, IntersectionArray } from "./intersections";
 
 Given('a ← tuple: {float}, {float}, {float}, {float}', function(f1, f2, f3, f4) {
 
@@ -720,7 +720,7 @@ Then('xs.count = {int}', function(int) {
 // Undefined. Implement with the following snippet:
 
 Then('xs[{int}] = {int}', function(int: number, int2: number) {
-    assert(isEqualF(this.xs[int], int2));
+    assert(isEqualF(this.xs[int].t, int2));
 });
 
 //intersections
@@ -746,6 +746,7 @@ Then('i.object = s', function() {
 // Undefined.Implement with the following snippet:
 
 Given(/i([-]?\d+\.?\d*) ← intersection\(([-]?\d+\.?\d*), s\)/, function(int, int2) {
+    this.i = this.i || [];
     this.i[int] = new Intersection(int2, this.s);
 });
 
@@ -753,6 +754,7 @@ Given(/i([-]?\d+\.?\d*) ← intersection\(([-]?\d+\.?\d*), s\)/, function(int, i
 // Undefined.Implement with the following snippet:
 
 When(/xs ← intersections\(i([-]?\d+\.?\d*), i([-]?\d+\.?\d*)\)/, function(int, int2) {
+    this.xs = [];
     this.xs = new IntersectionArray([this.i[int], this.i[int2]]);
 });
 
@@ -763,3 +765,25 @@ When(/xs ← intersections\(i([-]?\d+\.?\d*), i([-]?\d+\.?\d*)\)/, function(int,
 Then('xs[{int}].t = {int}', function(int, int2) {
     assert(isEqualF(this.xs[int].t,int2));
 });
+
+Then('xs[{int}].object = s', function (int) {
+    assert(this.xs[int].object==this.s);
+  });
+
+  //hits
+  When(/h ← hit\(xs\)/, function () {
+    this.h = hit(this.xs);
+  });
+
+  Then('h = i{int}', function (int) {
+    assert(this.h.equals(this.i[int]));
+  });
+
+  Then('h is nothing', function () {
+    assert(this.h==null);
+  });
+
+  Given(/xs ← intersections\(i(\d+), i(\d+), i(\d+), i(\d+)\)/, function (int, int2, int3, int4) {
+    this.xs = new IntersectionArray([this.i[int], this.i[int2], this.i[int3], this.i[int4]]);
+
+  });

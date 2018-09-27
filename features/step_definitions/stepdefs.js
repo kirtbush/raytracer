@@ -533,7 +533,7 @@ cucumber_1.Then('xs.count = {int}', function (int) {
 // ? And xs[0] = 4
 // Undefined. Implement with the following snippet:
 cucumber_1.Then('xs[{int}] = {int}', function (int, int2) {
-    assert(common_1.isEqualF(this.xs[int], int2));
+    assert(common_1.isEqualF(this.xs[int].t, int2));
 });
 //intersections
 cucumber_1.When(/i ← intersection\(([-]?\d+\.?\d*), s\)/, function (float) {
@@ -552,11 +552,13 @@ cucumber_1.Then('i.object = s', function () {
 // ?And i1 ← intersection(1, s)
 // Undefined.Implement with the following snippet:
 cucumber_1.Given(/i([-]?\d+\.?\d*) ← intersection\(([-]?\d+\.?\d*), s\)/, function (int, int2) {
+    this.i = this.i || [];
     this.i[int] = new intersections_1.Intersection(int2, this.s);
 });
 // ?When xs ← intersections(i1, i2)
 // Undefined.Implement with the following snippet:
 cucumber_1.When(/xs ← intersections\(i([-]?\d+\.?\d*), i([-]?\d+\.?\d*)\)/, function (int, int2) {
+    this.xs = [];
     this.xs = new intersections_1.IntersectionArray([this.i[int], this.i[int2]]);
 });
 // - Then xs.count = 2 # features\step_definitions\stepdefs.js: 530
@@ -564,5 +566,21 @@ cucumber_1.When(/xs ← intersections\(i([-]?\d+\.?\d*), i([-]?\d+\.?\d*)\)/, fu
 // Undefined.Implement with the following snippet:
 cucumber_1.Then('xs[{int}].t = {int}', function (int, int2) {
     assert(common_1.isEqualF(this.xs[int].t, int2));
+});
+cucumber_1.Then('xs[{int}].object = s', function (int) {
+    assert(this.xs[int].object == this.s);
+});
+//hits
+cucumber_1.When(/h ← hit\(xs\)/, function () {
+    this.h = intersections_1.hit(this.xs);
+});
+cucumber_1.Then('h = i{int}', function (int) {
+    assert(this.h.equals(this.i[int]));
+});
+cucumber_1.Then('h is nothing', function () {
+    assert(this.h == null);
+});
+cucumber_1.Given(/xs ← intersections\(i(\d+), i(\d+), i(\d+), i(\d+)\)/, function (int, int2, int3, int4) {
+    this.xs = new intersections_1.IntersectionArray([this.i[int], this.i[int2], this.i[int3], this.i[int4]]);
 });
 //# sourceMappingURL=stepdefs.js.map
