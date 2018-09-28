@@ -2,13 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const common = require("../common");
 const tuple = require("./tuple");
+const matrices = require("./matrices");
+const rays_1 = require("./rays");
 const intersections_1 = require("./intersections");
 class Sphere {
     constructor(orig, radius) {
         this.origin = orig;
         this.radius = radius;
+        this.transformMatrix = matrices.identity(4);
     }
-    intersects(ray) {
+    intersects(rayOrig) {
+        let ray = rays_1.transform(rayOrig, matrices.invert(this.transformMatrix));
         let sphere_to_ray = tuple.sub(ray.origin, new tuple.point(0, 0, 0));
         let a = tuple.dot(ray.direction, ray.direction);
         let b = 2 * tuple.dot(ray.direction, sphere_to_ray);
@@ -28,6 +32,10 @@ class Sphere {
     }
 }
 exports.Sphere = Sphere;
+function set_transform(s, t) {
+    s.transformMatrix = t;
+}
+exports.set_transform = set_transform;
 function createSphere(orig, rad) {
     return new Sphere(orig, rad);
 }

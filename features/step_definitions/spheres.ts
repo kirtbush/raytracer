@@ -2,20 +2,23 @@ import * as common from "../common";
 import * as tuple from "./tuple";
 import * as matrices from "./matrices";
 import * as transforms from "./transforms";
-import { Ray } from "./rays";
-import {Intersection, IntersectionArray} from "./intersections";
+import { Ray, transform } from "./rays";
+import { Intersection, IntersectionArray } from "./intersections";
 
 export class Sphere {
     origin: tuple.point;
     radius: number;
     color: tuple.Color;
+    transformMatrix: matrices.Matrix;
+
     constructor(orig: tuple.point, radius: number) {
         this.origin = orig;
         this.radius = radius;
+        this.transformMatrix = matrices.identity(4);
     }
 
-    intersects(ray: Ray) : IntersectionArray {
-
+    intersects(rayOrig: Ray): IntersectionArray {
+        let ray = transform(rayOrig, matrices.invert(this.transformMatrix));
         let sphere_to_ray = tuple.sub(ray.origin, new tuple.point(0, 0, 0));
         let a = tuple.dot(ray.direction, ray.direction);
         let b = 2 * tuple.dot(ray.direction, sphere_to_ray);
@@ -31,12 +34,16 @@ export class Sphere {
         if (t1 > t2)
             return new IntersectionArray([new Intersection(t2, this), new Intersection(t1, this)]);
 
-            return new IntersectionArray([new Intersection(t1, this), new Intersection(t2, this)]);
+        return new IntersectionArray([new Intersection(t1, this), new Intersection(t2, this)]);
     }
 
-    equals(other:Sphere) {
+    equals(other: Sphere) {
         return common.isEqualF(this.radius, other.radius) && tuple.isTupleEqual(this.origin, other.origin);
     }
+}
+
+export function set_transform(s:Sphere, t:matrices.Matrix) {
+    s.transformMatrix = t;
 }
 
 export function createSphere(orig: tuple.point, rad: number) {

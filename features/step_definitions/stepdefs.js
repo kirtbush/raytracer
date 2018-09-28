@@ -583,4 +583,42 @@ cucumber_1.Then('h is nothing', function () {
 cucumber_1.Given(/xs ← intersections\(i(\d+), i(\d+), i(\d+), i(\d+)\)/, function (int, int2, int3, int4) {
     this.xs = new intersections_1.IntersectionArray([this.i[int], this.i[int2], this.i[int3], this.i[int4]]);
 });
+//   ? And m ← translation(3, 4, 5)
+//   Undefined. Implement with the following snippet:
+cucumber_1.Given(/^m ← translation\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/, function (int, int2, int3) {
+    this.m = transforms.translation(int, int2, int3);
+});
+// ? When r2 ← transform(r, m)
+//   Undefined. Implement with the following snippet:
+cucumber_1.When(/r2 ← transform\(r, m\)/, function () {
+    this.r2 = rays_1.transform(this.r, this.m);
+});
+// ? Then r2.origin = point(4, 6, 8)
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('r{int}.origin = {point}', function (int, point) {
+    assert(tuple.isTupleEqual(this.r2.origin, point));
+});
+// ? And r2.direction = vector(0, 1, 0)
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('r{int}.direction = {vector}', function (int, vector) {
+    assert(tuple.isTupleEqual(this.r2.direction, vector));
+});
+cucumber_1.Given(/^m ← scaling\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/, function (int, int2, int3) {
+    this.m = transforms.scaling(int, int2, int3);
+});
+cucumber_1.Then('s.transform = identity_matrix', function () {
+    this.s.transform = matrices.identity(4);
+});
+cucumber_1.Given(/t ← translation\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/, function (int, int2, int3) {
+    this.t = transforms.translation(int, int2, int3);
+});
+cucumber_1.When(/^set_transform\(s, t\)/, function () {
+    spheres_1.set_transform(this.s, this.t);
+});
+cucumber_1.When(/^set_transform\(s, translation\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, function (int, int2, int3) {
+    spheres_1.set_transform(this.s, transforms.translation(int, int2, int3));
+});
+cucumber_1.When(/set_transform\(s, scaling\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, function (int, int2, int3) {
+    spheres_1.set_transform(this.s, transforms.scaling(int, int2, int3));
+});
 //# sourceMappingURL=stepdefs.js.map

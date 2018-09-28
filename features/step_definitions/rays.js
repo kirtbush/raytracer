@@ -18,6 +18,12 @@ class Ray {
     }
 }
 exports.Ray = Ray;
+function transform(ray, matrix) {
+    let newOrigin = matrix.multiplyByTuple(ray.origin);
+    let newDirection = matrix.multiplyByTuple(ray.direction);
+    return new Ray(newOrigin, newDirection);
+}
+exports.transform = transform;
 function createRay(orig, dir) {
     return new Ray(orig, dir);
 }
