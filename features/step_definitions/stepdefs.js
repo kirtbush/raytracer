@@ -340,7 +340,7 @@ cucumber_1.Then(/minor\(A, (.+), (.+)\) = (.+)/, function (int, int2, int3) {
     assert(common_1.isEqualF(minorVal, int3));
 });
 cucumber_1.Then(/cofactor\(A, (.+), (.+)\) = (.+)/, function (int, int2, int3) {
-    let cofo = matrices.cofactor(this.A, parseInt(int), parseInt(int2));
+    let cofo = matrices.cofactor(this.A, int, int2);
     assert(common_1.isEqualF(cofo, int3));
 });
 cucumber_1.Then('A is invertible', function () {

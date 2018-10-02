@@ -21,14 +21,14 @@ class IntersectionArray extends Array {
 }
 exports.IntersectionArray = IntersectionArray;
 function hit(objects) {
-    let foundIndex = -1;
+    let foundIndex = 0;
     let foundT = objects[0];
     for (let x = 0; x < objects.length; x++) {
         if (objects[x].t < foundT && objects[x].t >= 0) {
             foundIndex = x;
         }
     }
-    if (foundIndex == -1) // no hits
+    if (foundT == null || foundT.t < 0) // no hits
         return null;
     return objects[foundIndex];
 }

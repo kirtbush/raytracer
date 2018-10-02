@@ -1,9 +1,4 @@
 import * as common from "../common";
-import * as tuple from "./tuple";
-import * as matrices from "./matrices";
-import * as transforms from "./transforms";
-import { Ray } from "./rays";
-import { Sphere } from "./spheres";
 
 export class Intersection {
     t: number;
@@ -28,7 +23,7 @@ export class IntersectionArray extends Array {
 }
 
 export function hit(objects: IntersectionArray) {
-    let foundIndex = -1;
+    let foundIndex = 0;
     let foundT = objects[0];
     for(let x = 0; x < objects.length; x++) {
         if(objects[x].t < foundT && objects[x].t>=0) {
@@ -36,8 +31,9 @@ export function hit(objects: IntersectionArray) {
         }
     }
     
-    if(foundIndex==-1) // no hits
+    if(foundT == null || foundT.t < 0) // no hits
         return null;
+
 
     return objects[foundIndex];
 }

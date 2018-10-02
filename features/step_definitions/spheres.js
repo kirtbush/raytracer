@@ -28,6 +28,8 @@ class Sphere {
         return new intersections_1.IntersectionArray([new intersections_1.Intersection(t1, this), new intersections_1.Intersection(t2, this)]);
     }
     equals(other) {
+        if (other == null)
+            return false;
         return common.isEqualF(this.radius, other.radius) && tuple.isTupleEqual(this.origin, other.origin);
     }
 }

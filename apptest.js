@@ -5,6 +5,9 @@ const canvas = require("./features/step_definitions/canvas");
 const matrices = require("./features/step_definitions/matrices");
 const fs = require("fs");
 const transforms = require("./features/step_definitions/transforms");
+const spheres_1 = require("./features/step_definitions/spheres");
+const rays_1 = require("./features/step_definitions/rays");
+const intersections_1 = require("./features/step_definitions/intersections");
 //cannon projectile test
 console.log("apptest start");
 function world(grv, wnd) {
@@ -112,8 +115,59 @@ function ClockTransformTest() {
         stream.end();
     });
 }
+function DrawSphere(sphere, fname) {
+    let canvas_pixels = 100;
+    let cvs = new canvas.Canvas(canvas_pixels, canvas_pixels);
+    let ray_origin = new tuple.point(0, 0, -5);
+    let sphereColor = new tuple.Color(1, 0, 0);
+    let wall_z = 10;
+    let wall_size = 7.0;
+    let pixel_size = wall_size / canvas_pixels;
+    let half = wall_size / 2;
+    //let testR = new Ray(ray_origin, new tuple.vector(50, 50, wall_z));
+    console.log("testing points!");
+    for (let idy = 0; idy < 100; idy++) {
+        let world_y = half - (pixel_size * idy);
+        for (let idx = 0; idx < 100; idx++) {
+            let world_x = -half + (pixel_size * idx);
+            let position = new tuple.point(world_x, world_y, wall_z);
+            //cast the ray
+            let R = new rays_1.Ray(ray_origin, tuple.normalize(tuple.sub(position, ray_origin)));
+            let isect = sphere.intersects(R);
+            let hitObjects = intersections_1.hit(isect);
+            //this could be an array, but in our test there is only one sphere
+            if ((hitObjects != null) && sphere.equals(hitObjects.object)) {
+                canvas.write_pixel(cvs, idx, idy, sphereColor);
+                console.log("${idx}, ${idy}: hit sphere!");
+            }
+        }
+    }
+    let ppmString = canvas.canvas_to_ppm(cvs);
+    var stream = fs.createWriteStream(fname);
+    stream.once('open', function (fd) {
+        stream.write(ppmString);
+        stream.end();
+    });
+}
+function Chapter5Test() {
+    let sphere = new spheres_1.Sphere(new tuple.point(0, 0, 0), 1);
+    DrawSphere(sphere, "sphereintersect.ppm");
+    // shrink it along the y axis
+    sphere.transformMatrix = transforms.scaling(1, 0.5, 1);
+    DrawSphere(sphere, "sphereintersect2.ppm");
+    // # shrink it along the x-axis
+    sphere.transformMatrix = transforms.scaling(0.5, 1, 1);
+    DrawSphere(sphere, "sphereintersect3.ppm");
+    // # shrink it, and rotate it!
+    sphere.transformMatrix = transforms.rotation_z(Math.PI / 4).multiply(transforms.scaling(0.5, 1, 1));
+    DrawSphere(sphere, "sphereintersect4.ppm");
+    // # shrink it, and skew it!
+    sphere.transformMatrix = transforms.shearing(1, 0, 0, 0, 0, 0).multiply(transforms.scaling(0.5, 1, 1));
+    DrawSphere(sphere, "sphereintersect5.ppm");
+}
 CanvasTest();
 MatrixTests();
 ClockTransformTest();
+Chapter5Test();
 console.log("\nAppTest Finished");
 //# sourceMappingURL=apptest.js.map

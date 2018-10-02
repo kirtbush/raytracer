@@ -1,7 +1,5 @@
-import * as common from "../common";
 import * as tuple from "./tuple";
 import * as matrices from "./matrices";
-import * as transforms from "./transforms";
 
 export class Ray {
     origin: tuple.point;

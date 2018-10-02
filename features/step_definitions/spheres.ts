@@ -1,14 +1,12 @@
 import * as common from "../common";
 import * as tuple from "./tuple";
 import * as matrices from "./matrices";
-import * as transforms from "./transforms";
 import { Ray, transform } from "./rays";
 import { Intersection, IntersectionArray } from "./intersections";
 
 export class Sphere {
     origin: tuple.point;
     radius: number;
-    color: tuple.Color;
     transformMatrix: matrices.Matrix;
 
     constructor(orig: tuple.point, radius: number) {
@@ -37,7 +35,10 @@ export class Sphere {
         return new IntersectionArray([new Intersection(t1, this), new Intersection(t2, this)]);
     }
 
-    equals(other: Sphere) {
+    equals(other) {
+        if(other==null)
+            return false;
+            
         return common.isEqualF(this.radius, other.radius) && tuple.isTupleEqual(this.origin, other.origin);
     }
 }
