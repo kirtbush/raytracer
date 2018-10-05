@@ -386,6 +386,14 @@ Given('the following matrix B:', function (dataTable) {
     this.B = matrices.copyFromRawTable(dataTable);
 });
 
+Then('A = B', function () {
+    assert(this.A.equals(this.B));
+  });
+
+  Then('A != B', function () {
+    assert(!this.A.equals(this.B));
+  });
+
 Then('A * B is the following {int}x{int} matrix:', function (int: number, int2: number,  dataTable) {
     let testMatrix = matrices.copyFromRawTable(dataTable);
     let resultMatrix = this.A.multiply(this.B);

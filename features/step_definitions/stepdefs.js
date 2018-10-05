@@ -285,6 +285,12 @@ cucumber_1.Given('the following matrix A:', function (dataTable) {
 cucumber_1.Given('the following matrix B:', function (dataTable) {
     this.B = matrices.copyFromRawTable(dataTable);
 });
+cucumber_1.Then('A = B', function () {
+    assert(this.A.equals(this.B));
+});
+cucumber_1.Then('A != B', function () {
+    assert(!this.A.equals(this.B));
+});
 cucumber_1.Then('A * B is the following {int}x{int} matrix:', function (int, int2, dataTable) {
     let testMatrix = matrices.copyFromRawTable(dataTable);
     let resultMatrix = this.A.multiply(this.B);

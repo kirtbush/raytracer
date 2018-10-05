@@ -14,7 +14,7 @@ export class Matrix extends Array {
         }
     }
 
-    equals(other: Matrix) {
+    equals(other: Matrix): boolean {
 
         for (let row = 0; row < other.length; row++) {
             for (let col = 0; col < other[row].length; col++) {

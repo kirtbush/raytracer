@@ -200,8 +200,6 @@ function Chapter5Test() {
     // # shrink it, and skew it!
     sphere.transformMatrix = transforms.shearing(1, 0, 0, 0, 0, 0).multiply(transforms.scaling(0.5, 1, 1));
     DrawSphere(sphere, "sphereintersect5.ppm");
-
-
 }
 
 CanvasTest();
