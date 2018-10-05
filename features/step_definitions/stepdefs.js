@@ -10,6 +10,8 @@ const transforms = require("./transforms");
 const rays_1 = require("./rays");
 const spheres_1 = require("./spheres");
 const intersections_1 = require("./intersections");
+const lights_1 = require("./lights");
+const materials_1 = require("./materials");
 cucumber_1.Given('a ← tuple: {float}, {float}, {float}, {float}', function (f1, f2, f3, f4) {
     this.a = new tuple.tuple(f1, f2, f3, f4);
 });
@@ -626,5 +628,108 @@ cucumber_1.When(/^set_transform\(s, translation\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*
 });
 cucumber_1.When(/set_transform\(s, scaling\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, function (int, int2, int3) {
     spheres_1.set_transform(this.s, transforms.scaling(int, int2, int3));
+});
+//chapter 6 light and shading
+cucumber_1.When(/n ← normal_at\(s, point\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, function (int1, int2, int3) {
+    this.n = this.s.normal_at(new tuple.point(int1, int2, int3));
+});
+cucumber_1.When(/n ← normal_at\(s, point\((.+)\/(.+), (.+)\/(.+), (.+)\/(.+)\)\)/, function (sqrt, int, sqrt2, int2, sqrt3, int3) {
+    let sqrtC = sqrt.startsWith("√") ? Math.sqrt(sqrt.replace("√", "")) : sqrt;
+    let sqrtC2 = sqrt2.startsWith("√") ? Math.sqrt(sqrt2.replace("√", "")) : sqrt2;
+    let sqrtC3 = sqrt3.startsWith("√") ? Math.sqrt(sqrt3.replace("√", "")) : sqrt3;
+    this.n = this.s.normal_at(new tuple.point(sqrtC / int, sqrtC2 / int2, sqrtC3 / int3));
+});
+cucumber_1.Then(/^n = vector\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)$/, function (int1, int2, int3) {
+    let v = new tuple.vector(int1, int2, int3);
+    assert(tuple.isTupleEqual(this.n, v));
+});
+cucumber_1.Then(/^n = vector\(√3\/3, √3\/3, √3\/3\)$/, function () {
+    let v = new tuple.vector(Math.sqrt(3) / 3, Math.sqrt(3) / 3, Math.sqrt(3) / 3);
+    assert(tuple.isTupleEqual(this.n, v));
+});
+cucumber_1.Then(/n = normalize\(n\)/, function () {
+    this.n = tuple.normalize(this.n);
+});
+// ? When n ← normal_at(s, point(0, √2/2, -√2/2))
+// Undefined. Implement with the following snippet:
+cucumber_1.When(/^n ← normal_at\(s, point\(0, √2\/2, -√2\/2\)\)$/, function () {
+    this.n = this.s.normal_at(new tuple.point(0, Math.sqrt(2) / 2, Math.sqrt(2) / 2));
+});
+cucumber_1.Given('n ← {vector}', function (vector) {
+    this.n = vector;
+});
+cucumber_1.When(/r ← reflect\(v, n\)/, function () {
+    this.r = tuple.reflect(this.v, this.n);
+});
+cucumber_1.Then('r = {vector}', function (vector) {
+    assert(this.r, vector);
+});
+// ? Given intensity ← color(1, 1, 1)
+// Undefined. Implement with the following snippet:
+cucumber_1.Given('intensity ← {Color}', function (Colors) {
+    this.intensity = Colors;
+});
+// ? And position ← point(0, 0, 0)
+// Undefined. Implement with the following snippet:
+cucumber_1.Given('position ← {point}', function (point) {
+    this.position = point;
+});
+// ? When light ← point_light(position, intensity)
+// Undefined. Implement with the following snippet:
+cucumber_1.When(/light ← point_light\(position, intensity\)/, function () {
+    this.light = new lights_1.point_light(this.position, this.intensity);
+});
+// ? Then light.position = position
+// Undefined. Implement with the following snippet:
+cucumber_1.Then('light.position = position', function () {
+    assert(tuple.isTupleEqual(this.light.position, this.position));
+});
+// ? And light.intensity = intensity
+// Undefined. Implement with the following snippet:
+cucumber_1.Then('light.intensity = intensity', function () {
+    assert(tuple.isTupleEqual(this.light.intensity, this.intensity));
+});
+cucumber_1.Given(/m ← material\(\)/, function () {
+    this.m = new materials_1.Material();
+});
+//   ? Then m.color = color(1, 1, 1)
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('m.color = {Color}', function (Color) {
+    this.m.color = Color;
+});
+// ? And m.ambient = 0.1
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('m.ambient = {sfloat}', function (float) {
+    this.m.ambient = float;
+});
+cucumber_1.Then('m.ambient ← {sfloat}', function (int) {
+    this.m.ambient = int;
+});
+// ? And m.diffuse = 0.9
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('m.diffuse = {sfloat}', function (float) {
+    this.m.diffuse = float;
+});
+// ? And m.specular = 0.9
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('m.specular = {sfloat}', function (float) {
+    this.m.specular = float;
+});
+// ? And m.shininess = 200
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('m.shininess = {sfloat}', function (int) {
+    this.m.shininess = int;
+});
+cucumber_1.When('m ← s.material', function () {
+    this.m = this.s.material;
+});
+cucumber_1.Then(/m = material\(\)/, function () {
+    assert(this.m.equals(new materials_1.Material()));
+});
+cucumber_1.When('s.material ← m', function () {
+    this.s.material = this.m;
+});
+cucumber_1.Then('s.material = m', function () {
+    assert(this.s.material.equals(this.m));
 });
 //# sourceMappingURL=stepdefs.js.map

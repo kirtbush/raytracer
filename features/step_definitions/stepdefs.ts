@@ -8,6 +8,8 @@ import * as transforms from "./transforms";
 import { Ray, transform } from "./rays";
 import { Sphere, set_transform } from "./spheres";
 import { hit, Intersection, IntersectionArray } from "./intersections";
+import { point_light } from "./lights";
+import { Material } from "./materials";
 
 Given('a ← tuple: {float}, {float}, {float}, {float}', function (f1, f2, f3, f4) {
 
@@ -100,7 +102,7 @@ Given(/second ← tuple: (.+), (.+), (.+), (.+)/, function (int1: number, int2: 
 });
 
 
-Then(/first plus second should equal tuple: (.+), (.+), (.+), (.+)/, function (int: number, int2: number,  int3: number, int4) {
+Then(/first plus second should equal tuple: (.+), (.+), (.+), (.+)/, function (int: number, int2: number, int3: number, int4) {
     let sumTuple = tuple.add(this.a1, this.a2);
     let inputTuple = new tuple.tuple(int, int2, int3, int4);
     assert(inputTuple, sumTuple);
@@ -316,7 +318,7 @@ When('ppm ← {canvas_to_ppm}', function (canvas1) {
     this.ppm = canvas.canvas_to_ppm(this.c);
 });
 
-Then('lines {int}-{int} of ppm are', function (int: number, int2: number,  docString) {
+Then('lines {int}-{int} of ppm are', function (int: number, int2: number, docString) {
     var docStringSplit = docString.split("\n");
     var ppmSplit = this.ppm.split("\n");
     let lineCount = int2 - int + 1;
@@ -359,18 +361,18 @@ Then('the last character of ppm is a newline', function () {
 });
 
 // Matrices
-Given('the following {int}x{int} matrix M:', function (int: number, int2: number,  dataTable) {
+Given('the following {int}x{int} matrix M:', function (int: number, int2: number, dataTable) {
     this.M = matrices.copyFromRawTable(dataTable);
 });
 
 
-Then('M[{int},{int}] = {int}', function (int: number, int2: number,  int3: number) {
+Then('M[{int},{int}] = {int}', function (int: number, int2: number, int3: number) {
     let first = this.M[int][int2];
     let second = int3;
     assert(first == second);
 });
 
-Then('M[{int},{int}] = {float}', function (int: number, int2: number,  float) {
+Then('M[{int},{int}] = {float}', function (int: number, int2: number, float) {
     assert(isEqualF(this.M[int][int2], float));
 });
 
@@ -388,13 +390,13 @@ Given('the following matrix B:', function (dataTable) {
 
 Then('A = B', function () {
     assert(this.A.equals(this.B));
-  });
+});
 
-  Then('A != B', function () {
+Then('A != B', function () {
     assert(!this.A.equals(this.B));
-  });
+});
 
-Then('A * B is the following {int}x{int} matrix:', function (int: number, int2: number,  dataTable) {
+Then('A * B is the following {int}x{int} matrix:', function (int: number, int2: number, dataTable) {
     let testMatrix = matrices.copyFromRawTable(dataTable);
     let resultMatrix = this.A.multiply(this.B);
     let success = testMatrix.equals(resultMatrix);
@@ -439,7 +441,7 @@ Then('A = identity_matrix', function () {
     this.A.equals(matrices.identity(4));
 });
 
-Given('the following {int}x{int} matrix A:', function (int: number, int2: number,  dataTable) {
+Given('the following {int}x{int} matrix A:', function (int: number, int2: number, dataTable) {
     this.A = matrices.copyFromRawTable(dataTable);
 });
 
@@ -449,7 +451,7 @@ Then(/determinant\(A\) = (.+)/, function (int: number) {
     assert(isEqualF(determinant, int));
 });
 
-Then(/submatrix\(A, (.+), (.+)\) is the following (.+)x(.+) matrix:/, function (int: number, int2: number,  int3: number, int4, dataTable) {
+Then(/submatrix\(A, (.+), (.+)\) is the following (.+)x(.+) matrix:/, function (int: number, int2: number, int3: number, int4, dataTable) {
 
     let subm = matrices.submatrix(this.A, int, int2);
     assert(subm.equals(matrices.copyFromRawTable(dataTable)));
@@ -465,13 +467,13 @@ Then(/determinant\(B\) = (.+)/, function (int: number) {
     assert(isEqualF(this.B.determinant(), int));
 });
 
-Then(/minor\(A, (.+), (.+)\) = (.+)/, function (int: number, int2: number,  int3: number) {
+Then(/minor\(A, (.+), (.+)\) = (.+)/, function (int: number, int2: number, int3: number) {
 
     let minorVal = matrices.minor(this.A, int, int2)
     assert(isEqualF(minorVal, int3));
 });
 
-Then(/cofactor\(A, (.+), (.+)\) = (.+)/, function (int: number, int2: number,  int3: number) {
+Then(/cofactor\(A, (.+), (.+)\) = (.+)/, function (int: number, int2: number, int3: number) {
     let cofo = matrices.cofactor(this.A, int, int2);
     assert(isEqualF(cofo, int3));
 });
@@ -485,7 +487,7 @@ Given(/B ← inverse\(A\)/, function () {
     this.B = matrices.invert(this.A);
 });
 
-Then(/B\[(.+),(.+)\] = (.+)\/(.+)/, function (int: number, int2: number,  int3, int4) {
+Then(/B\[(.+),(.+)\] = (.+)\/(.+)/, function (int: number, int2: number, int3, int4) {
     assert(isEqualF(this.B[int][int2], int3 / int4));
 });
 
@@ -493,20 +495,20 @@ Then('A is not invertible', function () {
     assert(!this.A.isInvertible())
 });
 
-Then('B is the following {int}x{int} matrix:', function (int: number, int2: number,  dataTable) {
+Then('B is the following {int}x{int} matrix:', function (int: number, int2: number, dataTable) {
     let dt = matrices.copyFromRawTable(dataTable);
 
     assert(this.B.equals(dt));
 });
 
-Then(/inverse\(A\) is the following (.+)x(.+) matrix:/, function (int: number, int2: number,  dataTable) {
+Then(/inverse\(A\) is the following (.+)x(.+) matrix:/, function (int: number, int2: number, dataTable) {
     let invA = matrices.invert(this.A);
     let dtM = matrices.copyFromRawTable(dataTable);
     assert(invA.equals(dtM));
 });
 
 
-Given('the following {int}x{int} matrix B:', function (int: number, int2: number,  dataTable) {
+Given('the following {int}x{int} matrix B:', function (int: number, int2: number, dataTable) {
     this.B = matrices.copyFromRawTable(dataTable);
 });
 
@@ -521,7 +523,7 @@ Then(/C \* inverse\(B\) = A/, function () {
 });
 
 // Chapter 4 transformation and translation
-Given(/transform ← translation\((.+), (.+), (.+)\)/, function (int: number, int2: number,  int3: number) {
+Given(/transform ← translation\((.+), (.+), (.+)\)/, function (int: number, int2: number, int3: number) {
     this.transform = transforms.translation(int, int2, int3);
 });
 Then('transform * p = {point}', function (point: tuple.point) {
@@ -542,7 +544,7 @@ Then('transform * v = v', function () {
     assert(tuple.isTupleEqual(resultV, this.v));
 });
 
-Given(/transform ← scaling\((.+), (.+), (.+)\)/, function (int: number, int2: number,  int3: number) {
+Given(/transform ← scaling\((.+), (.+), (.+)\)/, function (int: number, int2: number, int3: number) {
     this.transform = transforms.scaling(int, int2, int3);
 });
 
@@ -603,7 +605,7 @@ Given(/inv ← inverse\(half_quarter\)/, function () {
 // ? Then inv * v = point(0, √2/2, -√2/2)
 // Undefined. Implement with the following snippet:
 
-Then(/inv \* v = point\((.+), (.+), (.+)\)/, function (int: number, int2: number,  int3: number) {
+Then(/inv \* v = point\((.+), (.+), (.+)\)/, function (int: number, int2: number, int3: number) {
     let pt = new tuple.point(0, Math.sqrt(2) / 2, -Math.sqrt(2) / 2);
     let resultV = this.inv.multiplyByTuple(this.v);
     assert(tuple.isTupleEqual(pt, resultV));
@@ -647,7 +649,7 @@ Then(/half_quarter \* p = point\(-√2\/2, √2\/2, 0\)/, function () {
 // ? Given transform ← shearing(1, 0, 0, 0, 0, 0)
 // Undefined. Implement with the following snippet:
 
-Given(/transform ← shearing\((.+), (.+), (.+), (.+), (.+), (.+)\)/, function (int: number, int2: number,  int3: number, int4: number, int5: number, int6: number) {
+Given(/transform ← shearing\((.+), (.+), (.+), (.+), (.+), (.+)\)/, function (int: number, int2: number, int3: number, int4: number, int5: number, int6: number) {
     this.transform = transforms.shearing(int, int2, int3, int4, int5, int6);
 });
 
@@ -824,7 +826,7 @@ Then('r{int}.direction = {vector}', function (int: number, vector: tuple.vector)
     assert(tuple.isTupleEqual(this.r2.direction, vector));
 });
 
-Given(/^m ← scaling\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/, function (int: number, int2: number,  int3: number) {
+Given(/^m ← scaling\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/, function (int: number, int2: number, int3: number) {
     this.m = transforms.scaling(int, int2, int3);
 });
 
@@ -832,7 +834,7 @@ Then('s.transform = identity_matrix', function () {
     this.s.transform = matrices.identity(4);
 });
 
-Given(/t ← translation\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/, function (int: number, int2: number,  int3: number) {
+Given(/t ← translation\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/, function (int: number, int2: number, int3: number) {
     this.t = transforms.translation(int, int2, int3);
 });
 
@@ -840,10 +842,151 @@ When(/^set_transform\(s, t\)/, function () {
     set_transform(this.s, this.t);
 });
 
-When(/^set_transform\(s, translation\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, function (int: number, int2: number,  int3: number) {
+When(/^set_transform\(s, translation\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, function (int: number, int2: number, int3: number) {
     set_transform(this.s, transforms.translation(int, int2, int3));
 });
 
-When(/set_transform\(s, scaling\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, function (int: number, int2: number,  int3: number) {
+When(/set_transform\(s, scaling\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, function (int: number, int2: number, int3: number) {
     set_transform(this.s, transforms.scaling(int, int2, int3));
 });
+
+//chapter 6 light and shading
+
+When(/n ← normal_at\(s, point\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, function (int1, int2, int3) {
+    this.n = this.s.normal_at(new tuple.point(int1, int2, int3));
+});
+
+When(/n ← normal_at\(s, point\((.+)\/(.+), (.+)\/(.+), (.+)\/(.+)\)\)/, function (sqrt, int, sqrt2, int2, sqrt3, int3) {
+    let sqrtC = sqrt.startsWith("√") ? Math.sqrt(sqrt.replace("√", "")) : sqrt;
+    let sqrtC2 = sqrt2.startsWith("√") ? Math.sqrt(sqrt2.replace("√", "")) : sqrt2;
+    let sqrtC3 = sqrt3.startsWith("√") ? Math.sqrt(sqrt3.replace("√", "")) : sqrt3;
+    this.n = this.s.normal_at(new tuple.point(sqrtC / int, sqrtC2 / int2, sqrtC3 / int3));
+});
+
+Then(/^n = vector\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)$/, function (int1: number, int2: number, int3: number) {
+    let v = new tuple.vector(int1, int2, int3);
+    assert(tuple.isTupleEqual(this.n, v));
+});
+
+
+Then(/^n = vector\(√3\/3, √3\/3, √3\/3\)$/, function () {
+    let v = new tuple.vector(Math.sqrt(3) / 3, Math.sqrt(3) / 3, Math.sqrt(3) / 3);
+    assert(tuple.isTupleEqual(this.n, v));
+});
+
+Then(/n = normalize\(n\)/, function () {
+    this.n = tuple.normalize(this.n);
+});
+
+// ? When n ← normal_at(s, point(0, √2/2, -√2/2))
+// Undefined. Implement with the following snippet:
+
+When(/^n ← normal_at\(s, point\(0, √2\/2, -√2\/2\)\)$/, function () {
+    this.n = this.s.normal_at(new tuple.point(0, Math.sqrt(2) / 2, Math.sqrt(2) / 2));
+});
+
+Given('n ← {vector}', function (vector) {
+    this.n = vector;
+});
+
+When(/r ← reflect\(v, n\)/, function () {
+    this.r = tuple.reflect(this.v, this.n);
+});
+
+Then('r = {vector}', function (vector) {
+    assert(this.r, vector);
+});
+
+// ? Given intensity ← color(1, 1, 1)
+// Undefined. Implement with the following snippet:
+
+Given('intensity ← {Color}', function (Colors) {
+    this.intensity = Colors;
+});
+
+// ? And position ← point(0, 0, 0)
+// Undefined. Implement with the following snippet:
+
+Given('position ← {point}', function (point) {
+    this.position = point;
+});
+
+// ? When light ← point_light(position, intensity)
+// Undefined. Implement with the following snippet:
+
+When(/light ← point_light\(position, intensity\)/, function () {           // Write code here that turns the phrase above into concrete
+    this.light = new point_light(this.position, this.intensity);
+});
+
+// ? Then light.position = position
+// Undefined. Implement with the following snippet:
+
+Then('light.position = position', function () {
+    assert(tuple.isTupleEqual(this.light.position, this.position));
+});
+
+// ? And light.intensity = intensity
+// Undefined. Implement with the following snippet:
+
+Then('light.intensity = intensity', function () {
+    assert(tuple.isTupleEqual(this.light.intensity, this.intensity));
+});
+
+Given(/m ← material\(\)/, function () {
+    this.m = new Material();
+});
+
+//   ? Then m.color = color(1, 1, 1)
+//   Undefined. Implement with the following snippet:
+
+Then('m.color = {Color}', function (Color: tuple.Color) {
+    this.m.color = Color;
+});
+
+// ? And m.ambient = 0.1
+//   Undefined. Implement with the following snippet:
+
+Then('m.ambient = {sfloat}', function (float: number) {
+    this.m.ambient = float;
+});
+
+Then('m.ambient ← {sfloat}', function (int: number) {
+    this.m.ambient = int;
+});
+
+// ? And m.diffuse = 0.9
+//   Undefined. Implement with the following snippet:
+
+Then('m.diffuse = {sfloat}', function (float: number) {
+    this.m.diffuse = float;
+});
+
+// ? And m.specular = 0.9
+//   Undefined. Implement with the following snippet:
+
+Then('m.specular = {sfloat}', function (float: number) {
+    this.m.specular = float;
+});
+
+// ? And m.shininess = 200
+//   Undefined. Implement with the following snippet:
+
+Then('m.shininess = {sfloat}', function (int: number) {
+    this.m.shininess = int;
+});
+
+When('m ← s.material', function () {
+    this.m = this.s.material;
+  });
+
+  Then(/m = material\(\)/, function () {
+    assert(this.m.equals(new Material()))
+  });  
+
+  When('s.material ← m', function () {
+    this.s.material = this.m;
+  });
+
+  Then('s.material = m', function () {
+    assert(this.s.material.equals(this.m));
+  });

@@ -5,11 +5,13 @@ const tuple = require("./tuple");
 const matrices = require("./matrices");
 const rays_1 = require("./rays");
 const intersections_1 = require("./intersections");
+const materials_1 = require("./materials");
 class Sphere {
     constructor(orig, radius) {
         this.origin = orig;
         this.radius = radius;
         this.transformMatrix = matrices.identity(4);
+        this.material = new materials_1.Material();
     }
     intersects(rayOrig) {
         let ray = rays_1.transform(rayOrig, matrices.invert(this.transformMatrix));
@@ -31,6 +33,13 @@ class Sphere {
         if (other == null)
             return false;
         return common.isEqualF(this.radius, other.radius) && tuple.isTupleEqual(this.origin, other.origin);
+    }
+    normal_at(world_point) {
+        let object_point = matrices.invert(this.transformMatrix).multiplyByTuple(world_point);
+        let object_normal = tuple.sub(object_point, new tuple.point(0, 0, 0));
+        let world_normal = matrices.transpose(matrices.invert(this.transformMatrix)).multiplyByTuple(object_normal);
+        world_normal.w = 0; //reset due to being skewed by transpose
+        return tuple.normalize(world_normal);
     }
 }
 exports.Sphere = Sphere;
