@@ -1,20 +1,22 @@
-import * as common from "./features/common";
 import * as tuple from "./features/step_definitions/tuple";
 import * as canvas from "./features/step_definitions/canvas";
 import * as matrices from "./features/step_definitions/matrices";
 import * as fs from "fs";
 import * as transforms from "./features/step_definitions/transforms";
+import { Sphere } from "./features/step_definitions/spheres";
+import { Ray } from "./features/step_definitions/rays";
+import {hit, Intersection} from "./features/step_definitions/intersections";
 
 //cannon projectile test
 console.log("apptest start");
 
-function world(grv, wnd) {
+function world(grv: tuple.vector, wnd: tuple.vector) {
     // this.gravity = grv;
     // this.wind = wnd;
     return { gravity: grv, wind: wnd };
 }
 
-function position(pt, vel) {
+function position(pt: tuple.point, vel:tuple.vector) {
     return { position: pt, velocity: vel };
 }
 
@@ -100,8 +102,8 @@ function MatrixTests() {
     newtuple.print();
 }
 
-function ClockTransformTest(){
-    let cvs = new canvas.Canvas(400,400);
+function ClockTransformTest() {
+    let cvs = new canvas.Canvas(400, 400);
     let origin = new tuple.point(200, 200, 0);
     let rot = Math.PI / 6;
     let trans = transforms.translation(1, 0, 0);
@@ -116,18 +118,18 @@ function ClockTransformTest(){
 
     // create the first point
     // translate it one unit +y axis
-    
+
     let firstPtPos = trans.multiplyByTuple(origin);
-    
+
     // scale it along the y axis
     firstPtPos = scale.multiplyByTuple(firstPtPos);
-    
-    for(let n = 0; n < 12; n++) {
-        let newPos = tuple.add(transforms.rotation_z(rot*n).multiplyByTuple(firstPtPos), origin);
+
+    for (let n = 0; n < 12; n++) {
+        let newPos = tuple.add(transforms.rotation_z(rot * n).multiplyByTuple(firstPtPos), origin);
 
         //write it
         cvs.write_pixel(newPos.x, newPos.y, projectileColor);
-        console.log("newPos.x:"+newPos.x+" newPos.y:"+newPos.y);
+        console.log("newPos.x:" + newPos.x + " newPos.y:" + newPos.y);
     }
 
     let ppmString = canvas.canvas_to_ppm(cvs);
@@ -138,9 +140,71 @@ function ClockTransformTest(){
     });
 }
 
+function DrawSphere(sphere:Sphere, fname:string) {
+    let canvas_pixels = 100;
+    let cvs = new canvas.Canvas(canvas_pixels, canvas_pixels);
+    let ray_origin = new tuple.point(0, 0, -5);
+    let sphereColor = new tuple.Color(1,0,0);
+    let wall_z = 10;
+    let wall_size = 7.0;
+    let pixel_size = wall_size / canvas_pixels;
+    let half = wall_size / 2;
+
+    //let testR = new Ray(ray_origin, new tuple.vector(50, 50, wall_z));
+
+    console.log("testing points!");
+    for(let idy = 0; idy < 100; idy++) {
+        let world_y = half - (pixel_size * idy);
+        for(let idx = 0; idx < 100; idx++) {
+            let world_x = -half + (pixel_size * idx);
+
+            let position = new tuple.point(world_x, world_y, wall_z);
+            //cast the ray
+            let R = new Ray(ray_origin, tuple.normalize(tuple.sub(position, ray_origin)));
+            let isect = sphere.intersects(R);
+            let hitObjects: Intersection = hit(isect);
+
+            //this could be an array, but in our test there is only one sphere
+            
+            if((hitObjects!= null) && sphere.equals(hitObjects.object)) {
+                canvas.write_pixel(cvs, idx, idy, sphereColor);
+                console.log("${idx}, ${idy}: hit sphere!");
+            }
+        }
+    }
+
+    let ppmString = canvas.canvas_to_ppm(cvs);
+    var stream = fs.createWriteStream(fname);
+    stream.once('open', function (fd) {
+        stream.write(ppmString);
+        stream.end();
+    });
+}
+
+function Chapter5Test() {
+    let sphere = new Sphere(new tuple.point(0,0,0), 1);
+
+    DrawSphere(sphere, "sphereintersect.ppm");
+    // shrink it along the y axis
+    sphere.transformMatrix = transforms.scaling(1, 0.5, 1);
+    DrawSphere(sphere, "sphereintersect2.ppm");
+
+    // # shrink it along the x-axis
+    sphere.transformMatrix = transforms.scaling(0.5, 1, 1);
+    DrawSphere(sphere, "sphereintersect3.ppm");
+
+    // # shrink it, and rotate it!
+    sphere.transformMatrix = transforms.rotation_z(Math.PI / 4).multiply(transforms.scaling(0.5, 1, 1));
+    DrawSphere(sphere, "sphereintersect4.ppm");
+
+    // # shrink it, and skew it!
+    sphere.transformMatrix = transforms.shearing(1, 0, 0, 0, 0, 0).multiply(transforms.scaling(0.5, 1, 1));
+    DrawSphere(sphere, "sphereintersect5.ppm");
+}
+
 CanvasTest();
 MatrixTests();
 ClockTransformTest();
-
+Chapter5Test();
 
 console.log("\nAppTest Finished");

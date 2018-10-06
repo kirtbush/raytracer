@@ -10,6 +10,8 @@ const transforms = require("./transforms");
 const rays_1 = require("./rays");
 const spheres_1 = require("./spheres");
 const intersections_1 = require("./intersections");
+const lights_1 = require("./lights");
+const materials_1 = require("./materials");
 cucumber_1.Given('a ← tuple: {float}, {float}, {float}, {float}', function (f1, f2, f3, f4) {
     this.a = new tuple.tuple(f1, f2, f3, f4);
 });
@@ -285,6 +287,12 @@ cucumber_1.Given('the following matrix A:', function (dataTable) {
 cucumber_1.Given('the following matrix B:', function (dataTable) {
     this.B = matrices.copyFromRawTable(dataTable);
 });
+cucumber_1.Then('A = B', function () {
+    assert(this.A.equals(this.B));
+});
+cucumber_1.Then('A != B', function () {
+    assert(!this.A.equals(this.B));
+});
 cucumber_1.Then('A * B is the following {int}x{int} matrix:', function (int, int2, dataTable) {
     let testMatrix = matrices.copyFromRawTable(dataTable);
     let resultMatrix = this.A.multiply(this.B);
@@ -340,7 +348,7 @@ cucumber_1.Then(/minor\(A, (.+), (.+)\) = (.+)/, function (int, int2, int3) {
     assert(common_1.isEqualF(minorVal, int3));
 });
 cucumber_1.Then(/cofactor\(A, (.+), (.+)\) = (.+)/, function (int, int2, int3) {
-    let cofo = matrices.cofactor(this.A, parseInt(int), parseInt(int2));
+    let cofo = matrices.cofactor(this.A, int, int2);
     assert(common_1.isEqualF(cofo, int3));
 });
 cucumber_1.Then('A is invertible', function () {
@@ -533,7 +541,7 @@ cucumber_1.Then('xs.count = {int}', function (int) {
 // ? And xs[0] = 4
 // Undefined. Implement with the following snippet:
 cucumber_1.Then('xs[{int}] = {int}', function (int, int2) {
-    assert(common_1.isEqualF(this.xs[int], int2));
+    assert(common_1.isEqualF(this.xs[int].t, int2));
 });
 //intersections
 cucumber_1.When(/i ← intersection\(([-]?\d+\.?\d*), s\)/, function (float) {
@@ -552,11 +560,13 @@ cucumber_1.Then('i.object = s', function () {
 // ?And i1 ← intersection(1, s)
 // Undefined.Implement with the following snippet:
 cucumber_1.Given(/i([-]?\d+\.?\d*) ← intersection\(([-]?\d+\.?\d*), s\)/, function (int, int2) {
+    this.i = this.i || [];
     this.i[int] = new intersections_1.Intersection(int2, this.s);
 });
 // ?When xs ← intersections(i1, i2)
 // Undefined.Implement with the following snippet:
 cucumber_1.When(/xs ← intersections\(i([-]?\d+\.?\d*), i([-]?\d+\.?\d*)\)/, function (int, int2) {
+    this.xs = [];
     this.xs = new intersections_1.IntersectionArray([this.i[int], this.i[int2]]);
 });
 // - Then xs.count = 2 # features\step_definitions\stepdefs.js: 530
@@ -564,5 +574,162 @@ cucumber_1.When(/xs ← intersections\(i([-]?\d+\.?\d*), i([-]?\d+\.?\d*)\)/, fu
 // Undefined.Implement with the following snippet:
 cucumber_1.Then('xs[{int}].t = {int}', function (int, int2) {
     assert(common_1.isEqualF(this.xs[int].t, int2));
+});
+cucumber_1.Then('xs[{int}].object = s', function (int) {
+    assert(this.xs[int].object == this.s);
+});
+//hits
+cucumber_1.When(/h ← hit\(xs\)/, function () {
+    this.h = intersections_1.hit(this.xs);
+});
+cucumber_1.Then('h = i{int}', function (int) {
+    assert(this.h.equals(this.i[int]));
+});
+cucumber_1.Then('h is nothing', function () {
+    assert(this.h == null);
+});
+cucumber_1.Given(/xs ← intersections\(i(\d+), i(\d+), i(\d+), i(\d+)\)/, function (int, int2, int3, int4) {
+    this.xs = new intersections_1.IntersectionArray([this.i[int], this.i[int2], this.i[int3], this.i[int4]]);
+});
+//   ? And m ← translation(3, 4, 5)
+//   Undefined. Implement with the following snippet:
+cucumber_1.Given(/^m ← translation\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/, function (int, int2, int3) {
+    this.m = transforms.translation(int, int2, int3);
+});
+// ? When r2 ← transform(r, m)
+//   Undefined. Implement with the following snippet:
+cucumber_1.When(/r2 ← transform\(r, m\)/, function () {
+    this.r2 = rays_1.transform(this.r, this.m);
+});
+// ? Then r2.origin = point(4, 6, 8)
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('r{int}.origin = {point}', function (int, point) {
+    assert(tuple.isTupleEqual(this.r2.origin, point));
+});
+// ? And r2.direction = vector(0, 1, 0)
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('r{int}.direction = {vector}', function (int, vector) {
+    assert(tuple.isTupleEqual(this.r2.direction, vector));
+});
+cucumber_1.Given(/^m ← scaling\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/, function (int, int2, int3) {
+    this.m = transforms.scaling(int, int2, int3);
+});
+cucumber_1.Then('s.transform = identity_matrix', function () {
+    this.s.transform = matrices.identity(4);
+});
+cucumber_1.Given(/t ← translation\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/, function (int, int2, int3) {
+    this.t = transforms.translation(int, int2, int3);
+});
+cucumber_1.When(/^set_transform\(s, t\)/, function () {
+    spheres_1.set_transform(this.s, this.t);
+});
+cucumber_1.When(/^set_transform\(s, translation\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, function (int, int2, int3) {
+    spheres_1.set_transform(this.s, transforms.translation(int, int2, int3));
+});
+cucumber_1.When(/set_transform\(s, scaling\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, function (int, int2, int3) {
+    spheres_1.set_transform(this.s, transforms.scaling(int, int2, int3));
+});
+//chapter 6 light and shading
+cucumber_1.When(/n ← normal_at\(s, point\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, function (int1, int2, int3) {
+    this.n = this.s.normal_at(new tuple.point(int1, int2, int3));
+});
+cucumber_1.When(/n ← normal_at\(s, point\((.+)\/(.+), (.+)\/(.+), (.+)\/(.+)\)\)/, function (sqrt, int, sqrt2, int2, sqrt3, int3) {
+    let sqrtC = sqrt.startsWith("√") ? Math.sqrt(sqrt.replace("√", "")) : sqrt;
+    let sqrtC2 = sqrt2.startsWith("√") ? Math.sqrt(sqrt2.replace("√", "")) : sqrt2;
+    let sqrtC3 = sqrt3.startsWith("√") ? Math.sqrt(sqrt3.replace("√", "")) : sqrt3;
+    this.n = this.s.normal_at(new tuple.point(sqrtC / int, sqrtC2 / int2, sqrtC3 / int3));
+});
+cucumber_1.Then(/^n = vector\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)$/, function (int1, int2, int3) {
+    let v = new tuple.vector(int1, int2, int3);
+    assert(tuple.isTupleEqual(this.n, v));
+});
+cucumber_1.Then(/^n = vector\(√3\/3, √3\/3, √3\/3\)$/, function () {
+    let v = new tuple.vector(Math.sqrt(3) / 3, Math.sqrt(3) / 3, Math.sqrt(3) / 3);
+    assert(tuple.isTupleEqual(this.n, v));
+});
+cucumber_1.Then(/n = normalize\(n\)/, function () {
+    this.n = tuple.normalize(this.n);
+});
+// ? When n ← normal_at(s, point(0, √2/2, -√2/2))
+// Undefined. Implement with the following snippet:
+cucumber_1.When(/^n ← normal_at\(s, point\(0, √2\/2, -√2\/2\)\)$/, function () {
+    this.n = this.s.normal_at(new tuple.point(0, Math.sqrt(2) / 2, Math.sqrt(2) / 2));
+});
+cucumber_1.Given('n ← {vector}', function (vector) {
+    this.n = vector;
+});
+cucumber_1.When(/r ← reflect\(v, n\)/, function () {
+    this.r = tuple.reflect(this.v, this.n);
+});
+cucumber_1.Then('r = {vector}', function (vector) {
+    assert(this.r, vector);
+});
+// ? Given intensity ← color(1, 1, 1)
+// Undefined. Implement with the following snippet:
+cucumber_1.Given('intensity ← {Color}', function (Colors) {
+    this.intensity = Colors;
+});
+// ? And position ← point(0, 0, 0)
+// Undefined. Implement with the following snippet:
+cucumber_1.Given('position ← {point}', function (point) {
+    this.position = point;
+});
+// ? When light ← point_light(position, intensity)
+// Undefined. Implement with the following snippet:
+cucumber_1.When(/light ← point_light\(position, intensity\)/, function () {
+    this.light = new lights_1.point_light(this.position, this.intensity);
+});
+// ? Then light.position = position
+// Undefined. Implement with the following snippet:
+cucumber_1.Then('light.position = position', function () {
+    assert(tuple.isTupleEqual(this.light.position, this.position));
+});
+// ? And light.intensity = intensity
+// Undefined. Implement with the following snippet:
+cucumber_1.Then('light.intensity = intensity', function () {
+    assert(tuple.isTupleEqual(this.light.intensity, this.intensity));
+});
+cucumber_1.Given(/m ← material\(\)/, function () {
+    this.m = new materials_1.Material();
+});
+//   ? Then m.color = color(1, 1, 1)
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('m.color = {Color}', function (Color) {
+    this.m.color = Color;
+});
+// ? And m.ambient = 0.1
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('m.ambient = {sfloat}', function (float) {
+    this.m.ambient = float;
+});
+cucumber_1.Then('m.ambient ← {sfloat}', function (int) {
+    this.m.ambient = int;
+});
+// ? And m.diffuse = 0.9
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('m.diffuse = {sfloat}', function (float) {
+    this.m.diffuse = float;
+});
+// ? And m.specular = 0.9
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('m.specular = {sfloat}', function (float) {
+    this.m.specular = float;
+});
+// ? And m.shininess = 200
+//   Undefined. Implement with the following snippet:
+cucumber_1.Then('m.shininess = {sfloat}', function (int) {
+    this.m.shininess = int;
+});
+cucumber_1.When('m ← s.material', function () {
+    this.m = this.s.material;
+});
+cucumber_1.Then(/m = material\(\)/, function () {
+    assert(this.m.equals(new materials_1.Material()));
+});
+cucumber_1.When('s.material ← m', function () {
+    this.s.material = this.m;
+});
+cucumber_1.Then('s.material = m', function () {
+    assert(this.s.material.equals(this.m));
 });
 //# sourceMappingURL=stepdefs.js.map

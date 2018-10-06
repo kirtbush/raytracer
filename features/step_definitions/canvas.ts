@@ -109,7 +109,7 @@ import * as tuple from"./tuple";
         let ppmStr = create_ppm_header(canvas1.width, canvas1.height, DEFAULT_COLOR_SCALE);
         let idx = 0, idy = 0;
         
-        let dataLines = [];
+        let dataLines: string[] = [];
         let nextLine = "\n";
         let s = {dl: dataLines, nl: nextLine};
         for(idy=0; idy < canvas1.height; idy++) {
@@ -130,6 +130,7 @@ import * as tuple from"./tuple";
                 dataLines = s.dl;
             }
 
+            dataLines.push()
             dataLines.push(nextLine);
             nextLine = "";
         }

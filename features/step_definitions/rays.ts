@@ -1,7 +1,5 @@
-import * as common from "../common";
 import * as tuple from "./tuple";
 import * as matrices from "./matrices";
-import * as transforms from "./transforms";
 
 export class Ray {
     origin: tuple.point;
@@ -18,12 +16,20 @@ export class Ray {
         return p;
     }
 
-    static position(r: Ray, t: number ){
+    static position(r: Ray, t: number ): tuple.tuple {
         let distance = tuple.multiplyScalar(r.direction, t);
         let p = tuple.add(r.origin, distance);
         
         return p;
     }
+
+
+}
+
+export function transform(ray: Ray, matrix: matrices.Matrix) : Ray {
+    let newOrigin = matrix.multiplyByTuple(ray.origin);
+    let newDirection = matrix.multiplyByTuple(ray.direction);
+    return new Ray(newOrigin, newDirection);
 }
 
 export function createRay(orig: tuple.point, dir: tuple.vector) {

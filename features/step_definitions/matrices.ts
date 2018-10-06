@@ -14,7 +14,7 @@ export class Matrix extends Array {
         }
     }
 
-    equals(other: Matrix) {
+    equals(other: Matrix): boolean {
 
         for (let row = 0; row < other.length; row++) {
             for (let col = 0; col < other[row].length; col++) {
@@ -99,14 +99,14 @@ export function minor(matrix: Matrix, row: number, col: number) {
 }
 
 function isEven(n: number) {
-    return (n % 2) == 0;
+    return (common.modulo(n,2) == 0);
 }
 
 export function cofactor(matrix: Matrix, row: number, col: number) {
-    let mnr = minor(matrix, row, col);
-    let sum = row + col;
-    let n = new Number(row + col);
-    return isEven(sum) ? mnr : -mnr;
+    let mnr:number = minor(matrix, row, col);
+    let sum:number = row*1 + col*1;
+    let EvenOrNot = isEven(sum);
+    return EvenOrNot ? mnr : -mnr;
 }
 
 export function submatrix(matrix: Matrix, row: number, col: number) {
@@ -114,7 +114,7 @@ export function submatrix(matrix: Matrix, row: number, col: number) {
     let size = matrix.length;
     let M = new Matrix(size - 1, size - 1);
     let actualX = 0;
-    let actualY = 0;
+    
     for (let x = 0; x < size; x++) {
         if (x == row) {
             continue;

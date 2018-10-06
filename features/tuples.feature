@@ -27,32 +27,32 @@ Feature: Is this a tuple?
   Scenario: "vector" describes tuples with w=0
     Given v ← vector: 4,-4,3
     Then v = tuple: 4, -4, 3, 0
-  
-#floating value comparison tests
+
+  #floating value comparison tests
   Scenario Outline: two floating values should be equal
     Given two values to compare <first>, <second>
     Then first = second
     Examples:
-    | first | second | 
-    | 1.23456677777  | 1.23456677778  |
-    | 1.23456677777  | 1.23456675777  |
-    | 1.23456677777  | 1.23456677777  |
+      | first         | second        |
+      | 1.23456677777 | 1.23456677778 |
+      | 1.23456677777 | 1.23456675777 |
+      | 1.23456677777 | 1.23456677777 |
 
   Scenario Outline: two floating values should not be equal
     Given two values to compare <first>, <second>
     Then first != second
     Examples:
-    | first | second | 
-    | 1.23456677777  | 1.23466677777  |
-    | 1.23456677777  | 2.0  |
-    | 1.23456677777  | 999.22337  |
+      | first         | second        |
+      | 1.23456677777 | 1.23466677777 |
+      | 1.23456677777 | 2.0           |
+      | 1.23456677777 | 999.22337     |
 
-#addition and subtraction
+  #addition and subtraction
   Scenario: Adding two tuples
     Given first ← tuple: 3, -2, 5, 1
     And second ← tuple: -2, 3, 1, 0
     Then first plus second should equal tuple: 1, 1, 6, 1
-  
+
   Scenario: Subtracting two points
     Given p1 ← point(3, 2, 1)
     And p2 ← point(5, 6, 7)
@@ -68,7 +68,7 @@ Feature: Is this a tuple?
     And v2 ← vector(5, 6, 7)
     Then v1 - v2 = vector(-2, -4, -6)
 
-#subtraction from zero
+  #subtraction from zero
   Scenario: Subtracting a vector from the zero vector
     Given zero ← vector(0, 0, 0)
     And v ← vector(1, -2, 3)
@@ -78,8 +78,8 @@ Feature: Is this a tuple?
     Given a ← tuple(1, -2, 3, -4)
     Then -a = tuple(-1, 2, -3, 4)
 
-#multiplcation and division of vectors (for scaling)
-#e.g. what lies 3.5 times farther in that direction
+  #multiplcation and division of vectors (for scaling)
+  #e.g. what lies 3.5 times farther in that direction
   Scenario: Multiplying a tuple by a scalar
     Given a ← tuple(1, -2, 3, -4)
     Then a * 3.5 = tuple(3.5, -7, 10.5, -14)
@@ -87,12 +87,12 @@ Feature: Is this a tuple?
   Scenario: Multiplying a tuple by a fraction
     Given a ← tuple(1, -2, 3, -4)
     Then a * 0.5 = tuple(0.5, -1, 1.5, -2)
-    
+
   Scenario: Dividing a tuple by a scalar
     Given a ← tuple(1, -2, 3, -4)
     Then a / 2 = tuple(0.5, -1, 1.5, -2)
 
-#magnitude
+  #magnitude
   Scenario: Magnitude of vector(1, 0, 0)
     Given v ← vector(1, 0, 0)
     Then magnitude(v) = 1
@@ -109,7 +109,7 @@ Feature: Is this a tuple?
     Given v ← vector(-1, -2, -3)
     Then magnitude(v) = √14
 
-#normalization
+  #normalization
   Scenario: Normalizing vector(4, 0, 0) gives (1, 0, 0)
     Given v ← vector(4, 0, 0)
     Then normalize(v) = vector(1, 0, 0)
@@ -122,20 +122,20 @@ Feature: Is this a tuple?
     When norm ← normalize(v)
     Then magnitude(norm) = 1
 
-#dot
+  #dot
   Scenario: The dot product of two tuples
     Given a ← vector(1, 2, 3)
     And b ← vector(2, 3, 4)
     Then a dot b = 20
 
-#cross
+  #cross
   Scenario: Cross product of two vectors
     Given a ← vector(1, 2, 3)
     And b ← vector(2, 3, 4)
     Then a cross b = vector(-1, 2, -1)
     And b cross a = vector(1, -2, 1)
 
-#colors
+  #colors
   Scenario: Colors are (red, green, blue) tuples
     Given c ← color(-0.5, 0.4, 1.7)
     Then c.red = -0.5
@@ -154,8 +154,20 @@ Feature: Is this a tuple?
     Given c ← color(0.2, 0.3, 0.4)
     Then c * 2 = color(0.4, 0.6, 0.8)
 
-#color blending
+  #color blending
   Scenario: Multiplying colors
     Given c1 ← color(1, 0.2, 0.4)
     And c2 ← color(0.9, 1, 0.1)
     Then c1 * c2 = color(0.9, 0.2, 0.04)
+
+  #chapter 6 reflections
+  Scenario: Reflecting a vector approaching at 45°
+    Given v ← vector(1, -1, 0)
+    And n ← vector(0, 1, 0)
+    When r ← reflect(v, n)
+    Then r = vector(1, 1, 0)
+  Scenario: Reflecting a vector off a slanted surface
+    Given v ← vector(0, -1, 0)
+    And n ← vector(√2/2, √2/2, 0)
+    When r ← reflect(v, n)
+    Then r = vector(1, 0, 0)

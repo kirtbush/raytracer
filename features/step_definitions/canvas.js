@@ -109,6 +109,7 @@ function canvas_to_ppm(canvas1) {
             nextLine = s.nl;
             dataLines = s.dl;
         }
+        dataLines.push();
         dataLines.push(nextLine);
         nextLine = "";
     }

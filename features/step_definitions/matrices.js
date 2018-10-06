@@ -83,13 +83,13 @@ function minor(matrix, row, col) {
 }
 exports.minor = minor;
 function isEven(n) {
-    return (n % 2) == 0;
+    return (common.modulo(n, 2) == 0);
 }
 function cofactor(matrix, row, col) {
     let mnr = minor(matrix, row, col);
-    let sum = row + col;
-    let n = new Number(row + col);
-    return isEven(sum) ? mnr : -mnr;
+    let sum = row * 1 + col * 1;
+    let EvenOrNot = isEven(sum);
+    return EvenOrNot ? mnr : -mnr;
 }
 exports.cofactor = cofactor;
 function submatrix(matrix, row, col) {
@@ -97,7 +97,6 @@ function submatrix(matrix, row, col) {
     let size = matrix.length;
     let M = new Matrix(size - 1, size - 1);
     let actualX = 0;
-    let actualY = 0;
     for (let x = 0; x < size; x++) {
         if (x == row) {
             continue;

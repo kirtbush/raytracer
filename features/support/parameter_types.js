@@ -11,6 +11,10 @@ defineParameterType({
     type: tuple.point,
     transformer: (x, y, z) => new tuple.point(x, y, z) // transformer function
 });
+defineParameterType({
+    name: 'sfloat',
+    regexp: /([-]?\d+\.?\d*)/,
+});
 //look at this bullsh!t
 defineParameterType({
     name: 'ray',

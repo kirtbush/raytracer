@@ -145,6 +145,10 @@ function isPoint(tpl) {
         return false;
 }
 exports.isPoint = isPoint;
+function reflect(input, normal) {
+    return sub(input, (multiplyScalar(normal, 2 * dot(input, normal))));
+}
+exports.reflect = reflect;
 //}
 module.id = "tuple";
 //# sourceMappingURL=tuple.js.map

@@ -1,5 +1,3 @@
-import * as common from "../common";
-import * as tuple from "./tuple";
 import * as matrices from "./matrices";
 
 export function translation(x: number, y:number, z:number) {
