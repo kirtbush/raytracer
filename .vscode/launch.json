@@ -8,12 +8,14 @@
             "type": "node",
             "request": "launch",
             "name": "apptest",
+            "preLaunchTask": "build",
             "program": "${workspaceFolder}/apptest.js"
         },
         {
             "name": "e2e",
             "type": "node",
             "request": "launch",
+            "preLaunchTask": "build",
             "protocol": "inspector",
             "program": "${workspaceRoot}/node_modules/cucumber/bin/cucumber-js",
             "outFiles": [
