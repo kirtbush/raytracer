@@ -142,22 +142,28 @@ function ClockTransformTest() {
     });
 }
 
-function DrawSphere(sphere: Sphere, light:point_light, fname: string) {
-    let canvas_pixels = 100;
-    let cvs = new canvas.Canvas(canvas_pixels, canvas_pixels);
+function WriteCanvas(cvs: canvas.Canvas, fname: string) {
+    let ppmString = canvas.canvas_to_ppm(cvs);
+    var stream = fs.createWriteStream(fname);
+    stream.once('open', function (fd) {
+        stream.write(ppmString);
+        stream.end();
+    });
+}
+
+function DrawSphere(cvs: canvas.Canvas, sphere: Sphere, light: point_light): canvas.Canvas {
+    let canvas_pixels = cvs.height;
+    //let cvs = new canvas.Canvas(canvas_pixels, canvas_pixels);
     let ray_origin = new tuple.point(0, 0, -5);
-    //let sphereColor = new tuple.Color(1, 0, 0);
     let wall_z = 10;
     let wall_size = 7.0;
     let pixel_size = wall_size / canvas_pixels;
     let half = wall_size / 2;
 
-    //let testR = new Ray(ray_origin, new tuple.vector(50, 50, wall_z));
-
     console.log("testing points!");
-    for (let idy = 0; idy < 100; idy++) {
+    for (let idy = 0; idy < canvas_pixels; idy++) {
         let world_y = half - (pixel_size * idy);
-        for (let idx = 0; idx < 100; idx++) {
+        for (let idx = 0; idx < canvas_pixels; idx++) {
             let world_x = -half + (pixel_size * idx);
 
             let position = new tuple.point(world_x, world_y, wall_z);
@@ -167,7 +173,6 @@ function DrawSphere(sphere: Sphere, light:point_light, fname: string) {
             let hitObjects: Intersection = hit(isect);
 
             //this could be an array, but in our test there is only one sphere
-
             if ((hitObjects != null) && sphere.equals(hitObjects.object)) {
                 let point = R.position(hitObjects.t);
                 let normal = sphere.normal_at(point);
@@ -179,15 +184,11 @@ function DrawSphere(sphere: Sphere, light:point_light, fname: string) {
         }
     }
 
-    let ppmString = canvas.canvas_to_ppm(cvs);
-    var stream = fs.createWriteStream(fname);
-    stream.once('open', function (fd) {
-        stream.write(ppmString);
-        stream.end();
-    });
+    return cvs;
 }
 
 function C5_simple_sphere() {
+    /*
     let sphere = new Sphere(new tuple.point(0, 0, 0), 1);
     let basic_light = new point_light(new tuple.point(-10, 10, -10), new tuple.Color(1, 0.2, 1));
     DrawSphere(sphere, basic_light, "sphereintersect.ppm");
@@ -206,20 +207,49 @@ function C5_simple_sphere() {
     // # shrink it, and skew it!
     sphere.transformMatrix = transforms.shearing(1, 0, 0, 0, 0, 0).multiply(transforms.scaling(0.5, 1, 1));
     DrawSphere(sphere, basic_light, "sphereintersect5.ppm");
+    */
 }
 
 function C6_lighting_sphere() {
-    let sphere = new Sphere(new tuple.point(0, 0, 0), 1);
-    //add material (pink)
-    sphere.material = new Material();
-    sphere.material.color = new tuple.Color(1, 0.2, 1);
-
+    let canvas_pixels = 200;
+    let cvs = new canvas.Canvas(canvas_pixels, canvas_pixels);
     //create a light behind above and to the left of the eye
-    let light_position = new tuple.point(-10, 10, -10);
+    let light_position = new tuple.point(-10, 15, -15);
     let light_color = new tuple.Color(1, 1, 1);
     let light = new point_light(light_position, light_color);
 
-    DrawSphere(sphere, light, "lit_sphere.ppm");
+    //First scene
+    let sphere = new Sphere(new tuple.point(0, 0, 0), 1);
+    //add material (pink)
+    sphere.material = new Material();
+    sphere.material.color = new tuple.Color(0.2, 0.5, 1);
+    cvs = DrawSphere(cvs, sphere, light);
+    //add the second sphere
+    let sphere2 = new Sphere(new tuple.point(0, 0, 0), 1);
+    sphere2.transformMatrix = transforms.scaling(0.2, 0.2, 0.2).multiply(transforms.translation(2,2.5,0));
+    //add material (pink)
+    sphere2.material = new Material();
+    sphere2.material.color = new tuple.Color(1, 0.3, 1);
+    cvs = DrawSphere(cvs, sphere2, light);
+    WriteCanvas(cvs, "lit_sphere.ppm");
+
+    //Second scene - change properties of spheres
+    cvs = new canvas.Canvas(canvas_pixels, canvas_pixels);
+    sphere.material.diffuse = 0.4;
+    sphere.material.specular = 0.1;
+    cvs = DrawSphere(cvs, sphere, light);
+    //add the second sphere
+    sphere2 = new Sphere(new tuple.point(0, 0, 0), 1);
+    sphere2.transformMatrix = transforms.scaling(0.2, 0.2, 0.2).multiply(transforms.translation(2,-2.125,0));
+    //add material (pink)
+    sphere2.material = new Material();
+    sphere2.material.color = new tuple.Color(1, 0.3, 1);
+    sphere2.material.diffuse = 0.8;
+    sphere2.material.specular = 0.05;
+    cvs = DrawSphere(cvs, sphere2, light);
+    WriteCanvas(cvs, "lit_sphere2.ppm");
+
+    /*
     // shrink it along the y axis
     sphere.transformMatrix = transforms.scaling(1, 0.5, 1);
     DrawSphere(sphere, light, "lit_sphere2.ppm");
@@ -235,6 +265,7 @@ function C6_lighting_sphere() {
     // # shrink it, and skew it!
     sphere.transformMatrix = transforms.shearing(1, 0, 0, 0, 0, 0).multiply(transforms.scaling(0.5, 1, 1));
     DrawSphere(sphere, light, "lit_sphere5.ppm");
+    */
 }
 
 CanvasTest();
