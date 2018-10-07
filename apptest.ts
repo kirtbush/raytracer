@@ -249,23 +249,25 @@ function C6_lighting_sphere() {
     cvs = DrawSphere(cvs, sphere2, light);
     WriteCanvas(cvs, "lit_sphere2.ppm");
 
-    /*
-    // shrink it along the y axis
-    sphere.transformMatrix = transforms.scaling(1, 0.5, 1);
-    DrawSphere(sphere, light, "lit_sphere2.ppm");
-
-    // # shrink it along the x-axis
-    sphere.transformMatrix = transforms.scaling(0.5, 1, 1);
-    DrawSphere(sphere, light, "lit_sphere3.ppm");
-
-    // # shrink it, and rotate it!
-    sphere.transformMatrix = transforms.rotation_z(Math.PI / 4).multiply(transforms.scaling(0.5, 1, 1));
-    DrawSphere(sphere, light, "lit_sphere4.ppm");
-
-    // # shrink it, and skew it!
-    sphere.transformMatrix = transforms.shearing(1, 0, 0, 0, 0, 0).multiply(transforms.scaling(0.5, 1, 1));
-    DrawSphere(sphere, light, "lit_sphere5.ppm");
-    */
+    //Third Scene - change light and materials
+    light_position = new tuple.point(0, 15, -10);
+    light_color = new tuple.Color(1, 1, 0); //yellow 
+    light = new point_light(light_position, light_color);
+    cvs = new canvas.Canvas(canvas_pixels, canvas_pixels);
+    sphere.material.diffuse = 0.5;
+    sphere.material.specular = 0.5;
+    cvs = DrawSphere(cvs, sphere, light);
+    //add the second sphere
+    sphere2 = new Sphere(new tuple.point(0, 0, 0), 1);
+    sphere2.transformMatrix = transforms.scaling(0.2, 0.2, 0.2).multiply(transforms.translation(2,-2.125,0));
+    //add material (pink)
+    sphere2.material = new Material();
+    sphere2.material.color = new tuple.Color(1, 0.3, 1);
+    sphere2.material.diffuse = 0.8;
+    sphere2.material.specular = 0.2;
+    //sphere2.material.ambient = 0;
+    cvs = DrawSphere(cvs, sphere2, light);
+    WriteCanvas(cvs, "lit_sphere3.ppm");
 }
 
 CanvasTest();
