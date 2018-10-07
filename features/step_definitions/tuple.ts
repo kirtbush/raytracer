@@ -7,7 +7,7 @@ export class tuple {
 	y: number;
 	z: number;
 	w: number;
-	constructor(xVal, yVal, zVal, wVal) {
+	constructor(xVal: number, yVal: number, zVal: number, wVal: number) {
 		this.x = xVal;
 		this.y = yVal;
 		this.z = zVal;
@@ -39,16 +39,17 @@ const POINT_TYPE = 1.0;
 const VECTOR_TYPE = 0;
 const ZeroVector = new vector(0, 0, 0);
 
-export class Color {
-	x: number;
-	y: number;
-	z: number;
-	w: number;
-	constructor(r, g, b) {
-		this.x = parseFloat(r);
-		this.y = parseFloat(g);
-		this.z = parseFloat(b);
-		this.w = 0;
+export class Color extends tuple {
+	// x: number;
+	// y: number;
+	// z: number;
+	// w: number;
+	constructor(r: number, g: number, b: number) {
+		super(r, g, b, 0);
+		// this.x = parseFloat(r);
+		// this.y = parseFloat(g);
+		// this.z = parseFloat(b);
+		// this.w = 0;
 		//console.log("color constructed with r:"+r+" g:"+g);
 	}
 	get red() {
@@ -72,11 +73,15 @@ export class Color {
 	}
 }
 
-export function add(tuple1, tuple2): tuple {
-	return new tuple(tuple1.x + tuple2.x, tuple1.y + tuple2.y, tuple1.z + tuple2.z, tuple1.w + tuple2.w);
+//absolute ridiculous JS behavior of string concat instead of arithmetic addition
+// unary plus forces the object to a number type
+export function add(tuple1: tuple, tuple2: tuple): tuple {
+	
+	return new tuple(+tuple1.x + +tuple2.x, +tuple1.y + +tuple2.y, 
+		+tuple1.z + +tuple2.z, +tuple1.w + +tuple2.w);
 }
 
-export function sub(tuple1, tuple2): tuple {
+export function sub(tuple1: tuple, tuple2: tuple): tuple {
 	let newTuple = new tuple(tuple1.x - tuple2.x, tuple1.y - tuple2.y, tuple1.z - tuple2.z, tuple1.w - tuple2.w);
 	return newTuple;
 }
@@ -127,18 +132,18 @@ export function hadamard_product(c1: Color, c2: Color): Color {
 	return new Color(r, g, b);
 }
 
-export function sqrtString(strVal) {
+export function sqrtString(strVal: string): number {
 	return Math.sqrt(parseFloat(strVal));
 }
 
-export function isVector(tpl) {
+export function isVector(tpl: tuple): boolean {
 	if (tpl.w === VECTOR_TYPE)
 		return true;
 	else
 		return false;
 }
 
-export function isTupleEqual(tuple1, tuple2) {
+export function isTupleEqual(tuple1: tuple, tuple2: tuple): boolean {
 	if (common.isEqualF(tuple1.x, tuple2.x)
 		&& common.isEqualF(tuple1.x, tuple2.x)
 		&& common.isEqualF(tuple1.x, tuple2.x)

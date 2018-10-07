@@ -9,7 +9,7 @@ import { Ray, transform } from "./rays";
 import { Sphere, set_transform } from "./spheres";
 import { hit, Intersection, IntersectionArray } from "./intersections";
 import { point_light } from "./lights";
-import { Material } from "./materials";
+import { Material, lighting } from "./materials";
 
 Given('a ← tuple: {float}, {float}, {float}, {float}', function (f1, f2, f3, f4) {
 
@@ -889,6 +889,10 @@ Given('n ← {vector}', function (vector) {
     this.n = vector;
 });
 
+Given(/n ← vector\(√2\/2, √2\/2, 0\)/, function () {
+    this.n = new tuple.vector(Math.sqrt(2)/2, Math.sqrt(2)/2, 0);
+});
+
 When(/r ← reflect\(v, n\)/, function () {
     this.r = tuple.reflect(this.v, this.n);
 });
@@ -940,17 +944,17 @@ Given(/m ← material\(\)/, function () {
 //   Undefined. Implement with the following snippet:
 
 Then('m.color = {Color}', function (Color: tuple.Color) {
-    this.m.color = Color;
+    assert(tuple.isTupleEqual(this.m.color, Color));
 });
 
 // ? And m.ambient = 0.1
 //   Undefined. Implement with the following snippet:
 
 Then('m.ambient = {sfloat}', function (float: number) {
-    this.m.ambient = float;
+    assert(this.m.ambient == float);
 });
 
-Then('m.ambient ← {sfloat}', function (int: number) {
+When('m.ambient ← {sfloat}', function (int: number) {
     this.m.ambient = int;
 });
 
@@ -958,35 +962,78 @@ Then('m.ambient ← {sfloat}', function (int: number) {
 //   Undefined. Implement with the following snippet:
 
 Then('m.diffuse = {sfloat}', function (float: number) {
-    this.m.diffuse = float;
+    assert(this.m.diffuse == float);
 });
 
 // ? And m.specular = 0.9
 //   Undefined. Implement with the following snippet:
 
 Then('m.specular = {sfloat}', function (float: number) {
-    this.m.specular = float;
+    assert(this.m.specular == float);
 });
 
 // ? And m.shininess = 200
 //   Undefined. Implement with the following snippet:
 
 Then('m.shininess = {sfloat}', function (int: number) {
-    this.m.shininess = int;
+    assert(this.m.shininess == int);
 });
 
 When('m ← s.material', function () {
     this.m = this.s.material;
-  });
+});
 
-  Then(/m = material\(\)/, function () {
+Then(/m = material\(\)/, function () {
     assert(this.m.equals(new Material()))
-  });  
+});
 
-  When('s.material ← m', function () {
+When('s.material ← m', function () {
     this.s.material = this.m;
-  });
+});
 
-  Then('s.material = m', function () {
+Then('s.material = m', function () {
     assert(this.s.material.equals(this.m));
-  });
+});
+
+//   ?Given eyev ← vector(0, 0, -1)
+// Undefined.Implement with the following snippet:
+
+Given('eyev ← {vector}', function (vector: tuple.vector) {
+    this.eyev = vector;
+});
+
+Given(/eyev ← vector\(0, √2\/2, -√2\/2\)/, function () {
+    this.eyev = new tuple.vector(0, Math.sqrt(2)/2, -Math.sqrt(2)/2);
+});
+
+Given(/eyev ← vector\(0, -√2\/2, -√2\/2\)/, function () {
+    this.eyev = new tuple.vector(0, -Math.sqrt(2)/2, -Math.sqrt(2)/2);
+});
+
+// ?And normalv ← vector(0, 0, -1)
+// Undefined.Implement with the following snippet:
+
+Given('normalv ← {vector}', function (vector: tuple.vector) {
+    this.normalv = vector;
+});
+
+// ?And light ← point_light(point(0, 0, -10), color(1, 1, 1))
+// Undefined.Implement with the following snippet:
+
+Given('light ← {point_light}', function (lt: point_light) {
+    this.light = lt;
+});
+
+// ?When result ← lighting(m, light, position, eyev, normalv)
+// Undefined.Implement with the following snippet:
+
+When(/result ← lighting\(m, light, position, eyev, normalv\)/, function () {
+    this.result = lighting(this.m, this.light, this.position, this.eyev, this.normalv);
+});
+
+// ?Then result = color(1.9, 1.9, 1.9)
+// Undefined.Implement with the following snippet:
+
+Then('result = {Color}', function (Color: tuple.Color) {
+    assert(tuple.isTupleEqual(this.result, Color));
+});

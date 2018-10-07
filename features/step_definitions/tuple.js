@@ -32,12 +32,17 @@ exports.VERSION = 1.0;
 const POINT_TYPE = 1.0;
 const VECTOR_TYPE = 0;
 const ZeroVector = new vector(0, 0, 0);
-class Color {
+class Color extends tuple {
+    // x: number;
+    // y: number;
+    // z: number;
+    // w: number;
     constructor(r, g, b) {
-        this.x = parseFloat(r);
-        this.y = parseFloat(g);
-        this.z = parseFloat(b);
-        this.w = 0;
+        super(r, g, b, 0);
+        // this.x = parseFloat(r);
+        // this.y = parseFloat(g);
+        // this.z = parseFloat(b);
+        // this.w = 0;
         //console.log("color constructed with r:"+r+" g:"+g);
     }
     get red() {
@@ -61,8 +66,10 @@ class Color {
     }
 }
 exports.Color = Color;
+//absolute ridiculous JS behavior of string concat instead of arithmetic addition
+// unary plus forces the object to a number type
 function add(tuple1, tuple2) {
-    return new tuple(tuple1.x + tuple2.x, tuple1.y + tuple2.y, tuple1.z + tuple2.z, tuple1.w + tuple2.w);
+    return new tuple(+tuple1.x + +tuple2.x, +tuple1.y + +tuple2.y, +tuple1.z + +tuple2.z, +tuple1.w + +tuple2.w);
 }
 exports.add = add;
 function sub(tuple1, tuple2) {

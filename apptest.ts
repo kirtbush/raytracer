@@ -5,7 +5,9 @@ import * as fs from "fs";
 import * as transforms from "./features/step_definitions/transforms";
 import { Sphere } from "./features/step_definitions/spheres";
 import { Ray } from "./features/step_definitions/rays";
-import {hit, Intersection} from "./features/step_definitions/intersections";
+import { hit, Intersection } from "./features/step_definitions/intersections";
+import { Material, lighting } from "./features/step_definitions/materials";
+import { point_light } from "./features/step_definitions/lights";
 
 //cannon projectile test
 console.log("apptest start");
@@ -16,7 +18,7 @@ function world(grv: tuple.vector, wnd: tuple.vector) {
     return { gravity: grv, wind: wnd };
 }
 
-function position(pt: tuple.point, vel:tuple.vector) {
+function position(pt: tuple.point, vel: tuple.vector) {
     return { position: pt, velocity: vel };
 }
 
@@ -140,11 +142,11 @@ function ClockTransformTest() {
     });
 }
 
-function DrawSphere(sphere:Sphere, fname:string) {
+function DrawSphere(sphere: Sphere, light:point_light, fname: string) {
     let canvas_pixels = 100;
     let cvs = new canvas.Canvas(canvas_pixels, canvas_pixels);
     let ray_origin = new tuple.point(0, 0, -5);
-    let sphereColor = new tuple.Color(1,0,0);
+    //let sphereColor = new tuple.Color(1, 0, 0);
     let wall_z = 10;
     let wall_size = 7.0;
     let pixel_size = wall_size / canvas_pixels;
@@ -153,9 +155,9 @@ function DrawSphere(sphere:Sphere, fname:string) {
     //let testR = new Ray(ray_origin, new tuple.vector(50, 50, wall_z));
 
     console.log("testing points!");
-    for(let idy = 0; idy < 100; idy++) {
+    for (let idy = 0; idy < 100; idy++) {
         let world_y = half - (pixel_size * idy);
-        for(let idx = 0; idx < 100; idx++) {
+        for (let idx = 0; idx < 100; idx++) {
             let world_x = -half + (pixel_size * idx);
 
             let position = new tuple.point(world_x, world_y, wall_z);
@@ -165,10 +167,14 @@ function DrawSphere(sphere:Sphere, fname:string) {
             let hitObjects: Intersection = hit(isect);
 
             //this could be an array, but in our test there is only one sphere
-            
-            if((hitObjects!= null) && sphere.equals(hitObjects.object)) {
-                canvas.write_pixel(cvs, idx, idy, sphereColor);
-                console.log("${idx}, ${idy}: hit sphere!");
+
+            if ((hitObjects != null) && sphere.equals(hitObjects.object)) {
+                let point = R.position(hitObjects.t);
+                let normal = sphere.normal_at(point);
+                let eye = tuple.negate(R.direction);
+                let sphere_lighting = lighting(hitObjects.object.material, light, point, eye, normal);
+                canvas.write_pixel(cvs, idx, idy, sphere_lighting);
+                //console.log("${idx}, ${idy}: hit sphere!");
             }
         }
     }
@@ -181,30 +187,60 @@ function DrawSphere(sphere:Sphere, fname:string) {
     });
 }
 
-function Chapter5Test() {
-    let sphere = new Sphere(new tuple.point(0,0,0), 1);
-
-    DrawSphere(sphere, "sphereintersect.ppm");
+function C5_simple_sphere() {
+    let sphere = new Sphere(new tuple.point(0, 0, 0), 1);
+    let basic_light = new point_light(new tuple.point(-10, 10, -10), new tuple.Color(1, 0.2, 1));
+    DrawSphere(sphere, basic_light, "sphereintersect.ppm");
     // shrink it along the y axis
     sphere.transformMatrix = transforms.scaling(1, 0.5, 1);
-    DrawSphere(sphere, "sphereintersect2.ppm");
+    DrawSphere(sphere, basic_light, "sphereintersect2.ppm");
 
     // # shrink it along the x-axis
     sphere.transformMatrix = transforms.scaling(0.5, 1, 1);
-    DrawSphere(sphere, "sphereintersect3.ppm");
+    DrawSphere(sphere, basic_light, "sphereintersect3.ppm");
 
     // # shrink it, and rotate it!
     sphere.transformMatrix = transforms.rotation_z(Math.PI / 4).multiply(transforms.scaling(0.5, 1, 1));
-    DrawSphere(sphere, "sphereintersect4.ppm");
+    DrawSphere(sphere, basic_light, "sphereintersect4.ppm");
 
     // # shrink it, and skew it!
     sphere.transformMatrix = transforms.shearing(1, 0, 0, 0, 0, 0).multiply(transforms.scaling(0.5, 1, 1));
-    DrawSphere(sphere, "sphereintersect5.ppm");
+    DrawSphere(sphere, basic_light, "sphereintersect5.ppm");
+}
+
+function C6_lighting_sphere() {
+    let sphere = new Sphere(new tuple.point(0, 0, 0), 1);
+    //add material (pink)
+    sphere.material = new Material();
+    sphere.material.color = new tuple.Color(1, 0.2, 1);
+
+    //create a light behind above and to the left of the eye
+    let light_position = new tuple.point(-10, 10, -10);
+    let light_color = new tuple.Color(1, 1, 1);
+    let light = new point_light(light_position, light_color);
+
+    DrawSphere(sphere, light, "lit_sphere.ppm");
+    // shrink it along the y axis
+    sphere.transformMatrix = transforms.scaling(1, 0.5, 1);
+    DrawSphere(sphere, light, "lit_sphere2.ppm");
+
+    // # shrink it along the x-axis
+    sphere.transformMatrix = transforms.scaling(0.5, 1, 1);
+    DrawSphere(sphere, light, "lit_sphere3.ppm");
+
+    // # shrink it, and rotate it!
+    sphere.transformMatrix = transforms.rotation_z(Math.PI / 4).multiply(transforms.scaling(0.5, 1, 1));
+    DrawSphere(sphere, light, "lit_sphere4.ppm");
+
+    // # shrink it, and skew it!
+    sphere.transformMatrix = transforms.shearing(1, 0, 0, 0, 0, 0).multiply(transforms.scaling(0.5, 1, 1));
+    DrawSphere(sphere, light, "lit_sphere5.ppm");
 }
 
 CanvasTest();
 MatrixTests();
 ClockTransformTest();
-Chapter5Test();
+C5_simple_sphere();
+C6_lighting_sphere();
 
 console.log("\nAppTest Finished");

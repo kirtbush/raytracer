@@ -3,7 +3,8 @@ const { defineParameterType } = require('cucumber')
 import * as tuple from "../step_definitions/tuple";
 import * as canvas from "../step_definitions/canvas";
 import * as matrices from "../step_definitions/matrices";
-import {Ray, createRay} from "../step_definitions/rays";
+import {Ray} from "../step_definitions/rays";
+import {point_light} from "../step_definitions/lights";
 
 defineParameterType({
     name: 'point',           // name
@@ -24,7 +25,7 @@ defineParameterType({
     name: 'ray',           // name
     regexp: /ray\(point\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\), vector\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, // regexp
     type: Ray,             // type
-    transformer: (pt1,pt2,pt3,vct1, vct2, vct3) => createRay(new tuple.point(pt1,pt2,pt3), new tuple.vector(vct1, vct2, vct3))  // transformer function
+    transformer: (pt1,pt2,pt3,vct1, vct2, vct3) => new Ray(new tuple.point(pt1,pt2,pt3), new tuple.vector(vct1, vct2, vct3))  // transformer function
 });
 
 defineParameterType({
@@ -37,9 +38,9 @@ defineParameterType({
 
 defineParameterType({
     name: 'vector',           // name
-    regexp: /vector\((.+),(.+),(.+)\)/, // regexp
+    regexp: /vector\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/, // regexp
     type: tuple.vector,             // type
-    transformer: (x,y,z) => new tuple.vector(x, y, z)  // transformer function
+    transformer: (x,y,z) => new tuple.vector(x.trim(), y.trim(), z.trim())  // transformer function
 });
 
 defineParameterType({
@@ -51,9 +52,16 @@ defineParameterType({
 
 defineParameterType({
     name: 'Color',           // name
-    regexp: /color\((.+),(.+),(.+)\)/, // regexp
+    regexp: /color\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/, // regexp
     type: tuple.Color,             // type
     transformer: (r,g,b) => new tuple.Color(r,g,b)  // transformer function
+});
+
+defineParameterType({
+    name: 'point_light',           // name
+    regexp: /point_light\(point\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\), color\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/, // regexp
+    type: point_light,             // type
+    transformer: (x,y,z,r,g,b) => new point_light(new tuple.point(x,y,z), new tuple.Color(r,g,b))  // transformer function
 });
 
 defineParameterType({

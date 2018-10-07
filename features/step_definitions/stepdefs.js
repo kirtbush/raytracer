@@ -658,6 +658,9 @@ cucumber_1.When(/^n ← normal_at\(s, point\(0, √2\/2, -√2\/2\)\)$/, functio
 cucumber_1.Given('n ← {vector}', function (vector) {
     this.n = vector;
 });
+cucumber_1.Given(/n ← vector\(√2\/2, √2\/2, 0\)/, function () {
+    this.n = new tuple.vector(Math.sqrt(2) / 2, Math.sqrt(2) / 2, 0);
+});
 cucumber_1.When(/r ← reflect\(v, n\)/, function () {
     this.r = tuple.reflect(this.v, this.n);
 });
@@ -695,30 +698,30 @@ cucumber_1.Given(/m ← material\(\)/, function () {
 //   ? Then m.color = color(1, 1, 1)
 //   Undefined. Implement with the following snippet:
 cucumber_1.Then('m.color = {Color}', function (Color) {
-    this.m.color = Color;
+    assert(tuple.isTupleEqual(this.m.color, Color));
 });
 // ? And m.ambient = 0.1
 //   Undefined. Implement with the following snippet:
 cucumber_1.Then('m.ambient = {sfloat}', function (float) {
-    this.m.ambient = float;
+    assert(this.m.ambient == float);
 });
-cucumber_1.Then('m.ambient ← {sfloat}', function (int) {
+cucumber_1.When('m.ambient ← {sfloat}', function (int) {
     this.m.ambient = int;
 });
 // ? And m.diffuse = 0.9
 //   Undefined. Implement with the following snippet:
 cucumber_1.Then('m.diffuse = {sfloat}', function (float) {
-    this.m.diffuse = float;
+    assert(this.m.diffuse == float);
 });
 // ? And m.specular = 0.9
 //   Undefined. Implement with the following snippet:
 cucumber_1.Then('m.specular = {sfloat}', function (float) {
-    this.m.specular = float;
+    assert(this.m.specular == float);
 });
 // ? And m.shininess = 200
 //   Undefined. Implement with the following snippet:
 cucumber_1.Then('m.shininess = {sfloat}', function (int) {
-    this.m.shininess = int;
+    assert(this.m.shininess == int);
 });
 cucumber_1.When('m ← s.material', function () {
     this.m = this.s.material;
@@ -731,5 +734,36 @@ cucumber_1.When('s.material ← m', function () {
 });
 cucumber_1.Then('s.material = m', function () {
     assert(this.s.material.equals(this.m));
+});
+//   ?Given eyev ← vector(0, 0, -1)
+// Undefined.Implement with the following snippet:
+cucumber_1.Given('eyev ← {vector}', function (vector) {
+    this.eyev = vector;
+});
+cucumber_1.Given(/eyev ← vector\(0, √2\/2, -√2\/2\)/, function () {
+    this.eyev = new tuple.vector(0, Math.sqrt(2) / 2, -Math.sqrt(2) / 2);
+});
+cucumber_1.Given(/eyev ← vector\(0, -√2\/2, -√2\/2\)/, function () {
+    this.eyev = new tuple.vector(0, -Math.sqrt(2) / 2, -Math.sqrt(2) / 2);
+});
+// ?And normalv ← vector(0, 0, -1)
+// Undefined.Implement with the following snippet:
+cucumber_1.Given('normalv ← {vector}', function (vector) {
+    this.normalv = vector;
+});
+// ?And light ← point_light(point(0, 0, -10), color(1, 1, 1))
+// Undefined.Implement with the following snippet:
+cucumber_1.Given('light ← {point_light}', function (lt) {
+    this.light = lt;
+});
+// ?When result ← lighting(m, light, position, eyev, normalv)
+// Undefined.Implement with the following snippet:
+cucumber_1.When(/result ← lighting\(m, light, position, eyev, normalv\)/, function () {
+    this.result = materials_1.lighting(this.m, this.light, this.position, this.eyev, this.normalv);
+});
+// ?Then result = color(1.9, 1.9, 1.9)
+// Undefined.Implement with the following snippet:
+cucumber_1.Then('result = {Color}', function (Color) {
+    assert(tuple.isTupleEqual(this.result, Color));
 });
 //# sourceMappingURL=stepdefs.js.map

@@ -5,6 +5,7 @@ const tuple = require("../step_definitions/tuple");
 const canvas = require("../step_definitions/canvas");
 const matrices = require("../step_definitions/matrices");
 const rays_1 = require("../step_definitions/rays");
+const lights_1 = require("../step_definitions/lights");
 defineParameterType({
     name: 'point',
     regexp: /point\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/,
@@ -20,7 +21,7 @@ defineParameterType({
     name: 'ray',
     regexp: /ray\(point\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\), vector\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/,
     type: rays_1.Ray,
-    transformer: (pt1, pt2, pt3, vct1, vct2, vct3) => rays_1.createRay(new tuple.point(pt1, pt2, pt3), new tuple.vector(vct1, vct2, vct3)) // transformer function
+    transformer: (pt1, pt2, pt3, vct1, vct2, vct3) => new rays_1.Ray(new tuple.point(pt1, pt2, pt3), new tuple.vector(vct1, vct2, vct3)) // transformer function
 });
 defineParameterType({
     name: 'position',
@@ -30,9 +31,9 @@ defineParameterType({
 });
 defineParameterType({
     name: 'vector',
-    regexp: /vector\((.+),(.+),(.+)\)/,
+    regexp: /vector\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/,
     type: tuple.vector,
-    transformer: (x, y, z) => new tuple.vector(x, y, z) // transformer function
+    transformer: (x, y, z) => new tuple.vector(x.trim(), y.trim(), z.trim()) // transformer function
 });
 defineParameterType({
     name: 'tuple',
@@ -42,9 +43,15 @@ defineParameterType({
 });
 defineParameterType({
     name: 'Color',
-    regexp: /color\((.+),(.+),(.+)\)/,
+    regexp: /color\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)/,
     type: tuple.Color,
     transformer: (r, g, b) => new tuple.Color(r, g, b) // transformer function
+});
+defineParameterType({
+    name: 'point_light',
+    regexp: /point_light\(point\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\), color\(([-]?\d+\.?\d*), ([-]?\d+\.?\d*), ([-]?\d+\.?\d*)\)\)/,
+    type: lights_1.point_light,
+    transformer: (x, y, z, r, g, b) => new lights_1.point_light(new tuple.point(x, y, z), new tuple.Color(r, g, b)) // transformer function
 });
 defineParameterType({
     name: 'sqrt',

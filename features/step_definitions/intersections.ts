@@ -1,9 +1,10 @@
 import * as common from "../common";
+import { Sphere } from "./spheres";
 
 export class Intersection {
     t: number;
-    object: object;
-    constructor(t: number, obj: object) {
+    object: Sphere;
+    constructor(t: number, obj: Sphere) {
         this.t = t;
         this.object = obj;
     }
