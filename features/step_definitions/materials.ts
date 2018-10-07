@@ -29,33 +29,26 @@ export class Material {
 
 export function lighting(material: Material, light: point_light,
     point: tuple.point, eyev: tuple.vector, normalv: tuple.vector): tuple.Color {
-    let illumination: number = 0;
+    //let illumination: number = 0;
     
     let effective_color = tuple.hadamard_product(material.color, light.intensity);
     let lightv = tuple.normalize(tuple.sub(light.position, point));
-    let ambient: number = tuple.multiplyScalar(effective_color, material.ambient).x;
-    let diffuse = 0;
-    let specular = 0;
+    let ambient: tuple.tuple = tuple.multiplyScalar(effective_color, material.ambient);
+    let diffuse = new tuple.tuple(0,0,0,0);
+    let specular = new tuple.tuple(0,0,0,0);
 
     let light_dot_normal = tuple.dot(lightv, normalv);
-    if (light_dot_normal <= 0) {
-        diffuse = 0;
-        specular = 0;
-    }
-    else {
-        diffuse = material.diffuse * effective_color.y * light_dot_normal;
+    if (light_dot_normal > 0) {
+        diffuse = tuple.multiplyScalar(effective_color, material.diffuse * light_dot_normal);
         let reflectv = tuple.reflect(tuple.negate(lightv), normalv);
         let reflect_dot_eye = Math.pow(tuple.dot(reflectv, eyev), material.shininess);
-        if( reflect_dot_eye <= 0) {
-            specular = 0;
-        }
-        else {
-            specular = reflect_dot_eye * material.specular * light.intensity.z;
+        if( reflect_dot_eye > 0) {
+            specular = tuple.multiplyScalar(light.intensity, reflect_dot_eye * material.specular);
         }
     }
 
-    illumination = ambient + diffuse + specular;
-    return new tuple.Color(illumination, illumination, illumination);
+    //illumination = ambient.x + diffuse.x + specular.x;
+    return new tuple.Color(ambient.x + diffuse.x + specular.x, ambient.y + diffuse.y + specular.y, ambient.z + diffuse.z + specular.z);
 }
 
 module.id = "materials";
