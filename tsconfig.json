@@ -18,6 +18,8 @@
     },
     "include": [
         "./apptest.ts",
+        "./server.ts",
+        "./public/main.ts",
         "./features/step_definitions/stepdefs.ts",
         "./features/support/parameter_types.ts"
     ],

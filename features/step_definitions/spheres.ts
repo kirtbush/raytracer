@@ -5,13 +5,14 @@ import { Ray, transform } from "./rays";
 import { Intersection, IntersectionArray } from "./intersections";
 import { Material } from "./materials";
 
-export class Sphere {
-    origin: tuple.point;
+export class Sphere extends tuple.SceneObject {
+    //origin: tuple.point;
     radius: number;
     transformMatrix: matrices.Matrix;
     material: Material;
     constructor(orig: tuple.point, radius: number) {
-        this.origin = orig;
+        super(orig, tuple.SceneObjectType.Sphere);
+        //this.origin = orig;
         this.radius = radius;
         this.transformMatrix = matrices.identity(4);
         this.material = new Material();

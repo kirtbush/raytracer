@@ -10,6 +10,8 @@ import { Sphere, set_transform } from "./spheres";
 import { hit, Intersection, IntersectionArray } from "./intersections";
 import { point_light } from "./lights";
 import { Material, lighting } from "./materials";
+import { World } from "./world";
+
 
 Given('a ← tuple: {float}, {float}, {float}, {float}', function (f1, f2, f3, f4) {
 
@@ -890,7 +892,7 @@ Given('n ← {vector}', function (vector) {
 });
 
 Given(/n ← vector\(√2\/2, √2\/2, 0\)/, function () {
-    this.n = new tuple.vector(Math.sqrt(2)/2, Math.sqrt(2)/2, 0);
+    this.n = new tuple.vector(Math.sqrt(2) / 2, Math.sqrt(2) / 2, 0);
 });
 
 When(/r ← reflect\(v, n\)/, function () {
@@ -1003,11 +1005,11 @@ Given('eyev ← {vector}', function (vector: tuple.vector) {
 });
 
 Given(/eyev ← vector\(0, √2\/2, -√2\/2\)/, function () {
-    this.eyev = new tuple.vector(0, Math.sqrt(2)/2, -Math.sqrt(2)/2);
+    this.eyev = new tuple.vector(0, Math.sqrt(2) / 2, -Math.sqrt(2) / 2);
 });
 
 Given(/eyev ← vector\(0, -√2\/2, -√2\/2\)/, function () {
-    this.eyev = new tuple.vector(0, -Math.sqrt(2)/2, -Math.sqrt(2)/2);
+    this.eyev = new tuple.vector(0, -Math.sqrt(2) / 2, -Math.sqrt(2) / 2);
 });
 
 // ?And normalv ← vector(0, 0, -1)
@@ -1036,4 +1038,30 @@ When(/result ← lighting\(m, light, position, eyev, normalv\)/, function () {
 
 Then('result = {Color}', function (Color: tuple.Color) {
     assert(tuple.isTupleEqual(this.result, Color));
+});
+
+//Chapter 7 worlds
+// ? Given w ← world()
+// Undefined. Implement with the following snippet:
+
+Given(/w ← world\(\)/, function () {
+    this.w = new World();
+});
+
+// ? Then w contains no objects
+// Undefined. Implement with the following snippet:
+
+Then('w contains no objects', function () {
+    assert(this.w.objects.length == 0);
+});
+
+// ? And w has no light source
+// Undefined. Implement with the following snippet:
+
+Then('w has no light source', function () {
+    assert(this.w.light == undefined);
+});
+
+Given(/s1 ← sphere\(\) with:/, function (dataTable) {
+    //this.s1 = new Sphere(tuple.ORIGIN, )
 });
